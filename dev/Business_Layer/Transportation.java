@@ -18,4 +18,15 @@ public class Transportation {
     private List<HashMap> suppliers;
     private List<HashMap> stores;
 
+    public Transportation(int id, LocalDate date, LocalTime leaving_time, int license, int driver_id, List<HashMap> suppliers, List<HashMap> stores)
+    {
+        this.id=id;
+        this.date=date;
+        this.leaving_time=leaving_time;
+        this.license=license;
+        this.driver_id=driver_id;
+        this.suppliers=suppliers;
+        this.stores=stores;
+    }
+
 }

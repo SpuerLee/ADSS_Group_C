@@ -14,6 +14,9 @@ public class Items {
 
     public Items(int id, int transportation_id, int site_id, List<HashMap<String,Integer>> items_list)
     {
-
+        this.id=id;
+        this.transportation_id=transportation_id;
+        this.site_id=site_id;
+        this.items_list=items_list;
     }
 }
