@@ -20,4 +20,15 @@ public class Drivers {
         this.licenses=licenses;
     }
 
+    private void create_Driver(int id, String name, List<License> licenses)
+    {
+        HashDrivers.put(id,new Drivers(id,name,licenses));
+    }
+
+    private void delete_Driver(int id, String name, List<License> licenses)
+    {
+        HashDrivers.remove(id);
+    }
+
+
 }

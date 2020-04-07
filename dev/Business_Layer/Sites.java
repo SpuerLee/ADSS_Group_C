@@ -42,4 +42,14 @@ public class Sites {
         this.phone=phone;
         this.site_area=site_area;
     }
+
+    private void create_Site(int id, type site_type, String name, String city, String street, int number, String name_of_contact, String phone, area site_area)
+    {
+        HashSites.put(id,new Sites(id,site_type,name,city,street,number,name_of_contact,phone,site_area));
+    }
+
+    private void delete_Driver(int id, String name, List<License> licenses)
+    {
+        HashSites.remove(id);
+    }
 }
