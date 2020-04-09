@@ -8,7 +8,7 @@ import java.util.List;
 public class Trucks {
 
     private int license_number;
-    private enum type{
+    public enum type{
         one,
         two
     };

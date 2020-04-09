@@ -1,5 +1,7 @@
 package Business_Layer;
 
+import javafx.scene.control.TableColumn;
+
 import javax.print.DocFlavor;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -46,6 +48,21 @@ public class Service {
     {
         int site_id = Integer.parseInt(licennse_number);
         HashTrucks.remove(site_id);
+    }
+
+    public void Add_truck(String number,String type,String model, String weight, String max){
+        int license_number = Integer.parseInt(number);
+        Trucks.type type1=null;
+        switch (type){
+            case "1":
+               type1=Trucks.type.one;
+            case "2":
+               type1=Trucks.type.two;
+
+        }
+        int weight1 = Integer.parseInt(weight);
+        int maxweight1 = Integer.parseInt(max);
+        HashTrucks.put(license_number,new Trucks(license_number,type1,model,weight1,maxweight1));
     }
 }
 
