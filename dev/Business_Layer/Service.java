@@ -45,7 +45,7 @@ public class Service {
     public void delete_truck(String licennse_number)
     {
         int site_id = Integer.parseInt(licennse_number);
-        HashSites.remove(site_id);
+        HashTrucks.remove(site_id);
     }
 }
 

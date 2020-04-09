@@ -6,8 +6,8 @@ public class Main {
     public static void main(String[] args) {
 
         Controler controler=new Controler();
-        System.out.println("Hello, please choose your option");
-        String[] A = new String[]{"Drivers", "Transportations", "Sites", "Suppliers", "Quit"};
+        System.out.println("Hello, please choose your option:");
+        String[] A = new String[]{"Drivers", "Transportations", "Sites", "Trucks", "Quit"};
         String choice = null;
         for (int i = 0; i < A.length; i++) {
             System.out.println(i+1 + ". " + A[i]);
@@ -55,7 +55,7 @@ public class Main {
                   }
               }
               case "3": {
-                  String[] sites = new String[]{"Add new sites", "Show sites List", "Remove site"};
+                  String[] sites = new String[]{"Add new site", "Show sites List", "Remove site"};
                   String option = null;
                   for (int i = 0; i < sites.length; i++) {
                       System.out.println(i+1 + ". " + sites[i]);
@@ -74,7 +74,7 @@ public class Main {
                   }
               }
               case "4": {
-                  String[] suppliers = new String[]{"Add new supplier", "Show suppliers List", "Remove supplier"};
+                  String[] suppliers = new String[]{"Add new Truck", "Show trucks List", "Remove truck"};
                   String option = null;
                   for (int i = 0; i < suppliers.length; i++) {
                       System.out.println(i+1 + ". " + suppliers[i]);
@@ -82,13 +82,13 @@ public class Main {
                   option = scan.nextLine();
                   switch (option) {
                       case "1": {
-                          controler.Add_supplier();
+                          controler.Add_truck();
                       }
                       case "2": {
-                          controler.Show_suppliers();
+                          controler.Show_trucks();
                       }
                       case "3": {
-                          controler.Remove_supplier();
+                          controler.Remove_truck();
                       }
                   }
               }

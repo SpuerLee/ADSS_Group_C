@@ -7,8 +7,6 @@ import java.util.List;
 
 public class Trucks {
 
-    public static HashMap<Integer,Trucks> HashTrucks= new HashMap<>();
-
     private int license_number;
     private enum type{
         one,
@@ -26,16 +24,6 @@ public class Trucks {
         this.model=model;
         this.weight=weight;
         this.max_weight=max_weight;
-    }
-
-    private void create_Site (int license_number, type type, String model, double weight, double max_weight)
-    {
-       HashTrucks.put(license_number, new Trucks(license_number,type,model,weight,max_weight));
-    }
-
-    private void delete_Truck(int id)
-    {
-        HashTrucks.remove(id);
     }
 
 }
