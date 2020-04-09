@@ -9,7 +9,7 @@ public class DriversHandler {
     private static Database database=Database.getInstance();
 
     public void AddDriver(int id){
-       database.AddDriver(id);
+        database.AddDriver(id);
     }
 
     public void RemoveDriver(int id){

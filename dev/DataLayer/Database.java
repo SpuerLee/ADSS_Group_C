@@ -13,7 +13,7 @@ public class Database {
     private List<Integer> sites=new LinkedList<>();
     private List<Integer> transportation= new LinkedList<>();
     private List<Integer> trucks= new LinkedList<>();
-
+    Service service=new Service();
 
     private static class Holder {
         private static Database dataBase = new Database();
@@ -44,10 +44,18 @@ public class Database {
     }
 
     public void AddDriver(int id){
-        drives.add(id);
+        if(drives.contains(id)){
+            Transfer_Error("The id of the driver is already exist");
+        }
+        else {
+            drives.add(id);
+        }
     }
 
     public void RemoveDriver(int id){
+        if(!drives.contains(id)){
+            Transfer_Error("The id of the driver doesn't exist");
+        }
         drives.remove(id);
     }
 
@@ -81,6 +89,10 @@ public class Database {
 
     public void RemoveTruck(int id){
         trucks.remove(id);
+    }
+
+    public void Transfer_Error(String error){
+        service.Transfer_Error(error);
     }
 
 

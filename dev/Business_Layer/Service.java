@@ -1,5 +1,7 @@
 package Business_Layer;
 
+import DataLayer.DriversHandler;
+import Presentation_Layer.Controler;
 import javafx.scene.control.TableColumn;
 
 import javax.print.DocFlavor;
@@ -12,18 +14,22 @@ public class Service {
     private static HashMap<Integer,Drivers> HashDrivers= new HashMap<>();
     private static HashMap<Integer,Sites> HashSites= new HashMap<>();
     private static HashMap<Integer,Trucks> HashTrucks= new HashMap<>();
+    Controler control=new Controler();
+    DriversHandler driversHandler=new DriversHandler();
 
-    public void add_driver(String id, String name, List<String> licenses)
+    public boolean add_driver(String id, String name, List<String> licenses)
     {
         int driver_id = Integer.parseInt(id);
         List<Drivers.type> licenses1=new LinkedList<>();
         for (String license: licenses){
             if(license.equals("1"))
                 licenses1.add(Drivers.type.one);
-            else
+            else if(license.equals("2"))
                 licenses1.add(Drivers.type.two);
         }
         HashDrivers.put(driver_id,new Drivers(driver_id,name,licenses1));
+        driversHandler.AddDriver(driver_id);
+        return true;
     }
 
     public void delete_Driver(String id)
@@ -32,6 +38,9 @@ public class Service {
         HashDrivers.remove(driver_id);
     }
 
+    public void Transfer_Error(String error){
+        control.Show_Error(error);
+    }
 
   /* private void create_Site(int id, Sites.type site_type, String name, String city, String street, int number, String name_of_contact, String phone, Sites.area site_area)
     {
