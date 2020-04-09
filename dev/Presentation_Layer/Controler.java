@@ -13,7 +13,7 @@ public class Controler {
 
     //Drivers
 
-    public void Add_driver(){
+    public boolean Add_driver(){
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter driver id");
         String id= scan.nextLine();
@@ -24,12 +24,13 @@ public class Controler {
         System.out.println("Please enter driver's license if there many than enter license and than press enter to the next one");
         System.out.println("If you dine enter the license please press q");
         do{
-            String license=scan.nextLine();
+            licenese=scan.nextLine();
             list.add(licenese);
         }
         while (!licenese.equals("q"));
 
-        service.add_driver(id,name,list);
+
+        return service.add_driver(id,name,list);
     }
 
     public void Show_drivers_List(){
@@ -73,7 +74,7 @@ public class Controler {
         String id= scan.nextLine();
         service.delete_site(id);
     }
-    
+
     //Trucks
 
     public void Add_truck(){
