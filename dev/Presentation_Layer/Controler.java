@@ -10,6 +10,9 @@ import java.util.Scanner;
 public class Controler {
 
     Service service=new Service();
+
+    //Drivers
+
     public void Add_driver(){
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter driver id");
@@ -40,6 +43,8 @@ public class Controler {
         service.delete_Driver(id);
     }
 
+    // Transportations
+
     public void Add_transport(){
 
     }
@@ -54,6 +59,8 @@ public class Controler {
         service.delete_Driver(id);
     }
 
+    //Sites
+
     public void Add_site(){
 
     }
@@ -66,11 +73,23 @@ public class Controler {
         String id= scan.nextLine();
         service.delete_site(id);
     }
-
+    
+    //Trucks
 
     public void Add_truck(){
-
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please enter truck's license_number");
+        String number= scan.nextLine();
+        System.out.println("Please enter truck's type");
+        String type= scan.nextLine();
+        System.out.println("Please enter truck's model");
+        String model= scan.nextLine();
+        System.out.println("Please enter truck's weight");
+        String weight= scan.nextLine();
+        System.out.println("Please enter truck's max weight");
+        String max_weight= scan.nextLine();
     }
+
     public void Show_trucks(){
 
     }
@@ -80,4 +99,5 @@ public class Controler {
         String id= scan.nextLine();
         service.delete_truck(id);
     }
+
 }
