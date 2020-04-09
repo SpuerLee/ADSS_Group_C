@@ -6,6 +6,7 @@ import Business_Layer.Service;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class Controler {
 
@@ -28,7 +29,6 @@ public class Controler {
             list.add(licenese);
         }
         while (!licenese.equals("q"));
-
 
         return service.add_driver(id,name,list);
     }
@@ -99,6 +99,10 @@ public class Controler {
         System.out.println("Please enter the truck's license number that you would like to delete");
         String id= scan.nextLine();
         service.delete_truck(id);
+    }
+
+    public void Show_Error(String error){
+        System.out.println(error);
     }
 
 }
