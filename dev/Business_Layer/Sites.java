@@ -13,10 +13,8 @@ public class Sites {
 
     private enum type {
         supplier,
-        tore
+        store
     }
-
-    ;
     private type site_type;
     private String city;
     private String street;

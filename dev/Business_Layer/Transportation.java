@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Transportation {
 
-    public static HashMap<Integer,Transportation> HashTransportation= new HashMap<>();
 
     private int id;
     private LocalDate date;
@@ -17,6 +16,7 @@ public class Transportation {
     private int driver_id;
     private List<HashMap> suppliers;
     private List<HashMap> stores;
+    private double weight_truck=-1;
 
     public Transportation(int id, LocalDate date, LocalTime leaving_time, int license, int driver_id, List<HashMap> suppliers, List<HashMap> stores)
     {
@@ -37,6 +37,11 @@ public class Transportation {
     private void removeTransport(int id)
     {
         HashTransportation.remove(id);
+    }
+
+    public void setWeight_truck(double weight)
+    {
+        this.weight_truck=weight;
     }
 
 }

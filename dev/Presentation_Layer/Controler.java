@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 public class Controler {
 
-    Service service=new Service();
+    Service service=Service.getInstance();
 
     //Drivers
 

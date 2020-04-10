@@ -1,0 +1,39 @@
+{
+  "Drivers": [
+    {
+      "id": 1,
+      "name": "amit1",
+      "licenses": ["A","B"]
+    },
+    {
+      "id": 2,
+      "name": "amit2",
+      "licenses": ["A"]
+    }
+  ],
+  "Sites": [
+    {
+      "id":1,
+      "name": "store1",
+      "site_type": "store",
+      "city": "beersheva",
+      "street": "takov cohen",
+      "number": 3,
+      "name_of_contact": "reut",
+      "phone": "0545774339",
+      "area":"A"
+    },
+    {
+      "id":2
+      "name": "tnova",
+      "site_type": "supplier",
+      "city": "ramat gan",
+      "street": "takov cohen",
+      "number": 3,
+      "name_of_contact": "roi",
+      "phone": "0545774339",
+      "area":"B"
+    }
+
+  ]
+}

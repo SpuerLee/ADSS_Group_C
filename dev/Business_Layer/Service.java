@@ -1,21 +1,36 @@
 package Business_Layer;
 
-import DataLayer.DriversHandler;
 import Presentation_Layer.Controler;
-import javafx.scene.control.TableColumn;
 
-import javax.print.DocFlavor;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Service {
 
-    private static HashMap<Integer,Drivers> HashDrivers= new HashMap<>();
-    private static HashMap<Integer,Sites> HashSites= new HashMap<>();
-    private static HashMap<Integer,Trucks> HashTrucks= new HashMap<>();
+    private static class SingletonService {
+        private static Service instance = new Service();
+    }
+    private Service() {
+        // initialization code..
+    }
+    public static Service getInstance() {
+        return SingletonService.instance;
+    }
+
+    private HashMap<Integer,Drivers> HashDrivers= new HashMap<>();
+    private HashMap<Integer,Sites> HashSites= new HashMap<>();
+    private HashMap<Integer,Trucks> HashTrucks= new HashMap<>();
+    public HashMap<Integer,Items> HashItems= new HashMap<>();
+    public HashMap<Integer,Transportation> HashTransportation= new HashMap<>();
+
     Controler control=new Controler();
-    DriversHandler driversHandler=new DriversHandler();
+
+    public void uploadData()
+    {
+
+    }
 
     public boolean add_driver(String id, String name, List<String> licenses)
     {
@@ -28,7 +43,6 @@ public class Service {
                 licenses1.add(Drivers.type.two);
         }
         HashDrivers.put(driver_id,new Drivers(driver_id,name,licenses1));
-        driversHandler.AddDriver(driver_id);
         return true;
     }
 
@@ -72,6 +86,16 @@ public class Service {
         int weight1 = Integer.parseInt(weight);
         int maxweight1 = Integer.parseInt(max);
         HashTrucks.put(license_number,new Trucks(license_number,type1,model,weight1,maxweight1));
+    }
+
+    private void create_transport(int id, int transport_id,  int site_id, List<HashMap<String,Integer>> items_list)
+    {
+        HashItems.put(id,new Items(id,transportation_id,site_id,items_list));
+    }
+
+    private void delete_transport(int id)
+    {
+        HashItems.remove(id);
     }
 }
 
