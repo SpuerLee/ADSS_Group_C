@@ -28,7 +28,7 @@ public class Transportation {
         this.suppliers=suppliers;
         this.stores=stores;
     }
-
+  /*
     private void addTransportTransportation(int id, LocalDate date, LocalTime leaving_time, int license, int driver_id, List<HashMap> suppliers, List<HashMap> stores)
     {
         HashTransportation.put(id,new Transportation(id,date,leaving_time,license,driver_id,suppliers,stores));
@@ -43,5 +43,5 @@ public class Transportation {
     {
         this.weight_truck=weight;
     }
-
+ */
 }
