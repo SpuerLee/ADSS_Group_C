@@ -22,17 +22,47 @@
                 switch (choice) {
                     case "1": {
                         String[] transports = new String[]{"Add new transport", "Show transports List", "Remove transport"};
-                        String option = null;
+                        String option = "";
                         for (int i = 0; i < transports.length; i++) {
                             System.out.println(i + 1 + ". " + transports[i]);
                         }
                         option = scan.nextLine();
-                        if(option.equals("1"))
-                            controler.Add_transport();
-                        else if(option.equals("2"))
-                            controler.Show_transports();
-                        else if(option.equals("3"))
-                            controler.Remove_transport();
+                        switch (option) {
+                            case "1": {
+
+                                String option2 = "";
+                                String[] transports_type = new String[]{"Complete stock missing", "Routine transport", "Cancel New transport"};
+                                for (int i = 0; i < transports_type.length; i++) {
+                                    System.out.println(i + 1 + ". " + transports_type[i]);
+                                }
+                                option2 = scan.nextLine();
+                                switch (option2) {
+                                    case "1": {
+
+                                    }
+                                    case "2": {
+
+                                    }
+                                    case "3": {
+
+                                    }
+
+
+                                controler.Add_transport();
+
+                            }
+                            case "2": {
+
+                                controler.Show_transports();
+
+                            }
+                            case "3": {
+
+                                controler.Remove_transport();
+
+                            }
+
+
 
                     }
                     case "2": {

@@ -25,6 +25,7 @@ public class Service {
     private HashMap<Integer,Trucks> HashTrucks= new HashMap<>();
     public HashMap<Integer,Items> HashItems= new HashMap<>();
     public HashMap<Integer,Transportation> HashTransportation= new HashMap<>();
+    public HashMap<Integer,Transportation> HashMissingItems= new HashMap<>();
 
     //Controler control=new Controler();
 
