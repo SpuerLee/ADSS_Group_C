@@ -12,7 +12,7 @@ public class Trucks {
         one,
         two
     };
-    private type truck_type;
+    private type license_type;
     private String model;
     private double weight;
     private double max_weight;
@@ -20,7 +20,7 @@ public class Trucks {
     public Trucks(int license_number, type type, String model, double weight, double max_weight)
     {
         this.license_number=license_number;
-        this.truck_type=type;
+        this.license_type=type;
         this.model=model;
         this.weight=weight;
         this.max_weight=max_weight;

@@ -9,6 +9,26 @@
       "id": 2,
       "name": "amit2",
       "licenses": ["A"]
+    },
+    {
+      "id": 3,
+      "name": "reut",
+      "licenses": ["A","B"]
+    },
+    {
+      "id": 4,
+      "name": "mor",
+      "licenses": ["B"]
+    },
+    {
+      "id": 5,
+      "name": "reut2",
+      "licenses": ["B"]
+    },
+    {
+      "id": 5,
+      "name": "daniel",
+      "licenses": ["A,B"]
     }
   ],
   "Sites": [
@@ -23,8 +43,9 @@
       "phone": "0545774339",
       "area":"A"
     },
+
     {
-      "id":2
+      "id":2,
       "name": "tnova",
       "site_type": "supplier",
       "city": "ramat gan",
@@ -33,7 +54,109 @@
       "name_of_contact": "roi",
       "phone": "0545774339",
       "area":"B"
+    },
+    {
+      "id":3,
+      "name": "Osem",
+      "site_type": "supplier",
+      "city": "Haifa",
+      "street": "Remez",
+      "number": 3,
+      "name_of_contact": "hadas",
+      "phone": "0548844345",
+      "area":"C"
+    },
+    {
+      "id":4,
+      "name": "store2",
+      "site_type": "store",
+      "city": "Tel Aviv",
+      "street": "Shlomo",
+      "number": 3,
+      "name_of_contact": "mor",
+      "phone": "0546343178",
+      "area":"D"
+    },
+    {
+      "id":5,
+      "name": "Shtraus",
+      "site_type": "supplier",
+      "city": "Beer Sheva",
+      "street": "Rager",
+      "number": 164,
+      "name_of_contact": "reut",
+      "phone": "0546343178",
+      "area":"A"
+    },
+    {
+      "id":6,
+      "name": "store3",
+      "site_type": "store",
+      "city": "Ramat Gan",
+      "street": "David Hamelech",
+      "number": 64,
+      "name_of_contact": "Roi",
+      "phone": "0546343169",
+      "area":"B"
+    },
+    {
+      "id":7,
+      "name": "store4",
+      "site_type": "store",
+      "city": "Haifa",
+      "street": "Remez",
+      "number": 64,
+      "name_of_contact": "Hadar",
+      "phone": "0546328694",
+      "area":"C"
+    },
+    {
+      "id":7,
+      "name": "Neviot",
+      "site_type": "supplier",
+      "city": "Tel Aviv",
+      "street": "Rotchild",
+      "number": 64,
+      "name_of_contact": "amit",
+      "phone": "0546323494",
+      "area":"D"
     }
-
+  ],
+  "Trucks": [
+    {
+      "license_number": 12345678,
+      "type": "two",
+      "model": "skoda",
+      "weight": 160,
+      "max weight": 240
+    },
+    {
+      "license_number": 12735778,
+      "type": "two",
+      "model": "volvo",
+      "weight": 180,
+      "max weight": 300
+    },
+    {
+      "license_number": 12745678,
+      "type": "one",
+      "model": "volvo",
+      "weight": 250,
+      "max weight": 400
+    },
+    {
+      "license_number": 14365769,
+      "type": "two",
+      "model": "mercedes",
+      "weight": 256,
+      "max weight": 384
+    },
+    {
+      "license_number": 14967069,
+      "type": "one",
+      "model": "volvo",
+      "weight": 328,
+      "max weight": 521
+    }
   ]
 }
