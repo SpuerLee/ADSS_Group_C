@@ -2,8 +2,9 @@ package Business_Layer;
 
 import Presentation_Layer.Controler;
 
-
-
+import com.google.gson.stream.JsonReader;
+import com.google.gson.*;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,11 +28,14 @@ public class Service {
     public HashMap<Integer,Transportation> HashTransportation= new HashMap<>();
     public HashMap<Integer,Transportation> HashMissingItems= new HashMap<>();
 
-    //Controler control=new Controler();
+    Controler control=new Controler();
 
     public void uploadData()
     {
-
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        JsonReader reader = new JsonReader(new FileReader("Data.json"));
+        JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
     }
 
     public boolean add_driver(String id, String name, List<String> licenses)

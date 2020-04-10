@@ -29,19 +29,32 @@ public class Sites {
         D
     }
 
-    ;
     private area site_area;
 
-    public Sites(int id, type site_type, String name, String city, String street, int number, String name_of_contact, String phone, area site_area) {
+    public Sites(int id, String site_type, String name, String city, String street, int number, String name_of_contact, String phone, String site_area) {
         this.id = id;
-        this.site_type = site_type;
+        switch (site_type){
+            case "store":
+                this.site_type = type.store;
+            case "supplier":
+                this.site_type = type.supplier;
+        }
         this.name = name;
         this.city = city;
         this.street = street;
         this.number = number;
         this.name_of_contact = name_of_contact;
         this.phone = phone;
-        this.site_area = site_area;
+        switch (site_area){
+            case "A":
+                this.site_area = area.A;
+            case "B":
+                this.site_area = area.B;
+            case "C":
+                this.site_area = area.C;
+            case "D":
+                this.site_area = area.D;
+        }
     }
 }
 

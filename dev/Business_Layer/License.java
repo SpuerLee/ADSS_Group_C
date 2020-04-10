@@ -6,4 +6,14 @@ public class License {
         one,
         two
     };
+    type license;
+
+    public License(String type){
+        switch (type){
+            case "A":
+              this.license= License.type.one;
+            case "B":
+                this.license=License.type.two;
+        }
+    }
 }

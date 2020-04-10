@@ -10,22 +10,7 @@ import java.util.logging.Logger;
 
 public class Controler {
 
-    private Service service=Service.getInstance();
-
-    private static class SingletonControler {
-        private static Controler instance = new Controler();
-    }
-    private Controler() {
-        // initialization code..
-    }
-    public static Controler getInstance() {
-        return Controler.SingletonControler.instance;
-    }
-
-    public void uploadData()
-    {
-        service.uploadData();
-    }
+    Service service=Service.getInstance();
 
     //Drivers
 
