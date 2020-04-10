@@ -3,6 +3,7 @@ package Business_Layer;
 import Presentation_Layer.Controler;
 
 
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class Service {
     public HashMap<Integer,Items> HashItems= new HashMap<>();
     public HashMap<Integer,Transportation> HashTransportation= new HashMap<>();
 
-    Controler control=new Controler();
+    //Controler control=new Controler();
 
     public void uploadData()
     {
