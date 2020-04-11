@@ -48,23 +48,25 @@
                                     }
 
 
-                                controler.Add_transport();
+                                    controler.Add_transport();
+                                }
+
+                                }
+                                case "2": {
+
+                                    controler.Show_transports();
+
+                                }
+                                case "3": {
+
+                                    controler.Remove_transport();
+
+                                }
+
 
                             }
-                            case "2": {
+                        }
 
-                                controler.Show_transports();
-
-                            }
-                            case "3": {
-
-                                controler.Remove_transport();
-
-                            }
-
-
-
-                    }
                     case "2": {
                         String[] drivers = new String[]{"Add new driver", "Show drivers list", "Remove driver"};
                         String driver_option = null;

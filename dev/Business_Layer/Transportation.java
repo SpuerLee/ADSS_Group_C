@@ -9,24 +9,33 @@ import java.util.List;
 public class Transportation {
 
 
+    private static int idcounter=0;
+
     private int id;
     private LocalDate date;
     private LocalTime leaving_time;
-    private int license;
     private int driver_id;
-    private List<HashMap> suppliers;
-    private List<HashMap> stores;
+    private int truck_license_number;
+    private List<Integer> suppliers;
+    private List<Integer> stores;
     private double weight_truck=-1;
+    private boolean status;
 
-    public Transportation(int id, LocalDate date, LocalTime leaving_time, int license, int driver_id, List<HashMap> suppliers, List<HashMap> stores)
+    public Transportation(LocalDate date, LocalTime leaving_time, int driver_id,int truck_license_number, List<Integer> suppliers, List<Integer> stores)
     {
-        this.id=id;
+        this.id=idcounter++;
         this.date=date;
         this.leaving_time=leaving_time;
-        this.license=license;
         this.driver_id=driver_id;
+        this.truck_license_number=truck_license_number;
         this.suppliers=suppliers;
         this.stores=stores;
+        this.status = false;
+    }
+
+    public Integer getID()
+    {
+        return this.id;
     }
   /*
     private void addTransportTransportation(int id, LocalDate date, LocalTime leaving_time, int license, int driver_id, List<HashMap> suppliers, List<HashMap> stores)

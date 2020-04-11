@@ -21,15 +21,16 @@ public class Sites {
     private int number;
     private String name_of_contact;
     private String phone;
+    private String site_area;
 
-    private enum area {
-        A,
-        B,
-        C,
-        D
-    }
-
-    private area site_area;
+//    private enum area {
+//        A,
+//        B,
+//        C,
+//        D
+//    }
+//
+//    private area site_area;
 
     public Sites(int id, String site_type, String name, String city, String street, int number, String name_of_contact, String phone, String site_area) {
         this.id = id;
@@ -45,7 +46,8 @@ public class Sites {
         this.number = number;
         this.name_of_contact = name_of_contact;
         this.phone = phone;
-        switch (site_area){
+        this.site_area=site_area;
+        /*switch (site_area){
             case "A":
                 this.site_area = area.A;
             case "B":
@@ -54,7 +56,16 @@ public class Sites {
                 this.site_area = area.C;
             case "D":
                 this.site_area = area.D;
-        }
+        }*/
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+    public String getArea()
+    {
+        return this.site_area;
     }
 }
 
