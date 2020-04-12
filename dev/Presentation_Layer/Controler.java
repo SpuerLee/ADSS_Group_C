@@ -156,7 +156,7 @@ public class Controler {
                 System.out.println("Please enter the next detalis for store :" + store);
                 boolean exit = false;
                 HashMap<String, Integer> add = new HashMap<>();
-                System.out.println("Please enter a product and the quantity required");
+                System.out.println("Please enter a product and the quantity required seperate by space");
                 System.out.println("Enter end to the next store");
                 while (!exit) {
                     String[] items = scan.nextLine().split(" ");
@@ -172,21 +172,6 @@ public class Controler {
         System.out.println("The transport was registered successfully");
         return true;
         }
-       /*
-        List<Integer> stores=new LinkedList<>();
-        stores.add(Integer.parseInt(storeId));
-        List<Integer> supplier_list=new LinkedList<>();
-        for (String s:suppliers)
-        {
-            supplier_list.add(Integer.parseInt(s));
-        }
-        if(service.createTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
-                Integer.parseInt(truckId),supplier_list,stores))
-        {
-            System.out.println("The transport was registered successfully");
-        }
-        return true;
-    } */
 
     //Drivers
 
