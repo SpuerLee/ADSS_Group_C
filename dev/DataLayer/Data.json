@@ -111,7 +111,7 @@
       "area":"C"
     },
     {
-      "id":7,
+      "id":8,
       "name": "Neviot",
       "site_type": "supplier",
       "city": "Tel Aviv",
@@ -128,35 +128,63 @@
       "type": "two",
       "model": "skoda",
       "weight": 160,
-      "max weight": 240
+      "max weight": 240,
+      "licenses": ["A","B"]
     },
     {
       "license_number": 12735778,
       "type": "two",
       "model": "volvo",
       "weight": 180,
-      "max weight": 300
+      "max weight": 300,
+      "licenses": ["A"]
+
     },
     {
       "license_number": 12745678,
       "type": "one",
       "model": "volvo",
       "weight": 250,
-      "max weight": 400
+      "max weight": 400,
+      "licenses": ["A","B"]
     },
     {
       "license_number": 14365769,
       "type": "two",
       "model": "mercedes",
       "weight": 256,
-      "max weight": 384
+      "max weight": 384,
+      "licenses": ["B"]
     },
     {
       "license_number": 14967069,
       "type": "one",
       "model": "volvo",
       "weight": 328,
-      "max weight": 521
+      "max weight": 521,
+      "licenses": ["A","B"]
+    }
+  ],
+  "Missing_Items": [
+    {
+      "source_site_id": 7,
+      "destination_site_id": 5,
+      "items_list": ["300:chocolate","500: Yogurt", "100:Chips"]
+    },
+    {
+      "source_site_id": 6,
+      "destination_site_id": 8,
+      "items_list": ["1000:water"]
+    },
+    {
+      "source_site_id": 1,
+      "destination_site_id": 2,
+      "items_list": ["1000:milk","500: white cheese","600: yogurt"]
+    },
+    {
+      "source_site_id": 1,
+      "destination_site_id": 3,
+      "items_list": ["1000:bamba","550: chips","800: cookies"]
     }
   ]
 }

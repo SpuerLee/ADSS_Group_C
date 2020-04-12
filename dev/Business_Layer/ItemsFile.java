@@ -12,10 +12,10 @@ public class ItemsFile {
     private int transportation_id;
     private int source_site_id;
     private int destination_site_id;
-    private List<HashMap<String,Integer>> items_list;
+    private HashMap<String,Integer> items_list;
 
 
-    public ItemsFile(int transportation_id, int source_site_id, int destination_site_id, List<HashMap<String,Integer>> items_list)
+    public ItemsFile(int transportation_id, int source_site_id, int destination_site_id, HashMap<String,Integer> items_list)
     {
         this.id=idcounter++;
         this.transportation_id=transportation_id;

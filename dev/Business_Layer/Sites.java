@@ -67,6 +67,18 @@ public class Sites {
     {
         return this.site_area;
     }
+    public String getType(){
+        String result="";
+        switch (site_type){
+            case store:
+                result= "store";
+            case supplier:
+                result= "supplier";
+        }
+        return result;
+    }
+
+    public int getId(){ return id;}
 }
 
 

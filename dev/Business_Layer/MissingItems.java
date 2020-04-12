@@ -10,10 +10,10 @@ public class MissingItems {
     private int id;
     private int source_site_id;
     private int destination_site_id;
-    private List<HashMap<String,Integer>> items_list;
+    private HashMap<String,Integer> items_list;
 
 
-    public MissingItems(int source_site_id,int destination_site_id, List<HashMap<String,Integer>> items_list)
+    public MissingItems(int source_site_id,int destination_site_id, HashMap<String,Integer> items_list)
     {
         this.id=idcounter++;
         this.source_site_id=source_site_id;
@@ -35,7 +35,7 @@ public class MissingItems {
     {
         return this.source_site_id;
     }
-    public List<HashMap<String,Integer>> getItems_list()
+    public HashMap<String,Integer> getItems_list()
     {
         return this.items_list;
     }

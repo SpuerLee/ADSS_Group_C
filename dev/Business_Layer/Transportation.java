@@ -37,6 +37,20 @@ public class Transportation {
     {
         return this.id;
     }
+    public Integer getDriveId(){
+        return driver_id;
+    }
+    public Integer getTrucklicense(){
+        return truck_license_number;
+    }
+
+    public LocalTime getLeaving_time(){
+        return leaving_time;
+    }
+
+    public List<Integer> getStores(){
+        return stores;
+    }
   /*
     private void addTransportTransportation(int id, LocalDate date, LocalTime leaving_time, int license, int driver_id, List<HashMap> suppliers, List<HashMap> stores)
     {

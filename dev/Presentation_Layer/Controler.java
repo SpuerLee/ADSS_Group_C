@@ -6,6 +6,7 @@ import Business_Layer.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -92,6 +93,86 @@ public class Controler {
         }
         return true;
     }
+
+    public boolean Regular_stock_transport()
+    {
+        Scanner scan = new Scanner(System.in);;
+        System.out.println(service.getSuppliers()); //print all the suppliers
+        System.out.println("Please choose supplier to transportation"); //choose supplier
+        String supplier = scan.nextLine();
+        System.out.println(service.getStoresByarea()); //show all the area with all the stores in it
+        System.out.println("Please choose area to transportation"); //chose area
+        String area= scan.nextLine();
+        System.out.println(service.get_Stores_By_specific_area(area)); //show all the stores in the area
+        System.out.println("Please choose stores (by id) to make transportation");
+        String[] stores = scan.nextLine().split(" ");
+        List<Integer> stores1=new LinkedList<>();
+        for(String store:stores) {
+            stores1.add(Integer.parseInt(store));
+        }
+        String driverId="";
+        String truckId="";
+        boolean find_truck_driver=false;
+        LocalDate date=LocalDate.now();
+        while (!find_truck_driver) {
+            System.out.println("Please choose date to transportation");
+            date = LocalDate.parse(scan.nextLine(), formatter);
+            String freeDrivers = service.getFreeDrivers(date);
+            if (freeDrivers != "") {
+                System.out.println("The drivers available for the date are:");
+                System.out.println(freeDrivers);
+                System.out.println("Please choose driver to transportation");
+                driverId = scan.nextLine();
+                String freeTrucks = service.getTrucksToDriver(driverId, date);
+                if (freeTrucks != "") {
+                    System.out.println("The trucks available for the date are and driver:");
+                    System.out.println(freeTrucks);
+                    System.out.println("Please choose truck to transportation");
+                    truckId = scan.nextLine();
+                    find_truck_driver = true;
+                } else {
+                    System.out.println("There are no trucks available for the driver at this date");
+                }
+            } else {
+                System.out.println("No drivers available on date");
+            }
+        }
+        if(service.createRegularTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
+                Integer.parseInt(truckId),Integer.parseInt(supplier),stores1))
+        for(String store:stores) {
+                System.out.println("Please enter the next detalis for store :" + service.get_Store_id(store));
+                boolean exit = false;
+                HashMap<String, Integer> add = new HashMap<>();
+                System.out.println("Please enter a product and the quantity required");
+                System.out.println("Enter end to the next store");
+                while (!exit) {
+                    String[] items = scan.nextLine().split(" ");
+                    if (items[0].equals("end")) {
+                        exit = true;
+                    } else {
+                        add.put(items[0], Integer.parseInt(items[1]));
+                }
+            }
+            service.add_to_items_file(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
+                    Integer.parseInt(truckId),Integer.parseInt(supplier),Integer.parseInt(store),add);
+          }
+        return true;
+        }
+       /*
+        List<Integer> stores=new LinkedList<>();
+        stores.add(Integer.parseInt(storeId));
+        List<Integer> supplier_list=new LinkedList<>();
+        for (String s:suppliers)
+        {
+            supplier_list.add(Integer.parseInt(s));
+        }
+        if(service.createTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
+                Integer.parseInt(truckId),supplier_list,stores))
+        {
+            System.out.println("The transport was registered successfully");
+        }
+        return true;
+    } */
 
     //Drivers
 
