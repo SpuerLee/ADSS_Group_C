@@ -2,6 +2,7 @@ package Business_Layer;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Transportation {
     private static int idcounter=0;
 
     private int id;
-    private LocalDate date;
+    private Date date;
     private LocalTime leaving_time;
     private int driver_id;
     private int truck_license_number;
@@ -21,7 +22,7 @@ public class Transportation {
     private double weight_truck=-1;
     private boolean status;
 
-    public Transportation(LocalDate date, LocalTime leaving_time, int driver_id,int truck_license_number, List<Integer> suppliers, List<Integer> stores)
+    public Transportation(Date date, LocalTime leaving_time, int driver_id, int truck_license_number, List<Integer> suppliers, List<Integer> stores)
     {
         this.id=idcounter++;
         this.date=date;
@@ -67,4 +68,12 @@ public class Transportation {
         this.weight_truck=weight;
     }
  */
+  public Date getDate(){
+      return date;
+  }
+
+  public List<Integer> getSuppliers(){
+      return suppliers;
+  }
+
 }

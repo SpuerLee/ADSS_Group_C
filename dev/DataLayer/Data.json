@@ -1,32 +1,26 @@
 {
   "Drivers": [
     {
-      "id": 1,
       "name": "amit1",
       "licenses": ["A","B"]
     },
     {
-      "id": 2,
       "name": "amit2",
       "licenses": ["A"]
     },
     {
-      "id": 3,
       "name": "reut",
       "licenses": ["A","B"]
     },
     {
-      "id": 4,
       "name": "mor",
       "licenses": ["B"]
     },
     {
-      "id": 5,
       "name": "reut2",
       "licenses": ["B"]
     },
     {
-      "id": 5,
       "name": "daniel",
       "licenses": ["A,B"]
     }
@@ -167,23 +161,23 @@
   ],
   "Missing_Items": [
     {
-      "source_site_id": 7,
-      "destination_site_id": 5,
+      "store_id": 7,
+      "supplier_id": 5,
       "items_list": ["300:chocolate","500: Yogurt", "100:Chips"]
     },
     {
-      "source_site_id": 6,
-      "destination_site_id": 8,
+      "store_id": 6,
+      "supplier_id": 8,
       "items_list": ["1000:water"]
     },
     {
-      "source_site_id": 1,
-      "destination_site_id": 2,
+      "store_id": 1,
+      "supplier_id": 2,
       "items_list": ["1000:milk","500: white cheese","600: yogurt"]
     },
     {
-      "source_site_id": 1,
-      "destination_site_id": 3,
+      "store_id": 1,
+      "supplier_id": 3,
       "items_list": ["1000:bamba","550: chips","800: cookies"]
     }
   ]

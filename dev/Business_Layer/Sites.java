@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Sites {
 
+    private static int idcounter=0;
     private int id;
     private String name;
 
@@ -34,12 +35,38 @@ public class Sites {
 
     public Sites(int id, String site_type, String name, String city, String street, int number, String name_of_contact, String phone, String site_area) {
         this.id = id;
-        switch (site_type){
-            case "store":
-                this.site_type = type.store;
-            case "supplier":
-                this.site_type = type.supplier;
+        idcounter++;
+        if(site_type.equals("store")) {
+            this.site_type=type.store;
         }
+        else
+            this.site_type=type.supplier;
+        this.name = name;
+        this.city = city;
+        this.street = street;
+        this.number = number;
+        this.name_of_contact = name_of_contact;
+        this.phone = phone;
+        this.site_area=site_area;
+        /*switch (site_area){
+            case "A":
+                this.site_area = area.A;
+            case "B":
+                this.site_area = area.B;
+            case "C":
+                this.site_area = area.C;
+            case "D":
+                this.site_area = area.D;
+        }*/
+    }
+
+    public Sites(String site_type, String name, String city, String street, int number, String name_of_contact, String phone, String site_area) {
+        this.id = idcounter++;
+        if(site_type.equals("store")) {
+            this.site_type=type.store;
+        }
+        else
+            this.site_type=type.supplier;
         this.name = name;
         this.city = city;
         this.street = street;
@@ -69,12 +96,12 @@ public class Sites {
     }
     public String getType(){
         String result="";
-        switch (site_type){
-            case store:
-                result= "store";
-            case supplier:
-                result= "supplier";
+        if(site_type.equals(type.store)) {
+            result = "store";
         }
+        else
+            result= "supplier";
+
         return result;
     }
 

@@ -4,17 +4,14 @@ import Presentation_Layer.Controler;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.*;
+import jdk.nashorn.internal.parser.JSONParser;
 
 
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Service {
 
@@ -28,40 +25,47 @@ public class Service {
         return SingletonService.instance;
     }
 
-    private HashMap<Integer,Drivers> HashDrivers= new HashMap<>();
-    private HashMap<Integer,Sites> HashSites= new HashMap<>();
-    private HashMap<Integer,Trucks> HashTrucks= new HashMap<>();
-    public HashMap<Integer,ItemsFile> HashItemsFile= new HashMap<>();
-    public HashMap<Integer,Transportation> HashTransportation= new HashMap<>();
-    public HashMap<Integer,MissingItems> HashMissingItems= new HashMap<>();
+    private ConcurrentHashMap<Integer,Drivers> HashDrivers= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer,Sites> HashSites= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer,Trucks> HashTrucks= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer,ItemsFile> HashItemsFile= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer,Transportation> HashTransportation= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer,MissingItems> HashMissingItems= new ConcurrentHashMap<>();
     public List<String> license_list = new LinkedList<>();
-    public List<String> area_list = new LinkedList<>();
+    private List<String> area_list = new LinkedList<>();
 
 
 
     public void uploadData()
     {
-        try {
+        JsonParser parser = new JsonParser();
+        try (InputStream is = this.getClass().getResourceAsStream("/DataLayer/Data.json");
+             Reader rd = new InputStreamReader(is, "UTF-8"); ) {
+            Object obj = parser.parse(rd);
             Gson gson = new Gson();
-            JsonParser parser = new JsonParser();
-            JsonReader reader = new JsonReader(new FileReader("../DataLayer/Data.json"));
-            JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+
+            JsonObject jsonObject = (JsonObject) obj;
+          //  JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
             final JsonArray drivers = jsonObject.get("Drivers").getAsJsonArray();
             for (int i = 0; i < drivers.size(); i++) {
                 final JsonObject driver = drivers.get(i).getAsJsonObject();
                 final JsonArray license = driver.getAsJsonArray("licenses");
                 List<String> licenses=new LinkedList<>();
                 for(int j=0;j<license.size();j++){
-                    String type = license.get(i).getAsString();
+                    String type = license.get(j).getAsString();
                     licenses.add(type);
                 }
-                HashDrivers.put(driver.get("id").getAsInt(),new Drivers(driver.get("id").getAsInt(),driver.get("name").getAsString(),licenses));
+                Drivers add=new Drivers(driver.get("name").getAsString(),licenses);
+                HashDrivers.put(add.getId(),add);
 
             }
             final JsonArray sites = jsonObject.get("Sites").getAsJsonArray();
             for (int i = 0; i < sites.size(); i++) {
                 final JsonObject site = sites.get(i).getAsJsonObject();
-                HashSites.put(site.get("id").getAsInt(),new Sites(site.get("id").getAsInt(),site.get("type").getAsString(),site.get("name").getAsString(),site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt(),site.get("name_of_contact").getAsString(),site.get("phone").getAsString(),site.get("area").getAsString()));
+                HashSites.put(site.get("id").getAsInt(),new Sites(site.get("id").getAsInt(),site.get("site_type").getAsString(),site.get("name").getAsString(),site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt(),site.get("name_of_contact").getAsString(),site.get("phone").getAsString(),site.get("area").getAsString()));
+                if(!area_list.contains(site.get("area").getAsString())){
+                    area_list.add(site.get("area").getAsString());
+                }
             }
             final JsonArray trucks = jsonObject.get("Trucks").getAsJsonArray();
             for (int i = 0; i < trucks.size(); i++) {
@@ -69,10 +73,10 @@ public class Service {
                 final JsonArray license = truck.getAsJsonArray("licenses");
                 List<String> licenses=new LinkedList<>();
                 for(int j=0;j<license.size();j++){
-                    String type = license.get(i).getAsString();
+                    String type = license.get(j).getAsString();
                     licenses.add(type);
                 }
-                HashTrucks.put(truck.get("license_number").getAsInt(),new Trucks(truck.get("license_number").getAsInt(),licenses,truck.get("model").getAsString(),truck.get("weight").getAsDouble(),truck.get("weight").getAsDouble()));
+                HashTrucks.put(truck.get("license_number").getAsInt(),new Trucks(truck.get("license_number").getAsInt(),licenses,truck.get("model").getAsString(),truck.get("weight").getAsDouble(),truck.get("max weight").getAsDouble()));
             }
             final JsonArray missing_items = jsonObject.get("Missing_Items").getAsJsonArray();
             for (int i = 0; i < missing_items.size(); i++) {
@@ -80,10 +84,10 @@ public class Service {
                 final JsonArray items = missing.getAsJsonArray("items_list");
                 HashMap<String,Integer> map=new HashMap<>();
                 for(int j=0;j<items.size();j++){
-                    String [] items_to_add=items.get(i).getAsString().split(":");
+                    String [] items_to_add=items.get(j).getAsString().split(":");
                     map.put(items_to_add[1],Integer.parseInt(items_to_add[0]));
                 }
-                MissingItems items1=new MissingItems(missing.get("source_site_id").getAsInt(),missing.get("destination_site_id").getAsInt(),map);
+                MissingItems items1=new MissingItems(missing.get("store_id").getAsInt(),missing.get("supplier_id").getAsInt(),map);
                 HashMissingItems.put(items1.getID(),items1);
             }
 
@@ -95,7 +99,7 @@ public class Service {
     }
 
     //missing items
-    public boolean createTransportation(LocalDate date, LocalTime leaving_time, int driver_id,
+    public boolean createTransportation(Date date, LocalTime leaving_time, int driver_id,
                                         int truck_license_number, List<Integer> suppliers, List<Integer> stores)
     {
         Transportation transportation =
@@ -106,8 +110,8 @@ public class Service {
         {
             if(stores.contains(missingItems.getStoreId())&&suppliers.contains(missingItems.getSupplierId()))
             {
-                ItemsFile itemFile = new ItemsFile(transportation.getID(),missingItems.getSupplierId(),
-                        missingItems.getStoreId(),missingItems.getItems_list());
+                ItemsFile itemFile = new ItemsFile(transportation.getID(),missingItems.getStoreId(),
+                        missingItems.getSupplierId(),missingItems.getItems_list());
                 HashItemsFile.put(itemFile.getID(),itemFile);
                 id_to_delete.add(missingItems.getID());
             }
@@ -122,7 +126,7 @@ public class Service {
     }
 
     //create Regular Transportation
-    public boolean createRegularTransportation(LocalDate date, LocalTime leaving_time, int driver_id,
+    public boolean createRegularTransportation(Date date, LocalTime leaving_time, int driver_id,
                                         int truck_license_number, int supplierid, List<Integer> stores)
     {
         List <Integer> suppliers=new LinkedList<>();
@@ -136,7 +140,7 @@ public class Service {
     }
 
     //add each store to the itemFile
-    public void add_to_items_file(LocalDate date, LocalTime leaving_time, int driver_id,
+    public void add_to_items_file(Date date, LocalTime leaving_time, int driver_id,
                                      int truck_license_number, int supplierid, int store, HashMap<String,Integer> items){
         for(Transportation transportation: HashTransportation.values()){
             if(transportation.getDriveId().equals(driver_id)& transportation.getLeaving_time().equals(leaving_time)& (transportation.getTrucklicense()==truck_license_number)){
@@ -194,7 +198,7 @@ public class Service {
         {
             int supplierId = missingItems.getSupplierId();
             String supplierArea = HashSites.get(supplierId).getArea();
-            if(storeId==missingItems.getStoreId()&&area==supplierArea)
+            if(storeId==missingItems.getStoreId()&&area.equals(supplierArea))
             {
                 output = output +supplierId+". "+ HashSites.get(supplierId).getName()+"\n";
             }
@@ -202,15 +206,14 @@ public class Service {
         return output;
     }
 
-
     //print the area and the stores that are in the area
     public String getStoresByarea()
     {
         String result="";
         for(String area: area_list) {
-            String output = area+ ": [ ";
+            String output = "Area "+area+ ": [ ";
             for (Sites sites : HashSites.values()) {
-                if ((sites.getType().equals("supplier")) & (sites.getArea().equals(area))) {
+                if ((sites.getType().equals("store")) & (sites.getArea().equals(area))) {
                     output = output + sites.getName() + " ,";
                 }
             }
@@ -251,7 +254,7 @@ public class Service {
         {
             if((site.getType().equals("supplier"))& (!sites.contains(site)))
             {
-                output = output + site.getName()+"\n";
+                output = output +"name: "+site.getName()+", id : "+ site.getId()+"\n";
                 sites.add(site);
             }
         }
@@ -276,14 +279,14 @@ public class Service {
         String output = "";
         for (Sites sites: HashSites.values())
         {
-            if(sites.getName().equals(sites)) {
+            if(sites.getName().equals(site)) {
                 output = Integer.toString(sites.getId());
             }
         }
         return output;
     }
 
-    public String getFreeDrivers(LocalDate date)
+    public String getFreeDrivers(Date date)
     {
         String output = "";
         for (Drivers driver: HashDrivers.values())
@@ -296,7 +299,7 @@ public class Service {
         return output;
     }
 
-    public String getTrucksToDriver(String id, LocalDate date)
+    public String getTrucksToDriver(String id, Date date)
     {
         int driverId = Integer.parseInt(id);
         List<String> license_list =HashDrivers.get(driverId).getLicenses();
@@ -311,8 +314,125 @@ public class Service {
         return output;
     }
 
+    public boolean delete_Transport(String id)
+    {
+        int transport_id = Integer.parseInt(id);
+        for(Map.Entry<Integer, Transportation> transport:HashTransportation.entrySet()){
+            if (transport.getValue().getID()==transport_id){
+                int driver=transport.getValue().getDriveId();
+                int truck=transport.getValue().getTrucklicense();
+                HashDrivers.get(driver).Remove_date(transport.getValue().getDate());
+                HashTrucks.get(truck).Remove_date(transport.getValue().getDate());
+                HashTransportation.remove(transport.getKey());
+            }
+        }
+        return true;
+    }
 
+    public String getTransport_id(){
+        String result="";
+        for(Transportation transportation: HashTransportation.values()){
+            result=result+transportation.getID()+" ,";
+        }
+        return result;
+    }
 
+    public boolean addDriver(String name,List<String> license_list){
+        Drivers drivers=new Drivers(name,license_list);
+        HashDrivers.put(drivers.getId(),drivers);
+        return true;
+    }
+
+    public boolean addTruck(String license_number, List<String> licenses_types, String model, String weight, String max_weight){
+        Trucks trucks=new Trucks(Integer.parseInt(license_number),licenses_types,model,Double.parseDouble(weight),Double.parseDouble(max_weight));
+        HashTrucks.put(Integer.parseInt(license_number),trucks);
+        return true;
+    }
+
+    public boolean addsite(String site_type, String name, String city, String street, String number, String name_of_contact, String phone, String site_area){
+        boolean result=true;
+        for(Sites sites:HashSites.values()){
+            if(sites.getName().equals(name)){
+                result=false;
+            }
+        }
+        if(result){
+            Sites sites=new Sites(site_type,name,city,street,Integer.parseInt(number),name_of_contact,phone,site_area);
+            HashSites.put(sites.getId(),sites);
+        }
+        return result;
+    }
+
+    public boolean removeDriver(String name){
+        boolean result=false;
+        for(Drivers drivers:HashDrivers.values()){
+            if ((drivers.getName().equals(name))){
+                result=true;
+                int id=drivers.getId();
+                if(drivers.getDo_transportation_days().size()>0)
+                    result=false;
+                if(result)
+                    HashDrivers.remove(drivers.getId());
+            }
+        }
+        return result;
+    }
+
+    public boolean removeTruck(String id){
+        boolean result=false;
+        Integer number=Integer.parseInt(id);
+        for(Trucks trucks:HashTrucks.values()){
+            if ((trucks.getlicense_number().equals(number))){
+                result=true;
+                if(trucks.getDo_transportation_days().size()>0)
+                    result=false;
+                if(result)
+                    HashTrucks.remove(trucks.getlicense_number());
+            }
+        }
+        return result;
+    }
+
+    public boolean removeSite(String name){
+        boolean result=false;
+        for(Sites sites:HashSites.values()){
+            if ((sites.getName().equals(name))){
+                result=true;
+                for(Transportation transportation:HashTransportation.values()){
+                    if ((transportation.getStores().contains((sites.getId()))||(transportation.getSuppliers().contains(sites.getId())))){
+                        result=false;
+                    }
+                }
+                if(result){
+                    HashSites.remove(sites.getId());
+                }
+            }
+        }
+        return result;
+    }
+    public String showDrivers(){
+        String result="";
+        for(Drivers drivers: HashDrivers.values()){
+            result=result+"id :"+drivers.getId()+" , Name:"+drivers.getName()+"\n";
+        }
+        return result;
+    }
+
+    public String showsite(){
+        String result="";
+        for(Sites sites: HashSites.values()){
+            result=result+"id :"+sites.getId()+" , Name :"+sites.getName()+" ,Type :"+sites.getType()+"\n";
+        }
+        return result;
+    }
+
+    public String showtrucks(){
+        String result="";
+        for(Trucks trucks: HashTrucks.values()){
+            result=result+"License Number: "+trucks.getlicense_number()+" , Model: "+trucks.getModel()+"\n";
+        }
+        return result;
+    }
 }
 
 

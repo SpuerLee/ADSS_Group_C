@@ -1,20 +1,22 @@
 package Business_Layer;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
     public class Drivers {
 
-    private int id;
+     private static int idcounter=0;
+     private int id;
     private String name;
     private List<String> licenses;
-    private List<LocalDate> do_transportation_days = new LinkedList<>();
+    private List<Date> do_transportation_days = new LinkedList<>();
 
 
-    public Drivers(int id, String name, List<String> licenses)
+    public Drivers(String name, List<String> licenses)
     {
-        this.id=id;
+        this.id=idcounter++;
         this.name=name;
         this.licenses=licenses;
     }
@@ -33,12 +35,12 @@ import java.util.List;
         return this.licenses;
     }
 
-    public void addDate(LocalDate date)
+    public void addDate(Date date)
     {
         this.do_transportation_days.add(date);
     }
 
-    public boolean checkIfFree(LocalDate date)
+    public boolean checkIfFree(Date date)
     {
         if(do_transportation_days.contains(date))
         {
@@ -49,6 +51,18 @@ import java.util.List;
             //do_transportation_days.add(date);
             return true;
         }
+    }
+
+    public void Remove_date(Date date){
+        for(Date date1:do_transportation_days){
+            if (date1.equals(date)){
+                do_transportation_days.remove(date);
+            }
+        }
+    }
+
+    public List<Date> getDo_transportation_days(){
+        return do_transportation_days;
     }
 
 }

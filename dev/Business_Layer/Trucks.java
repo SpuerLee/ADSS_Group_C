@@ -2,6 +2,7 @@ package Business_Layer;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class Trucks {
     private String model;
     private double weight;
     private double max_weight;
-    private List<LocalDate> do_transportation_days = new LinkedList<>();
+    private List<Date> do_transportation_days = new LinkedList<>();
 
     public Trucks(int license_number, List<String> licenses_types, String model, double weight, double max_weight)
     {
@@ -33,7 +34,7 @@ public class Trucks {
         return this.model;
     }
 
-    public void addDate(LocalDate date)
+    public void addDate(Date date)
     {
         this.do_transportation_days.add(date);
     }
@@ -52,7 +53,7 @@ public class Trucks {
         return output;
     }
 
-    public boolean checkIfFree(LocalDate date)
+    public boolean checkIfFree(Date date)
     {
         if(do_transportation_days.contains(date))
         {
@@ -63,6 +64,18 @@ public class Trucks {
             //do_transportation_days.add(date);
             return true;
         }
+    }
+
+    public void Remove_date(Date date){
+        for(Date date1:do_transportation_days){
+            if (date1.equals(date)){
+                do_transportation_days.remove(date);
+            }
+        }
+    }
+
+    public List<Date> getDo_transportation_days(){
+        return do_transportation_days;
     }
 
 }
