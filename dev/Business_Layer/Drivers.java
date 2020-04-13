@@ -9,12 +9,12 @@ import java.util.List;
 
      private static int idcounter=0;
      private int id;
-    private String name;
-    private List<String> licenses;
-    private List<Date> do_transportation_days = new LinkedList<>();
+     private String name;
+     private List<License> licenses;
+   // private List<Date> do_transportation_days = new LinkedList<>();
 
 
-    public Drivers(String name, List<String> licenses)
+    public Drivers(String name, List<License> licenses)
     {
         this.id=idcounter++;
         this.name=name;
@@ -30,12 +30,12 @@ import java.util.List;
     {
         return this.name;
     }
-    public List<String> getLicenses()
+    public List<License> getLicenses()
     {
         return this.licenses;
     }
 
-    public void addDate(Date date)
+   /* public void addDate(Date date)
     {
         this.do_transportation_days.add(date);
     }
@@ -63,6 +63,6 @@ import java.util.List;
 
     public List<Date> getDo_transportation_days(){
         return do_transportation_days;
-    }
+    } */
 
 }

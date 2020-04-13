@@ -12,68 +12,61 @@ public class Transportation {
 
     private static int idcounter=0;
 
-    private int id;
+   private int id;
     private Date date;
     private LocalTime leaving_time;
-    private int driver_id;
-    private int truck_license_number;
-    private List<Integer> suppliers;
-    private List<Integer> stores;
+    private Trucks truck;
+    private List<Supplier> suppliers;
+    private List<Store> stores;
     private double weight_truck=-1;
-    private boolean status;
+    private Drivers driver;
+    private List<ItemsFile> itemsFiles;
 
-    public Transportation(Date date, LocalTime leaving_time, int driver_id, int truck_license_number, List<Integer> suppliers, List<Integer> stores)
+    public Transportation(int id,Date date, LocalTime leaving_time, Drivers drivers, Trucks truck, List<Supplier> suppliers, List<Store> stores, List<ItemsFile> itemsFiles)
     {
-        this.id=idcounter++;
+        this.id=id;
         this.date=date;
         this.leaving_time=leaving_time;
-        this.driver_id=driver_id;
-        this.truck_license_number=truck_license_number;
+        this.driver=drivers;
+        this.truck=truck;
         this.suppliers=suppliers;
         this.stores=stores;
-        this.status = false;
+        this.itemsFiles=itemsFiles;
     }
 
-    public Integer getID()
-    {
-        return this.id;
-    }
-    public Integer getDriveId(){
-        return driver_id;
-    }
-    public Integer getTrucklicense(){
-        return truck_license_number;
-    }
-
-    public LocalTime getLeaving_time(){
-        return leaving_time;
-    }
-
-    public List<Integer> getStores(){
-        return stores;
-    }
-  /*
-    private void addTransportTransportation(int id, LocalDate date, LocalTime leaving_time, int license, int driver_id, List<HashMap> suppliers, List<HashMap> stores)
-    {
-        HashTransportation.put(id,new Transportation(id,date,leaving_time,license,driver_id,suppliers,stores));
-    }
-
-    private void removeTransport(int id)
-    {
-        HashTransportation.remove(id);
-    }
-
-    public void setWeight_truck(double weight)
-    {
-        this.weight_truck=weight;
-    }
- */
   public Date getDate(){
       return date;
   }
 
-  public List<Integer> getSuppliers(){
+  public List<Supplier> getSuppliers(){
       return suppliers;
   }
 
+    public LocalTime getLeaving_time() {
+        return leaving_time;
+    }
+
+    public Trucks getTruck() {
+        return truck;
+    }
+
+    public void setTruck(Trucks truck) {
+        this.truck = truck;
+    }
+
+    public List<Store> getStores() {
+        return stores;
+    }
+
+    public double getWeight_truck() {
+        return weight_truck;
+    }
+
+    public Drivers getDriver() {
+        return driver;
+    }
+
+    public List<ItemsFile> getItemsFiles() {
+        return itemsFiles;
+    }
 }

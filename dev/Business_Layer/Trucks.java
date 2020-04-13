@@ -10,13 +10,13 @@ import java.util.List;
 public class Trucks {
 
     private int license_number;
-    private List<String> licenses_types;
+    private List<License> licenses_types;
     private String model;
     private double weight;
     private double max_weight;
-    private List<Date> do_transportation_days = new LinkedList<>();
+  //  private List<Date> do_transportation_days = new LinkedList<>();
 
-    public Trucks(int license_number, List<String> licenses_types, String model, double weight, double max_weight)
+    public Trucks(int license_number, List<License> licenses_types, String model, double weight, double max_weight)
     {
         this.license_number=license_number;
         this.licenses_types=licenses_types;
@@ -33,11 +33,10 @@ public class Trucks {
     {
         return this.model;
     }
-
-    public void addDate(Date date)
+    /*  public void addDate(Date date)
     {
         this.do_transportation_days.add(date);
-    }
+    } */
 
     public boolean checkLicense(List<String> license_list)
     {
@@ -53,7 +52,7 @@ public class Trucks {
         return output;
     }
 
-    public boolean checkIfFree(Date date)
+  /*  public boolean checkIfFree(Date date)
     {
         if(do_transportation_days.contains(date))
         {
@@ -77,5 +76,5 @@ public class Trucks {
     public List<Date> getDo_transportation_days(){
         return do_transportation_days;
     }
-
+  */
 }
