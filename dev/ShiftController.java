@@ -29,7 +29,12 @@ public class ShiftController{
     }
 
     public boolean validateNewShift(Date date, HR.ShiftType shiftType){
-        return false;
+        for (Shift shifty: this.shiftHistory.values()) {
+            if((shifty.getDate().compareTo(date)==0) && shifty.getStype().equals(shiftType)){
+                return false;
+            }
+        }
+        return true;
     }
 
     public void createShift(int _shiftType,int managerSn, String listOfWorkersSn,String _date) throws ParseException {
@@ -41,19 +46,28 @@ public class ShiftController{
             Worker workerToAdd = WorkerController.getInstance().getWorkerBySn(Integer.parseInt(workerSn));
             workersListOfCurrentShift.add(workerToAdd);
         }
-        Date date = new SimpleDateFormat("yyyy-M-d").parse(_date);
+        Date date = new SimpleDateFormat("dd-MM-yyyy").parse(_date);
         Shift shiftToAdd = new Shift(date,sType,manager,workersListOfCurrentShift,getSnFactory());
-        this.shiftHistory.put(shiftToAdd.getSn(),shiftToAdd);
+        if(this.validateNewShift(date,sType)) {
+            this.shiftHistory.put(shiftToAdd.getSn(), shiftToAdd);
+            System.out.println("New shift has been added successfully" +"\n");
+        }
+        else{
+            System.out.println("We're sorry, Shift already exists"+"\n");
+        }
     }
+
 
     public void printShift(int shiftIndex){
         Shift shift = this.shiftHistory.get(shiftIndex);
         shift.printShift();
+        System.out.println("\n"+"Workers: ");
         for(Worker worker : shift.getShiftWorker()){
-            if(WorkerController.getInstance().getWorkerList().containsValue(worker)){
+            if((shift.getDate().compareTo(new Date()) < 0) | WorkerController.getInstance().getWorkerList().containsValue(worker)){
                 worker.printWorker();
             }
         }
+        System.out.println("\n");
     }
 
     public void setShiftLists() {

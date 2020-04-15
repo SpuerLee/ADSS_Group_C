@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,11 +19,12 @@ public class Shift {
     }
 
     public void printShift() {
-
+        SimpleDateFormat daty = new SimpleDateFormat("dd/MM/yyyy");
+        String dat = daty.format(date);
         System.out.println("Shift SN. " + this.sn);
-        System.out.println("    Manager SN: " + this.manager.getName() + " Manager Name: " + this.manager.getName());
-        System.out.println("    Date: " + this.date);
-        System.out.println("    Type: " + this.shiftType);
+        System.out.println("Manager SN: " + this.manager.getSn() + " Manager Name: " + this.manager.getName());
+        System.out.println("Date: " + dat);
+        System.out.println("Type: " + this.shiftType);
     }
 
     public int getSn() { return this.sn; }

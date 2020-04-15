@@ -1,7 +1,9 @@
 import javafx.util.Pair;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class Worker {
 
@@ -17,17 +19,17 @@ public class Worker {
 
     @Override
     public String toString() {
-        return "Worker{" +
-                "sn. " + sn +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", phoneNumber=" + phoneNumber +
-                ", bankAccount=" + bankAccount +
-                ", salary=" + salary +
-                ", date=" + date +
-                ", jobTitle='" + jobTitle + '\'' +
-                ", constrains=" + constrains +
-                '}';
+        SimpleDateFormat daty = new SimpleDateFormat("dd/MM/yyyy");
+        String dat = daty.format(date);
+        return "sn. " + sn + "\n" +
+                "id: " + id + "\n" +
+                "name: '" + name + '\'' + "\n" +
+                "phoneNumber: " + phoneNumber + "\n" +
+                "bankAccount: " + bankAccount + "\n" +
+                "salary: " + salary + "\n" +
+                "date: " + dat + "\n" +
+                "jobTitle: '" + jobTitle + '\'' + "\n" +
+                "constrains: " + printConstrains()  + "\n" ;
     }
 
     public Worker(int id, String name, int phoneNumber, int bankAccount, int salary, Date date, String jobTitle, int sn) {
@@ -40,6 +42,22 @@ public class Worker {
         this.date = date;
         this.jobTitle = jobTitle;
         this.constrains = new HashMap<>();
+    }
+
+    public String printConstrains(){
+        String constrains="";
+        if(this.constrains.keySet().isEmpty()){
+            constrains = "No Constrains";
+        } else {
+            Iterator<Pair<HR.Day,HR.ShiftType>> it = this.constrains.keySet().iterator();
+            Pair<HR.Day,HR.ShiftType> pair = it.next();
+            constrains = constrains + pair.getKey() +" "+ pair.getValue();
+            while (it.hasNext()) {
+                pair = it.next();
+                constrains =  pair.getKey() +" "+ pair.getValue() +", "+ constrains ;
+            }
+        }
+        return  constrains;
     }
 
     public int getSn() { return this.sn; }
@@ -114,7 +132,7 @@ public class Worker {
     }
 
     public void printWorker(){
-        System.out.println(this.sn + ". ID: " + this.id + " Name: " + this.name);
+        System.out.println(this.sn + ". ID: " + this.id + " Name: " + this.name+" Job Title: "+this.jobTitle);
     }
 
 }

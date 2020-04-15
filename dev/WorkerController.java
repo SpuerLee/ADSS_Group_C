@@ -29,7 +29,7 @@ public class WorkerController {
 
 
         // convert date to day
-        Date date = new SimpleDateFormat("yyyy-M-d").parse(_date);
+        Date date = new SimpleDateFormat("dd-MM-yyyy").parse(_date);
         String dayOfWeek = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date);
         HR.Day selectedDay=selecetShiftDay(dayOfWeek);
         HR.ShiftType sType =selectShiftType(_shiftType);
@@ -72,6 +72,7 @@ public class WorkerController {
     }
 
     public void removeWorker(int workerSn){
+        this.workerList.remove(workerSn);
 
     }
 

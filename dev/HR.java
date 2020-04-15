@@ -75,7 +75,9 @@ public class HR {
         System.out.println("Select shift by SN");
         HashMap<Integer,Shift> shiftHistory = ShiftController.getInstance().getShiftHistory();
         for(Shift shift : shiftHistory.values()){
-            System.out.println(shift.getSn() + ". Date: " + shift.getDate() + " Type: " + shift.getStype());
+            SimpleDateFormat daty = new SimpleDateFormat("dd/MM/yyyy");
+            String dat = daty.format(shift.getDate());
+            System.out.println(shift.getSn() + ". Date: " + dat + " Type: " + shift.getStype());
         }
         int shiftSn = sc.nextInt();
         ShiftController.getInstance().printShift(shiftSn);
@@ -117,6 +119,7 @@ public class HR {
         System.out.println("1. Edit worker constrains");
         System.out.println("2. Edit worker salary");
         System.out.println("3. Fire worker");
+        System.out.println("Enter 0 to stop");
         int userChooseForWorker = sc.nextInt();
         switch (userChooseForWorker){
             case 1: // Edit constrains
@@ -130,6 +133,8 @@ public class HR {
                     System.out.println("Enter constrains day:");
                     constrainsDay = sc.next(); // { Day }
                 }
+                System.out.println("These constrains have been added: " );
+                System.out.println(WorkerController.getInstance().getWorkerBySn(workerSn).printConstrains());
                 break;
             case 2: // Edit salary
                 System.out.println("Enter new salary");
@@ -143,7 +148,7 @@ public class HR {
     }
 
     public void initSuperLeeWithWorkers() throws ParseException {
-        Date date = new SimpleDateFormat("yyyy-M-d").parse("2020-4-15");
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-15");
         Worker w1 = new Worker(100,"Andrey Palman",100,123,100,date,"Cashier",WorkerController.getInstance().getSnFactory());
         Worker w2 = new Worker(101,"Hadar Kor",101,124,2500,date,"Manager",WorkerController.getInstance().getSnFactory());
         Worker w3 = new Worker(102,"Tomer Hacham",102,125,10000,date,"Storekeeper",WorkerController.getInstance().getSnFactory());
