@@ -57,12 +57,16 @@ public class HR {
         System.out.println("Please select shift type Morning or Night");
         String shiftType = sc.next().toUpperCase(); // { Morning , Night }
         System.out.println("Please select manager SN for the shift");
-        WorkerController.getInstance().printAllManagers(date,shiftType);
-        int selectedManagerSn = sc.nextInt();
-        System.out.println("Please select workers SN's for the shift");
-        WorkerController.getInstance().printAllWorkers(date,shiftType);
-        String chosenWorkersSn = sc.next(); // 1,2,6,9
-        ShiftController.getInstance().createShift(shiftType,selectedManagerSn,chosenWorkersSn,date);
+        boolean Manager = WorkerController.getInstance().printAllManagers(date,shiftType);
+        if(Manager) {
+            int selectedManagerSn = sc.nextInt();
+            System.out.println("Please select workers SN's for the shift");
+            WorkerController.getInstance().printAllWorkers(date, shiftType);
+            String chosenWorkersSn = sc.next(); // 1,2,6,9
+            ShiftController.getInstance().createShift(shiftType, selectedManagerSn, chosenWorkersSn, date);
+        }else{
+            System.out.println("We're sorry, Shift must have a Manager.");
+        }
     }
 
     public  void displayShifts(Scanner sc){

@@ -31,32 +31,33 @@ public class WorkerController {
     }
 
     public List<Worker> getAllAvailableWorkers(String _date, String shiftType) throws ParseException {
-
-
         // convert date to day
         Date date = new SimpleDateFormat("dd-MM-yyyy").parse(_date);
-        String dayOfWeek = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date);
-        enums selectedDay= enums.valueOf(dayOfWeek.toUpperCase());
         enums sType =enums.valueOf(shiftType);
 
         List<Worker> workersToPrint = new LinkedList<Worker>();
 
         for (Worker worker : workerList.values()) {
-            if(!worker.getWorkerConstrains().containsKey(new Pair<>(selectedDay,sType))){
+            if(worker.available(date,sType)){
                 workersToPrint.add(worker);
             }
         }
-
         return workersToPrint;
     }
 
-    public void printAllManagers(String date, String shiftType) throws ParseException {
+    public boolean printAllManagers(String date, String shiftType) throws ParseException {
+        boolean availableManager=false;
         List<Worker> listOfAvailableWorkers = WorkerController.getInstance().getAllAvailableWorkers(date,shiftType);
         for (Worker manager : listOfAvailableWorkers) {
             if(manager.getWorkerJobTitle().equals("Manager")) {
                 System.out.println(manager.getWorkerSn() + ". ID: " + manager.getWorkerId() + " Name: " + manager.getWorkerName());
+                availableManager = true;
             }
         }
+        if(!availableManager){
+            System.out.println("There is no available manager for this shift");
+        }
+        return availableManager;
     }
 
     public void printAllWorkers(String date, String shiftType) throws ParseException {

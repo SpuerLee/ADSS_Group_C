@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 
 public class Worker {
 
@@ -95,6 +96,12 @@ public class Worker {
 
     public void printWorker(){
         System.out.println(this.sn + ". ID: " + this.id + " Name: " + this.name+" Job Title: "+this.jobTitle);
+    }
+
+    public boolean available(Date date, enums sType) {
+        String dayOfWeek = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date);
+        enums selectedDay= enums.valueOf(dayOfWeek.toUpperCase());
+        return !this.constrains.containsKey(new Pair<>(selectedDay,sType));
     }
 
 }
