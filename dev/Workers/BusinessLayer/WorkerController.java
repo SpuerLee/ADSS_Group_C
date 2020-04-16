@@ -36,7 +36,7 @@ public class WorkerController {
         // convert date to day
         Date date = new SimpleDateFormat("dd-MM-yyyy").parse(_date);
         String dayOfWeek = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date);
-        enums selectedDay= enums.valueOf(dayOfWeek);
+        enums selectedDay= enums.valueOf(dayOfWeek.toUpperCase());
         enums sType =enums.valueOf(shiftType);
 
         List<Worker> workersToPrint = new LinkedList<Worker>();
