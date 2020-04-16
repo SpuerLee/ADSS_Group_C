@@ -16,7 +16,7 @@ public class HR {
     }
 
     public void start() throws ParseException {
-        initSuperLeeWithWorkers();
+        //initSuperLeeWithWorkers();
         System.out.println("Welcome to SuperLee");
         printMenu();
 
@@ -28,13 +28,13 @@ public class HR {
                     addShift(sc);
                     break;
                 case 2: // Display shift
-                    displayShift(sc);
+                    displayShifts(sc);
                     break;
                 case 3: // add worker
                     addWorker(sc);
                     break;
                 case 4: // Display Worker
-                    displayWorker(sc);
+                    displayWorkers(sc);
                     break;
             }
             printMenu();
@@ -65,16 +65,20 @@ public class HR {
         ShiftController.getInstance().createShift(shiftType,selectedManagerSn,chosenWorkersSn,date);
     }
 
-    public  void displayShift(Scanner sc){
-        System.out.println("Select shift by SN");
+    public  void displayShifts(Scanner sc){
         HashMap<Integer, Shift> shiftHistory = ShiftController.getInstance().getShiftHistory();
-        for(Shift shift : shiftHistory.values()){
-            SimpleDateFormat daty = new SimpleDateFormat("dd/MM/yyyy");
-            String dat = daty.format(shift.getDate());
-            System.out.println(shift.getSn() + ". Date: " + dat + " Type: " + shift.getStype());
+        if(!shiftHistory.isEmpty()) {
+            System.out.println("Select shift by SN");
+            for (Shift shift : shiftHistory.values()) {
+                SimpleDateFormat daty = new SimpleDateFormat("dd/MM/yyyy");
+                String dat = daty.format(shift.getDate());
+                System.out.println(shift.getShiftSn() + ". Date: " + dat + " Type: " + shift.getShiftType());
+            }
+            int shiftSn = sc.nextInt();
+            ShiftController.getInstance().printShift(shiftSn);
+        } else {
+            System.out.println("No shifts to display\n");
         }
-        int shiftSn = sc.nextInt();
-        ShiftController.getInstance().printShift(shiftSn);
     }
 
     public  void addWorker(Scanner sc) throws ParseException {
@@ -99,7 +103,7 @@ public class HR {
     }
 
     private void addConstrains(Scanner sc, int workerToAddSn, String constrainsDay) {
-        while(!constrainsDay.equals("Stop")){
+        while(!constrainsDay.equals("0")){
             System.out.println("Enter shift type Morning or Night");
             String _shiftType = sc.next().toUpperCase(); // { Type }
             WorkerController.getInstance().addConstrainsToWorkerByWorkerSn(workerToAddSn,constrainsDay,_shiftType);
@@ -108,34 +112,36 @@ public class HR {
         }
     }
 
-    public void displayWorker(Scanner sc){
-        System.out.println("Choose worker by SN");
-        WorkerController.getInstance().printAllWorker();
-        int workerSn = sc.nextInt();
-        WorkerController.getInstance().printWorkerBySn(workerSn);
-        System.out.println("Choose action: ");
-        System.out.println("1. Edit worker constrains");
-        System.out.println("2. Edit worker salary");
-        System.out.println("3. Fire worker");
-        System.out.println("Enter 0 to stop");
-        int userChooseForWorker = sc.nextInt();
-        switch (userChooseForWorker){
-            case 1: // Edit constrains
-                WorkerController.getInstance().getWorkerBySn(workerSn).setConstrains();
-                System.out.println("Enter constrains day:");
-                String constrainsDay = sc.next().toUpperCase(); // { Day }
-                addConstrains(sc, workerSn, constrainsDay);
-                System.out.println("These constrains have been added: " );
-                System.out.println(WorkerController.getInstance().getWorkerBySn(workerSn).printConstrains());
-                break;
-            case 2: // Edit salary
-                System.out.println("Enter new salary");
-                int newSalary = sc.nextInt();
-                WorkerController.getInstance().setNewSalaryBySn(workerSn,newSalary);
-                break;
-            case 3: // Fire worker
-                WorkerController.getInstance().removeWorker(workerSn);
-                break;
+    public void displayWorkers(Scanner sc){
+        if(WorkerController.getInstance().printAllWorker()) {
+            int workerSn = sc.nextInt();
+            WorkerController.getInstance().printWorkerBySn(workerSn);
+            System.out.println("Choose action: ");
+            System.out.println("1. Edit worker constrains");
+            System.out.println("2. Edit worker salary");
+            System.out.println("3. Fire worker");
+            System.out.println("Enter 0 to stop");
+            int userChooseForWorker = sc.nextInt();
+            switch (userChooseForWorker) {
+                case 1: // Edit constrains
+                    WorkerController.getInstance().getWorkerBySn(workerSn).setWorkerConstrains();
+                    System.out.println("Enter constrains day:");
+                    String constrainsDay = sc.next().toUpperCase(); // { Day }
+                    addConstrains(sc, workerSn, constrainsDay);
+                    System.out.println("These constrains have been added: ");
+                    System.out.println(WorkerController.getInstance().getWorkerBySn(workerSn).printConstrains());
+                    break;
+                case 2: // Edit salary
+                    System.out.println("Enter new salary");
+                    int newSalary = sc.nextInt();
+                    WorkerController.getInstance().setNewSalaryBySn(workerSn, newSalary);
+                    break;
+                case 3: // Fire worker
+                    WorkerController.getInstance().removeWorker(workerSn);
+                    break;
+            }
+        }else {
+            System.out.println("No workers to display\n");
         }
     }
 
@@ -144,8 +150,8 @@ public class HR {
         Worker w1 = new Worker(100,"Andrey Palman",100,123,100,date,"Cashier", WorkerController.getInstance().getSnFactory());
         Worker w2 = new Worker(101,"Hadar Kor",101,124,2500,date,"Manager", WorkerController.getInstance().getSnFactory());
         Worker w3 = new Worker(102,"Tomer Hacham",102,125,10000,date,"Storekeeper", WorkerController.getInstance().getSnFactory());
-        WorkerController.getInstance().getWorkerList().put(w1.getSn(),w1);
-        WorkerController.getInstance().getWorkerList().put(w2.getSn(),w2);
-        WorkerController.getInstance().getWorkerList().put(w3.getSn(),w3);
+        WorkerController.getInstance().getWorkerList().put(w1.getWorkerSn(),w1);
+        WorkerController.getInstance().getWorkerList().put(w2.getWorkerSn(),w2);
+        WorkerController.getInstance().getWorkerList().put(w3.getWorkerSn(),w3);
     }
 }

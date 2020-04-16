@@ -3,7 +3,6 @@ package Workers.BusinessLayer;
 import Workers.BusinessLayer.Utils.Shift;
 import Workers.BusinessLayer.Utils.Worker;
 import Workers.BusinessLayer.Utils.enums;
-import Workers.InterfaceLayer.HR;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,7 +36,7 @@ public class ShiftController{
 
     public boolean validateNewShift(Date date, enums shiftType){
         for (Shift shifty: this.shiftHistory.values()) {
-            if((shifty.getDate().compareTo(date)==0) && shifty.getStype().equals(shiftType)){
+            if((shifty.getDate().compareTo(date)==0) && shifty.getShiftType().equals(shiftType)){
                 return false;
             }
         }
@@ -56,7 +55,7 @@ public class ShiftController{
         Date date = new SimpleDateFormat("dd-MM-yyyy").parse(_date);
         Shift shiftToAdd = new Shift(date,sType,manager,workersListOfCurrentShift,getSnFactory());
         if(this.validateNewShift(date,sType)) {
-            this.shiftHistory.put(shiftToAdd.getSn(), shiftToAdd);
+            this.shiftHistory.put(shiftToAdd.getShiftSn(), shiftToAdd);
             System.out.println("New shift has been added successfully" +"\n");
         }
         else{
@@ -68,7 +67,7 @@ public class ShiftController{
         Shift shift = this.shiftHistory.get(shiftIndex);
         shift.printShift();
         System.out.println("\n"+"Workers: ");
-        for(Worker worker : shift.getShiftWorker()){
+        for(Worker worker : shift.getShiftWorkers()){
             if((shift.getDate().compareTo(new Date()) < 0) | WorkerController.getInstance().getWorkerList().containsValue(worker)){
                 worker.printWorker();
             }
@@ -76,12 +75,9 @@ public class ShiftController{
         System.out.println("\n");
     }
 
-    public void setShiftLists() {
-        this.shiftHistory = new HashMap<>();
-    }
-
     public HashMap<Integer, Shift> getShiftHistory() {
         return this.shiftHistory;
     }
+
 }
 

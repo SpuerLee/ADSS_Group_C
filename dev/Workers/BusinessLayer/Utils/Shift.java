@@ -1,7 +1,5 @@
 package Workers.BusinessLayer.Utils;
 
-import Workers.InterfaceLayer.HR;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -25,22 +23,22 @@ public class Shift {
         SimpleDateFormat daty = new SimpleDateFormat("dd/MM/yyyy");
         String dat = daty.format(date);
         System.out.println("Shift SN. " + this.sn);
-        System.out.println("Manager SN: " + this.manager.getSn() + " Manager Name: " + this.manager.getName());
+        System.out.println("Manager SN: " + this.manager.getWorkerSn() + " Manager Name: " + this.manager.getWorkerName());
         System.out.println("Date: " + dat);
         System.out.println("Type: " + this.shiftType);
     }
 
-    public int getSn() { return this.sn; }
+    public int getShiftSn() { return this.sn; }
 
     public Date getDate() {
         return date;
     }
 
-    public enums getStype() {
+    public enums getShiftType() {
         return shiftType;
     }
 
-    public List<Worker> getShiftWorker() {
+    public List<Worker> getShiftWorkers() {
         return shiftWorkers;
     }
 

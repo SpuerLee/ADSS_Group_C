@@ -63,33 +63,33 @@ public class Worker {
         return  constrains;
     }
 
-    public int getSn() { return this.sn; }
+    public int getWorkerSn() { return this.sn; }
 
-    public int getId() {
+    public int getWorkerId() {
         return id;
     }
 
-    public String getName() {
+    public String getWorkerName() {
         return name;
     }
 
-    public void setSalary(int salary) {
+    public void getWorkerSalary(int salary) {
         this.salary = salary;
     }
 
-    public String getJobTitle() {
+    public String getWorkerJobTitle() {
         return jobTitle;
     }
 
-    public HashMap<Pair<enums, enums>,Boolean> getConstrains() {
+    public HashMap<Pair<enums, enums>,Boolean> getWorkerConstrains() {
         return constrains;
     }
 
-    public void addConstrains(enums day,enums shiftType){
+    public void addConstrainsToWorker(enums day, enums shiftType){
         this.constrains.put( new Pair<>(day,shiftType),false);
     }
 
-    public void setConstrains() {
+    public void setWorkerConstrains() {
         System.out.println("All constrains has been removed");
         this.constrains = new HashMap<>();
     }

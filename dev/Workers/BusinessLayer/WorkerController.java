@@ -42,7 +42,7 @@ public class WorkerController {
         List<Worker> workersToPrint = new LinkedList<Worker>();
 
         for (Worker worker : workerList.values()) {
-            if(!worker.getConstrains().containsKey(new Pair<>(selectedDay,sType))){
+            if(!worker.getWorkerConstrains().containsKey(new Pair<>(selectedDay,sType))){
                 workersToPrint.add(worker);
             }
         }
@@ -53,8 +53,8 @@ public class WorkerController {
     public void printAllManagers(String date, String shiftType) throws ParseException {
         List<Worker> listOfAvailableWorkers = WorkerController.getInstance().getAllAvailableWorkers(date,shiftType);
         for (Worker manager : listOfAvailableWorkers) {
-            if(manager.getJobTitle().equals("Manager")) {
-                System.out.println(manager.getSn() + ". ID: " + manager.getId() + " Name: " + manager.getName());
+            if(manager.getWorkerJobTitle().equals("Manager")) {
+                System.out.println(manager.getWorkerSn() + ". ID: " + manager.getWorkerId() + " Name: " + manager.getWorkerName());
             }
         }
     }
@@ -62,8 +62,8 @@ public class WorkerController {
     public void printAllWorkers(String date, String shiftType) throws ParseException {
         List<Worker> listOfAvailableWorkers = WorkerController.getInstance().getAllAvailableWorkers(date,shiftType);
         for (Worker listOfAvailableWorker : listOfAvailableWorkers) {
-            if(!listOfAvailableWorker.getJobTitle().equals("Manager")) {
-                System.out.println(listOfAvailableWorker.getSn() + ". ID: " + listOfAvailableWorker.getId() + " Name: " + listOfAvailableWorker.getName() + " Job title: " + listOfAvailableWorker.getJobTitle());
+            if(!listOfAvailableWorker.getWorkerJobTitle().equals("Manager")) {
+                System.out.println(listOfAvailableWorker.getWorkerSn() + ". ID: " + listOfAvailableWorker.getWorkerId() + " Name: " + listOfAvailableWorker.getWorkerName() + " Job title: " + listOfAvailableWorker.getWorkerJobTitle());
             }
         }
     }
@@ -78,13 +78,18 @@ public class WorkerController {
     }
 
     public void setNewSalaryBySn(int workerSn,int newSalaty){
-        workerList.get(workerSn).setSalary(newSalaty);
+        workerList.get(workerSn).getWorkerSalary(newSalaty);
     }
 
-    public void printAllWorker(){
-        for(Worker worker : workerList.values()){
-            System.out.println(worker.getSn() + ". ID: " + worker.getId() + " Name: " + worker.getName());
+    public boolean printAllWorker(){
+        if(workerList.isEmpty()){
+            return false;
         }
+        System.out.println("Choose worker by SN");
+        for(Worker worker : workerList.values()){
+            System.out.println(worker.getWorkerSn() + ". ID: " + worker.getWorkerId() + " Name: " + worker.getWorkerName());
+        }
+        return true;
     }
 
     public int getSnFactory(){
@@ -98,7 +103,7 @@ public class WorkerController {
     public void addConstrainsToWorkerByWorkerSn(int workerSn, String day, String shiftType){
         enums selectedDay= enums.valueOf(day);
         enums sType = enums.valueOf(shiftType);
-        WorkerController.getInstance().getWorkerBySn(workerSn).addConstrains(selectedDay,sType);
+        WorkerController.getInstance().getWorkerBySn(workerSn).addConstrainsToWorker(selectedDay,sType);
 
     }
 
@@ -106,8 +111,8 @@ public class WorkerController {
 
         Date date = new SimpleDateFormat("yyyy-M-d").parse(_date);
         Worker workerToAdD = new Worker(id,name,phoneNumber,bankAccount,salary,date,jobTitle,getSnFactory());
-        workerList.put(workerToAdD.getSn(),workerToAdD);
-        return workerToAdD.getSn();
+        workerList.put(workerToAdD.getWorkerSn(),workerToAdD);
+        return workerToAdD.getWorkerSn();
 
     }
 
