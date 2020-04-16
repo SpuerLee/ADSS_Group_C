@@ -11,19 +11,11 @@ import java.util.*;
 public class WorkerController {
 
     private HashMap<Integer, Worker> workerList;
-    private static WorkerController workerController = null;
     private int snFactory;
 
-    private WorkerController() {
+    public WorkerController() {
         this.workerList = new HashMap<>();
         this.snFactory = 0;
-    }
-
-    public static WorkerController getInstance(){
-        if(workerController == null){
-            workerController = new WorkerController();
-        }
-        return  workerController;
     }
 
     public HashMap<Integer, Worker> getWorkerList() {
@@ -47,7 +39,7 @@ public class WorkerController {
 
     public boolean printAllManagers(String date, String shiftType) throws ParseException {
         boolean availableManager=false;
-        List<Worker> listOfAvailableWorkers = WorkerController.getInstance().getAllAvailableWorkers(date,shiftType);
+        List<Worker> listOfAvailableWorkers = getAllAvailableWorkers(date,shiftType);
         for (Worker manager : listOfAvailableWorkers) {
             if(manager.getWorkerJobTitle().equals("Manager")) {
                 System.out.println(manager.getWorkerSn() + ". ID: " + manager.getWorkerId() + " Name: " + manager.getWorkerName());
@@ -61,7 +53,7 @@ public class WorkerController {
     }
 
     public void printAllWorkers(String date, String shiftType) throws ParseException {
-        List<Worker> listOfAvailableWorkers = WorkerController.getInstance().getAllAvailableWorkers(date,shiftType);
+        List<Worker> listOfAvailableWorkers = getAllAvailableWorkers(date,shiftType);
         for (Worker listOfAvailableWorker : listOfAvailableWorkers) {
             if(!listOfAvailableWorker.getWorkerJobTitle().equals("Manager")) {
                 System.out.println(listOfAvailableWorker.getWorkerSn() + ". ID: " + listOfAvailableWorker.getWorkerId() + " Name: " + listOfAvailableWorker.getWorkerName() + " Job title: " + listOfAvailableWorker.getWorkerJobTitle());
@@ -104,7 +96,7 @@ public class WorkerController {
     public void addConstrainsToWorkerByWorkerSn(int workerSn, String day, String shiftType){
         enums selectedDay= enums.valueOf(day);
         enums sType = enums.valueOf(shiftType);
-        WorkerController.getInstance().getWorkerBySn(workerSn).addConstrainsToWorker(selectedDay,sType);
+        this.getWorkerBySn(workerSn).addConstrainsToWorker(selectedDay,sType);
 
     }
 

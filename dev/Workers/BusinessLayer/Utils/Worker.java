@@ -35,8 +35,8 @@ public class Worker {
                 "constrains: " + printConstrains()  + "\n" ;
     }
 
-    public Worker(int id, String name, int phoneNumber, int bankAccount, int salary, Date date, String jobTitle, int sn) {
-        this.sn = sn;
+    public Worker(int id, String name, int phoneNumber, int bankAccount, int salary, Date date, String jobTitle,int Sn) {
+        this.sn = Sn;
         this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;

@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 
 public class projectTests {
 
-    private ShiftController shiftController = ShiftController.getInstance();
-    private WorkerController workerController = WorkerController.getInstance();
+    private ShiftController shiftController = new ShiftController();
+    private WorkerController workerController = new WorkerController();
 
     @Test
     @DisplayName("")
