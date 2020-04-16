@@ -1,3 +1,6 @@
+package Workers.BusinessLayer.Utils;
+
+import Workers.InterfaceLayer.HR;
 import javafx.util.Pair;
 
 import java.text.SimpleDateFormat;
@@ -15,7 +18,7 @@ public class Worker {
     private int salary;
     private Date date;
     private String jobTitle;
-    private HashMap<Pair<HR.Day,HR.ShiftType>,Boolean> constrains;
+    private HashMap<Pair<enums,enums>,Boolean> constrains;
 
     @Override
     public String toString() {
@@ -49,8 +52,8 @@ public class Worker {
         if(this.constrains.keySet().isEmpty()){
             constrains = "No Constrains";
         } else {
-            Iterator<Pair<HR.Day,HR.ShiftType>> it = this.constrains.keySet().iterator();
-            Pair<HR.Day,HR.ShiftType> pair = it.next();
+            Iterator<Pair<enums,enums>> it = this.constrains.keySet().iterator();
+            Pair<enums,enums> pair = it.next();
             constrains = constrains + pair.getKey() +" "+ pair.getValue();
             while (it.hasNext()) {
                 pair = it.next();
@@ -66,64 +69,24 @@ public class Worker {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public int getBankAccount() {
-        return bankAccount;
-    }
-
-    public void setBankAccount(int bankAccount) {
-        this.bankAccount = bankAccount;
-    }
-
-    public int getSalary() {
-        return salary;
     }
 
     public void setSalary(int salary) {
         this.salary = salary;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public String getJobTitle() {
         return jobTitle;
     }
 
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
-    }
-
-    public HashMap<Pair<HR.Day, HR.ShiftType>,Boolean> getConstrains() {
+    public HashMap<Pair<enums, enums>,Boolean> getConstrains() {
         return constrains;
     }
 
-    public void addConstrains(HR.Day _day,HR.ShiftType _shiftType){
-        this.constrains.put( new Pair<>(_day,_shiftType),false);
+    public void addConstrains(enums day,enums shiftType){
+        this.constrains.put( new Pair<>(day,shiftType),false);
     }
 
     public void setConstrains() {

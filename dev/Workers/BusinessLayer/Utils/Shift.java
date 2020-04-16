@@ -1,16 +1,19 @@
+package Workers.BusinessLayer.Utils;
+
+import Workers.InterfaceLayer.HR;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Shift {
-    private HR.ShiftType shiftType;
+    private enums shiftType;
     private Worker manager;
     private List<Worker> shiftWorkers;
     private Date date;
     private int sn;
 
-    public Shift(Date date, HR.ShiftType shiftType, Worker manager, List<Worker> shiftWorkers,int sn) {
+    public Shift(Date date, enums shiftType, Worker manager, List<Worker> shiftWorkers, int sn) {
         this.date = date;
         this.shiftType = shiftType;
         this.manager = manager;
@@ -33,32 +36,12 @@ public class Shift {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public HR.ShiftType getStype() {
+    public enums getStype() {
         return shiftType;
-    }
-
-    public void setStype(HR.ShiftType stype) {
-        this.shiftType = stype;
-    }
-
-    public Worker getManager() {
-        return manager;
-    }
-
-    public void setManager(Worker manager) {
-        this.manager = manager;
     }
 
     public List<Worker> getShiftWorker() {
         return shiftWorkers;
-    }
-
-    public void setShiftWorker(List<Worker> shiftWorker) {
-        this.shiftWorkers = shiftWorker;
     }
 
 }

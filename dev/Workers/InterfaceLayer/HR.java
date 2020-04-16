@@ -1,18 +1,15 @@
+package Workers.InterfaceLayer;
+
+import Workers.BusinessLayer.ShiftController;
+import Workers.BusinessLayer.WorkerController;
+import Workers.BusinessLayer.Utils.Shift;
+import Workers.BusinessLayer.Utils.Worker;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class HR {
-
-    public enum Day {
-        SUNDAY, MONDAY, TUESDAY, WEDNESDAY,
-        THURSDAY, FRIDAY, SATURDAY
-    }
-
-    public enum ShiftType{
-        MORNING,
-        NIGHT
-    }
 
     public HR(){
 
@@ -21,12 +18,7 @@ public class HR {
     public void start() throws ParseException {
         initSuperLeeWithWorkers();
         System.out.println("Welcome to SuperLee");
-        System.out.println("Select option:");
-        System.out.println("1. Add shift");
-        System.out.println("2. Display shift");
-        System.out.println("3. Add worker");
-        System.out.println("4. Display worker");
-        System.out.println("Enter 0 to stop");
+        printMenu();
 
         Scanner sc=new Scanner(System.in);
         int userChoose = sc.nextInt();
@@ -45,23 +37,25 @@ public class HR {
                     displayWorker(sc);
                     break;
             }
-            System.out.println("Enter your next choice:");
-            System.out.println("1. Add shift");
-            System.out.println("2. Display shift");
-            System.out.println("3. Add worker");
-            System.out.println("4. Display worker");
-            System.out.println("Enter 0 to stop");
+            printMenu();
             userChoose = sc.nextInt();
         }
     }
 
+    private void printMenu(){
+        System.out.println("Enter your next choice:");
+        System.out.println("1. Add shift");
+        System.out.println("2. Display shifts");
+        System.out.println("3. Add worker");
+        System.out.println("4. Display workers");
+        System.out.println("Enter 0 to stop");
+    }
+
     public void addShift(Scanner sc) throws ParseException {
-        System.out.println("Please select a date");
+        System.out.println("Please select a date - dd/mm/yyyy");
         String date = sc.next();
-        System.out.println("Please select shift type");
-        System.out.println("1.Morning");
-        System.out.println("2.Night");
-        int shiftType = sc.nextInt();
+        System.out.println("Please select shift type Morning or Night");
+        String shiftType = sc.next().toUpperCase(); // { Morning , Night }
         System.out.println("Please select manager SN for the shift");
         WorkerController.getInstance().printAllManagers(date,shiftType);
         int selectedManagerSn = sc.nextInt();
@@ -73,7 +67,7 @@ public class HR {
 
     public  void displayShift(Scanner sc){
         System.out.println("Select shift by SN");
-        HashMap<Integer,Shift> shiftHistory = ShiftController.getInstance().getShiftHistory();
+        HashMap<Integer, Shift> shiftHistory = ShiftController.getInstance().getShiftHistory();
         for(Shift shift : shiftHistory.values()){
             SimpleDateFormat daty = new SimpleDateFormat("dd/MM/yyyy");
             String dat = daty.format(shift.getDate());
@@ -89,24 +83,28 @@ public class HR {
         System.out.println("Enter worker name:");
         String workerName = sc.next();
         System.out.println("Enter phone:");
-        int workerphoneNumber = sc.nextInt();
+        int workerPhoneNumber = sc.nextInt();
         System.out.println("Enter bank account:");
-        int workerBankAcount = sc.nextInt();
+        int workerBankAccount = sc.nextInt();
         System.out.println("Enter salary:");
         int workerSalary = sc.nextInt();
-        System.out.println("Enter starting date");
+        System.out.println("Enter starting date - dd/mm/yyyy");
         String dateOfStart = sc.next();
         System.out.println("Enter job title:");
         String workerJobTitle = sc.next();
         System.out.println("Enter constrains day:");
-        int workerToAddSn = WorkerController.getInstance().addWorker(workerId,workerName,workerphoneNumber,workerBankAcount,workerSalary,dateOfStart,workerJobTitle);
+        int workerToAddSn = WorkerController.getInstance().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle);
         String constrainsDay = sc.next(); // { Day }
+        addConstrains(sc, workerToAddSn, constrainsDay);
+    }
+
+    private void addConstrains(Scanner sc, int workerToAddSn, String constrainsDay) {
         while(!constrainsDay.equals("Stop")){
-            System.out.println("Enter shift type");
-            int _shiftType = sc.nextInt(); // { Type }
+            System.out.println("Enter shift type Morning or Night");
+            String _shiftType = sc.next().toUpperCase(); // { Type }
             WorkerController.getInstance().addConstrainsToWorkerByWorkerSn(workerToAddSn,constrainsDay,_shiftType);
             System.out.println("Enter constrains day:");
-            constrainsDay = sc.next(); // { Day }
+            constrainsDay = sc.next().toUpperCase(); // { Day }
         }
     }
 
@@ -125,14 +123,8 @@ public class HR {
             case 1: // Edit constrains
                 WorkerController.getInstance().getWorkerBySn(workerSn).setConstrains();
                 System.out.println("Enter constrains day:");
-                String constrainsDay = sc.next(); // { Day }
-                while(!constrainsDay.equals("Stop")){
-                    System.out.println("Enter shift type");
-                    int _shiftType = sc.nextInt(); // { Type }
-                    WorkerController.getInstance().addConstrainsToWorkerByWorkerSn(workerSn,constrainsDay,_shiftType);
-                    System.out.println("Enter constrains day:");
-                    constrainsDay = sc.next(); // { Day }
-                }
+                String constrainsDay = sc.next().toUpperCase(); // { Day }
+                addConstrains(sc, workerSn, constrainsDay);
                 System.out.println("These constrains have been added: " );
                 System.out.println(WorkerController.getInstance().getWorkerBySn(workerSn).printConstrains());
                 break;
@@ -149,9 +141,9 @@ public class HR {
 
     public void initSuperLeeWithWorkers() throws ParseException {
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-15");
-        Worker w1 = new Worker(100,"Andrey Palman",100,123,100,date,"Cashier",WorkerController.getInstance().getSnFactory());
-        Worker w2 = new Worker(101,"Hadar Kor",101,124,2500,date,"Manager",WorkerController.getInstance().getSnFactory());
-        Worker w3 = new Worker(102,"Tomer Hacham",102,125,10000,date,"Storekeeper",WorkerController.getInstance().getSnFactory());
+        Worker w1 = new Worker(100,"Andrey Palman",100,123,100,date,"Cashier", WorkerController.getInstance().getSnFactory());
+        Worker w2 = new Worker(101,"Hadar Kor",101,124,2500,date,"Manager", WorkerController.getInstance().getSnFactory());
+        Worker w3 = new Worker(102,"Tomer Hacham",102,125,10000,date,"Storekeeper", WorkerController.getInstance().getSnFactory());
         WorkerController.getInstance().getWorkerList().put(w1.getSn(),w1);
         WorkerController.getInstance().getWorkerList().put(w2.getSn(),w2);
         WorkerController.getInstance().getWorkerList().put(w3.getSn(),w3);

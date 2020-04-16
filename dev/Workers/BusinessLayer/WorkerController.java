@@ -1,3 +1,7 @@
+package Workers.BusinessLayer;
+
+import Workers.BusinessLayer.Utils.Worker;
+import Workers.BusinessLayer.Utils.enums;
 import javafx.util.Pair;
 
 import java.text.ParseException;
@@ -5,7 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class WorkerController {
-    private HashMap<Integer,Worker> workerList;
+
+    private HashMap<Integer, Worker> workerList;
     private static WorkerController workerController = null;
     private int snFactory;
 
@@ -25,14 +30,14 @@ public class WorkerController {
         return workerList;
     }
 
-    public List<Worker> getAllAvailableWorkers(String _date,int _shiftType) throws ParseException {
+    public List<Worker> getAllAvailableWorkers(String _date, String shiftType) throws ParseException {
 
 
         // convert date to day
         Date date = new SimpleDateFormat("dd-MM-yyyy").parse(_date);
         String dayOfWeek = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date);
-        HR.Day selectedDay=selecetShiftDay(dayOfWeek);
-        HR.ShiftType sType =selectShiftType(_shiftType);
+        enums selectedDay= enums.valueOf(dayOfWeek);
+        enums sType =enums.valueOf(shiftType);
 
         List<Worker> workersToPrint = new LinkedList<Worker>();
 
@@ -45,11 +50,7 @@ public class WorkerController {
         return workersToPrint;
     }
 
-    public boolean validateWorker(){
-        return false;
-    }
-
-    public void printAllManagers(String date, int shiftType) throws ParseException {
+    public void printAllManagers(String date, String shiftType) throws ParseException {
         List<Worker> listOfAvailableWorkers = WorkerController.getInstance().getAllAvailableWorkers(date,shiftType);
         for (Worker manager : listOfAvailableWorkers) {
             if(manager.getJobTitle().equals("Manager")) {
@@ -58,7 +59,7 @@ public class WorkerController {
         }
     }
 
-    public void printAllWorkers(String date, int shiftType) throws ParseException {
+    public void printAllWorkers(String date, String shiftType) throws ParseException {
         List<Worker> listOfAvailableWorkers = WorkerController.getInstance().getAllAvailableWorkers(date,shiftType);
         for (Worker listOfAvailableWorker : listOfAvailableWorkers) {
             if(!listOfAvailableWorker.getJobTitle().equals("Manager")) {
@@ -87,60 +88,18 @@ public class WorkerController {
     }
 
     public int getSnFactory(){
-        return this.snFactory++;
+        return ++this.snFactory;
     }
 
     public Worker getWorkerBySn(int snOfWorker){
         return this.workerList.get(snOfWorker);
     }
 
-    public void addConstrainsToWorkerByWorkerSn(int workerSn,String day,int _shiftType){
-        HR.Day selectedDay= selecetShiftDay(day);
-        HR.ShiftType sType = selectShiftType(_shiftType);
-
+    public void addConstrainsToWorkerByWorkerSn(int workerSn, String day, String shiftType){
+        enums selectedDay= enums.valueOf(day);
+        enums sType = enums.valueOf(shiftType);
         WorkerController.getInstance().getWorkerBySn(workerSn).addConstrains(selectedDay,sType);
 
-    }
-
-    public HR.Day selecetShiftDay(String day){
-        HR.Day selectedDay=null;
-        switch (day) {
-            case "Sunday":
-                selectedDay = HR.Day.SUNDAY;
-                break;
-            case "Monday":
-                selectedDay = HR.Day.MONDAY;
-                break;
-            case "Tuesday":
-                selectedDay = HR.Day.TUESDAY;
-                break;
-            case "Wednesday":
-                selectedDay = HR.Day.WEDNESDAY;
-                break;
-            case "Thursday":
-                selectedDay = HR.Day.THURSDAY;
-                break;
-            case "Friday":
-                selectedDay = HR.Day.FRIDAY;
-                break;
-            case "Saturday":
-                selectedDay = HR.Day.SATURDAY;
-                break;
-        }
-        return selectedDay;
-    }
-
-    public static HR.ShiftType selectShiftType(int _shiftType) {
-        HR.ShiftType sType=null;
-        switch (_shiftType){
-            case 1:
-                sType = HR.ShiftType.MORNING;
-                break;
-            case 2:
-                sType = HR.ShiftType.NIGHT;
-                break;
-        }
-        return  sType;
     }
 
     public int addWorker(int id, String name, int phoneNumber, int bankAccount, int salary, String _date, String jobTitle) throws ParseException {

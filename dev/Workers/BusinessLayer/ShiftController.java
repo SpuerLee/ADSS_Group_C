@@ -1,3 +1,10 @@
+package Workers.BusinessLayer;
+
+import Workers.BusinessLayer.Utils.Shift;
+import Workers.BusinessLayer.Utils.Worker;
+import Workers.BusinessLayer.Utils.enums;
+import Workers.InterfaceLayer.HR;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,7 +15,7 @@ import java.util.List;
 
 public class ShiftController{
 
-    private HashMap<Integer,Shift> shiftHistory;
+    private HashMap<Integer, Shift> shiftHistory;
     private static ShiftController shiftController = null;
     private int snFactory;
 
@@ -28,7 +35,7 @@ public class ShiftController{
         return shiftController;
     }
 
-    public boolean validateNewShift(Date date, HR.ShiftType shiftType){
+    public boolean validateNewShift(Date date, enums shiftType){
         for (Shift shifty: this.shiftHistory.values()) {
             if((shifty.getDate().compareTo(date)==0) && shifty.getStype().equals(shiftType)){
                 return false;
@@ -37,8 +44,8 @@ public class ShiftController{
         return true;
     }
 
-    public void createShift(int _shiftType,int managerSn, String listOfWorkersSn,String _date) throws ParseException {
-        HR.ShiftType sType = WorkerController.selectShiftType(_shiftType);
+    public void createShift(String shiftType, int managerSn, String listOfWorkersSn, String _date) throws ParseException {
+        enums sType = enums.valueOf(shiftType);
         Worker manager = WorkerController.getInstance().getWorkerBySn(managerSn);
         String[] workersSn = listOfWorkersSn.split(",");
         List<Worker> workersListOfCurrentShift = new LinkedList<>();
@@ -57,7 +64,6 @@ public class ShiftController{
         }
     }
 
-
     public void printShift(int shiftIndex){
         Shift shift = this.shiftHistory.get(shiftIndex);
         shift.printShift();
@@ -74,7 +80,7 @@ public class ShiftController{
         this.shiftHistory = new HashMap<>();
     }
 
-    public HashMap<Integer,Shift> getShiftHistory() {
+    public HashMap<Integer, Shift> getShiftHistory() {
         return this.shiftHistory;
     }
 }
