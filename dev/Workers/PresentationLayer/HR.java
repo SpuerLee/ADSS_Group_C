@@ -54,7 +54,7 @@ public class HR {
     }
 
     public static void addShift(Scanner sc) throws ParseException {
-        System.out.println("Please select a date - dd/mm/yyyy");
+        System.out.println("Please select a date - dd-mm-yyyy");
         String date = sc.next();
         System.out.println("Please select shift type Morning or Night");
         String shiftType = sc.next().toUpperCase(); // { Morning , Night }
