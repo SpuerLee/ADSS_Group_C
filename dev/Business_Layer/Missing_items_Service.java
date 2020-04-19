@@ -31,7 +31,8 @@ public class Missing_items_Service {
             {
                 id_stores_list.add(storeId);
                 String store = service.getHashStoresMap().get(storeId).getName();
-                output = output +storeId+". "+ store+"\n";
+                String area=service.getHashStoresMap().get(storeId).getArea().toString();
+                output = output +storeId+". "+ store+" area: "+area+"\n";
             }
 
         }

@@ -60,14 +60,24 @@ public class Service {
                     License type = new License(license.get(j).getAsString());
                     licenses.add(type);
                 }
-                Drivers add=new Drivers(driver.get("license_number").getAsInt(),driver.get("name").getAsString(),licenses);
-                Drivers.put(driver.get("license_number").getAsInt(),add);
+                Drivers add=new Drivers(driver.get("name").getAsString(),licenses);
+                Drivers.put(add.getId(),add);
 
             }
             final JsonArray sites = jsonObject.get("Sites").getAsJsonArray();
             for (int i = 0; i < sites.size(); i++) {
                 final JsonObject site = sites.get(i).getAsJsonObject();
-                String type=site.get("type").getAsString();
+                String type=site.get("site_type").getAsString();
+                Area area=new Area(site.get("area").getAsString());
+                boolean add=true;
+                for(Area area1:area_list){
+                    if (area1.toString().equals(area.toString())) {
+                        add=false;
+                        break;
+                    }
+                }
+                if(add)
+                    area_list.add(area);
                 if(type.equals("store")){
                     Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
                     HashStore.put(site.get("id").getAsInt(),new Store(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString())));
@@ -77,9 +87,7 @@ public class Service {
                     HashSuppliers.put(site.get("id").getAsInt(),new Supplier(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString())));
                    }
                 }
-              /*  if(!area_list.contains(site.get("area").getAsString())){
-                    area_list.add(site.get("area").getAsString());
-                } */
+
             final JsonArray trucks = jsonObject.get("Trucks").getAsJsonArray();
             for (int i = 0; i < trucks.size(); i++) {
                 final JsonObject truck = trucks.get(i).getAsJsonObject();
@@ -167,20 +175,6 @@ public class Service {
     }
 
     //print list of all the suppliers
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public ConcurrentHashMap<Integer,MissingItems> getMissing(){
         return MissingItems;

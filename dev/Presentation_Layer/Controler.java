@@ -77,7 +77,7 @@ public class Controler {
                 {
                     System.out.println("The trucks available for the date are and driver:");
                     System.out.println(freeTrucks);
-                    System.out.println("Please choose driver to transportation");
+                    System.out.println("Please choose truck to transportation");
                     truckId= scan.nextLine();
                     find_truck_driver=true;
                 }
@@ -111,12 +111,15 @@ public class Controler {
     {
         Scanner scan = new Scanner(System.in);;
         System.out.println(site_service.getSuppliers()); //print all the suppliers
+        System.out.println("Please choose area for the suppliers");
+        String area=scan.nextLine();
+        System.out.println(site_service.getSuppliersbyarea(area));
         System.out.println("Please choose suppliers to transportation by id"); //choose supplier
         String[] supplier = scan.nextLine().split(" ");
         System.out.println(site_service.getStoresByarea()); //show all the area with all the stores in it
         System.out.println("Please choose area to transportation"); //chose area
-        String area= scan.nextLine();
-        System.out.println(site_service.get_Stores_By_specific_area(area)); //show all the stores in the area
+        String area1= scan.nextLine();
+        System.out.println(site_service.get_Stores_By_specific_area(area1)); //show all the stores in the area
         System.out.println("Please choose stores (by id) to make transportation");
         String[] stores = scan.nextLine().split(" ");
         List<Integer> stores1=new LinkedList<>();
@@ -164,22 +167,25 @@ public class Controler {
         if(transportation_service.createRegularTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
                 Integer.parseInt(truckId),suppliers,stores1))
         for(String suppller: supplier) {
-            System.out.println("Please choose for every store the products you would like to supply");
+            System.out.println("For supplier "+suppller+" enter the next detalis");
             for (String store : stores) {
-                System.out.println("Please enter the next detalis for store :" + store);
-                boolean exit = false;
-                HashMap<String, Integer> add = new HashMap<>();
-                System.out.println("Please enter a product and the quantity required seperate by space");
-                System.out.println("Enter end to the next store");
-                while (!exit) {
-                    String[] items = scan.nextLine().split(" ");
-                    if (items[0].equals("end")) {
-                        exit = true;
-                    } else {
-                        add.put(items[0], Integer.parseInt(items[1]));
+                System.out.println("Do you want that this supplier will supply products for stroe :" + store+" yes/no");
+                String answer=scan.nextLine();
+                if(answer.equals("yes")) {
+                    boolean exit = false;
+                    HashMap<String, Integer> add = new HashMap<>();
+                    System.out.println("Please enter a product and the quantity required seperate by space");
+                    System.out.println("Enter end to the next store");
+                    while (!exit) {
+                        String[] items = scan.nextLine().split(" ");
+                        if (items[0].equals("end")) {
+                            exit = true;
+                        } else {
+                            add.put(items[0], Integer.parseInt(items[1]));
+                        }
                     }
+                    transportation_service.addItemFiletotransport(add, Integer.parseInt(store), Integer.parseInt(suppller));
                 }
-                transportation_service.addItemFiletotransport(add,Integer.parseInt(store),Integer.parseInt(suppller));
             }
         }
         System.out.println("The transport was registered successfully");
@@ -190,8 +196,6 @@ public class Controler {
 
     public boolean Add_driver(){
         Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter driver license's number");
-        String license= scan.nextLine();
         System.out.println("Please enter driver name");
         String name= scan.nextLine();
         String licenese=null;
@@ -205,7 +209,7 @@ public class Controler {
         while (!licenese.equals("q"));
 
         System.out.println("The driver was added successfully");
-        return drivers_service.addDriver(new Integer(licenese),name,list);
+        return drivers_service.addDriver(name,list);
     }
 
     public void Show_drivers_List(){

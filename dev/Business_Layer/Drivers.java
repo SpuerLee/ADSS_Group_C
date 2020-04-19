@@ -14,9 +14,9 @@ import java.util.List;
      private List<Date> do_transportation_days = new LinkedList<>();
 
 
-    public Drivers(int id,String name, List<License> licenses)
+    public Drivers(String name, List<License> licenses)
     {
-        this.id=id;
+        this.id=idcounter++;
         this.name=name;
         this.licenses=licenses;
     }

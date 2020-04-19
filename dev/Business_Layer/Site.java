@@ -22,7 +22,7 @@ public abstract class Site {
     }
 
     Site (String name, String phone, String contact_name, Address address,Area area){
-        this.id=idcounter;
+        this.id=idcounter++;
         this.name=name;
         this.contact_name=contact_name;
         this.phone=phone;

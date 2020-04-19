@@ -9,8 +9,8 @@ public class License {
         C,
         C1
     };
-    private List<String> license_list;
-    type license;
+ //   private List<String> license_list;
+    private type license;
 
     public License(String type){
         if(type.equals("C")){

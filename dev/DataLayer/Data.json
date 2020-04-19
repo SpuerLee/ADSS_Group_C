@@ -2,27 +2,27 @@
   "Drivers": [
     {
       "name": "amit1",
-      "licenses": ["A","B"]
+      "licenses": ["C1","C"]
     },
     {
       "name": "amit2",
-      "licenses": ["A"]
+      "licenses": ["C1"]
     },
     {
       "name": "reut",
-      "licenses": ["A","B"]
+      "licenses": ["C","C1"]
     },
     {
       "name": "mor",
-      "licenses": ["B"]
+      "licenses": ["C","C1"]
     },
     {
       "name": "reut2",
-      "licenses": ["B"]
+      "licenses": ["C"]
     },
     {
       "name": "daniel",
-      "licenses": ["A,B"]
+      "licenses": ["C,C1"]
     }
   ],
   "Sites": [
@@ -123,7 +123,7 @@
       "model": "skoda",
       "weight": 160,
       "max weight": 240,
-      "licenses": ["A","B"]
+      "licenses": ["C","C1"]
     },
     {
       "license_number": 12735778,
@@ -131,7 +131,7 @@
       "model": "volvo",
       "weight": 180,
       "max weight": 300,
-      "licenses": ["A"]
+      "licenses": ["C"]
 
     },
     {
@@ -140,7 +140,7 @@
       "model": "volvo",
       "weight": 250,
       "max weight": 400,
-      "licenses": ["A","B"]
+      "licenses": ["C","C1"]
     },
     {
       "license_number": 14365769,
@@ -148,7 +148,7 @@
       "model": "mercedes",
       "weight": 256,
       "max weight": 384,
-      "licenses": ["B"]
+      "licenses": ["C"]
     },
     {
       "license_number": 14967069,
@@ -156,7 +156,7 @@
       "model": "volvo",
       "weight": 328,
       "max weight": 521,
-      "licenses": ["A","B"]
+      "licenses": ["C","C1"]
     }
   ],
   "Missing_Items": [

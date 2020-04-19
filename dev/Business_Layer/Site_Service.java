@@ -94,7 +94,22 @@ public class Site_Service {
         {
             if((site instanceof Supplier & (!sites.contains(site))))
             {
-                output = output +"name: "+site.getName();
+                output = output +"area ,"+ site.getArea().toString()+ " name: "+site.getName()+ ", id "+site.getId()+"\n";
+                sites.add(site);
+            }
+        }
+        return output;
+    }
+
+    public String getSuppliersbyarea(String area)
+    {
+        List<Site> sites=new LinkedList<>();
+        String output = "";
+        for (Site site: service.getSuppliersMap().values())
+        {
+            if((!sites.contains(site)&(site.getArea().toString().equals(area))))
+            {
+                output = output+"name: "+site.getName()+ ", id "+site.getId()+"\n";
                 sites.add(site);
             }
         }
@@ -137,8 +152,8 @@ public class Site_Service {
         for(Area area: service.getArea_list()) {
             String output = "Area "+area+ ": [ ";
             for (Site sites : service.getHashStoresMap().values()) {
-                if (sites instanceof Store & (sites.getArea().equals(area))) {
-                    output = output + sites.getName() + " ,";
+                if ((sites.getArea().toString().equals(area.toString()))) {
+                    output = output + "id "+ sites.getId()+", name :"+sites.getName() + " ,";
                 }
             }
             output = output +"]\n";

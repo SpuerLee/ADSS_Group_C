@@ -61,9 +61,11 @@ public class Trucks {
     public boolean checkLicense(List<License> license_list) {
         boolean output = false;
         for (License license : license_list) {
-            if (this.licenses_types.contains(license)) {
-                output = true;
-                break;
+            for(License license1:license_list){
+                if(license1.equals(license)) {
+                    output = true;
+                    break;
+                }
             }
         }
         return output;

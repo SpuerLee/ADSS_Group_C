@@ -21,13 +21,13 @@ public class Drivers_Service {
 
     private Service service = Service.getInstance();
 
-    public boolean addDriver(int license_number, String name, List<String> license_list) {
+    public boolean addDriver(String name, List<String> license_list) {
         List<License> licenses = new LinkedList<>();
         for (String license : license_list) {
             licenses.add(new License(license));
         }
-        Drivers drivers = new Drivers(license_number, name, licenses);
-        service.getDrivers().put(license_number, drivers);
+        Drivers drivers = new Drivers(name, licenses);
+        service.getDrivers().put(drivers.getId(), drivers);
         return true;
     }
 
@@ -52,7 +52,7 @@ public class Drivers_Service {
     public String showDrivers() {
         String result = "";
         for (Drivers drivers : service.getDrivers().values()) {
-            result = result + "Name:" + drivers.getName() + "Id " + drivers.getId() + "\n";
+            result = result + "Name:" + drivers.getName() + ", Id " + drivers.getId() + "\n";
         }
         return result;
     }
