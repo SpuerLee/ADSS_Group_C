@@ -15,26 +15,31 @@ public class Site_Service {
     Service service=Service.getInstance();
 
     public static Site_Service getInstance() {
-        return Site_Service.getInstance();
+        return SingletonService.instance;
     }
 
 
     public boolean addsite(String site_type, String name, String city, String street, String number, String name_of_contact, String phone, String site_area){
-        boolean result=true;
-        for(Site sites:service.getSitesMap().values()){
+        boolean result=false;
+        for(Site sites:service.getSuppliersMap().values()){
             if(sites.getName().equals(name)){
-                result=false;
+                result=true;
+            }
+        }
+        for(Site sites:service.getHashStoresMap().values()){
+            if(sites.getName().equals(name)){
+                result=true;
             }
         }
         if(result){
             if(site_type.equals("store")){
-                Site store=new Store(name,phone,name_of_contact, new Address(city,street,Integer.parseInt(number)), new Area(site_area));
-                service.getSitesMap().put(name,store);
+                Store store=new Store(name,phone,name_of_contact, new Address(city,street,Integer.parseInt(number)), new Area(site_area));
+                service.getHashStoresMap().put(store.getId(),store);
 
             }
             else if(site_type.equals("supplier")){
-                Site supplier=new Supplier(name,phone,name_of_contact, new Address(city,street,Integer.parseInt(number)), new Area(site_area));
-                service.getSitesMap().put(name,supplier);
+                Supplier supplier=new Supplier(name,phone,name_of_contact, new Address(city,street,Integer.parseInt(number)), new Area(site_area));
+                service.getSuppliersMap().put(supplier.getId(),supplier);
 
             }
         }
@@ -43,18 +48,16 @@ public class Site_Service {
 
     public String showsite(){
         String result="";
-        for(Site sites: service.getSitesMap().values()){
-            if(sites instanceof Store)
+        for(Store sites: service.getHashStoresMap().values())
                 result=result+"Name :"+sites.getName()+" ,Type : Store"+"\n";
-            else
+        for(Supplier sites: service.getSuppliersMap().values())
                 result=result+"Name :"+sites.getName()+" ,Type : Supplier"+"\n";
-        }
         return result;
     }
 
     public boolean removeSite(String name){
         boolean result=false;
-        for(Site sites:service.getSitesMap().values()){
+        for(Site sites:service.getSuppliersMap().values()){
             if ((sites.getName().equals(name))){
                 result=true;
                 for(Transportation transportation:service.getHashTransportation().values()){
@@ -63,7 +66,20 @@ public class Site_Service {
                     }
                 }
                 if(result){
-                    service.getSitesMap().remove(sites.getName());
+                    service.getSuppliersMap().remove(sites.getName());
+                }
+            }
+        }
+        for(Site sites:service.getHashStoresMap().values()){
+            if ((sites.getName().equals(name))){
+                result=true;
+                for(Transportation transportation:service.getHashTransportation().values()){
+                    if ((transportation.getStores().contains((sites)))||(transportation.getSuppliers().contains(sites))){
+                        result=false;
+                    }
+                }
+                if(result){
+                    service.getHashStoresMap().remove(sites.getName());
                 }
             }
         }
@@ -74,7 +90,7 @@ public class Site_Service {
     {
         List<Site> sites=new LinkedList<>();
         String output = "";
-        for (Site site: service.getSitesMap().values())
+        for (Site site: service.getSuppliersMap().values())
         {
             if((site instanceof Supplier & (!sites.contains(site))))
             {
@@ -88,7 +104,7 @@ public class Site_Service {
     //print store and id
     public String get_Stores_By_specific_area(String area){
         String output = "";
-        for (Site sites: service.getSitesMap().values())
+        for (Site sites: service.getHashStoresMap().values())
         {
             if(sites.getArea().equals(area) && sites instanceof Store)
             {
@@ -102,13 +118,13 @@ public class Site_Service {
     {
         int storeId = Integer.parseInt(id);
         String output = "";
-        for (MissingItems missingItems: service.getMissing())
+        for (MissingItems missingItems: service.getMissing().values())
         {
             int supplierId = missingItems.getSupplierId();
-            Area supplierArea = service.getSitesMap().get(supplierId).getArea();
+            Area supplierArea = service.getSuppliersMap().get(supplierId).getArea();
             if(storeId==missingItems.getStoreId()&&area.equals(supplierArea.toString()))
             {
-                output = output + supplierId+". "+ service.getSitesMap().get(supplierId).getName()+"\n";
+                output = output + supplierId+". "+ service.getSuppliersMap().get(supplierId).getName()+"\n";
             }
         }
         return output;
@@ -120,7 +136,7 @@ public class Site_Service {
         String result="";
         for(Area area: service.getArea_list()) {
             String output = "Area "+area+ ": [ ";
-            for (Site sites : service.getSitesMap().values()) {
+            for (Site sites : service.getHashStoresMap().values()) {
                 if (sites instanceof Store & (sites.getArea().equals(area))) {
                     output = output + sites.getName() + " ,";
                 }
@@ -137,12 +153,12 @@ public class Site_Service {
         int storeId = Integer.parseInt(id);
         List<Area> area_list = new LinkedList<>();
         String output = "[ ";
-        for (MissingItems missingItems: service.getMissing())
+        for (MissingItems missingItems: service.getMissing().values())
         {
             if(storeId==missingItems.getStoreId())
             {
                 int supplierId = missingItems.getSupplierId();
-                Area area = service.getSitesMap().get(supplierId).getArea();
+                Area area = service.getSuppliersMap().get(supplierId).getArea();
                 if(!area_list.contains(area))
                 {
                     area_list.add(area);
@@ -151,6 +167,17 @@ public class Site_Service {
             }
         }
         output = output +"]";
+        return output;
+    }
+
+     public String get_Store_id(String site){
+        String output = "";
+        for (Site sites: service.getHashStoresMap().values())
+        {
+            if(sites.getName().equals(site)) {
+                output = Integer.toString(sites.getId());
+            }
+        }
         return output;
     }
 

@@ -29,12 +29,13 @@ public class Service {
         return SingletonService.instance;
     }
 
-    private List<Drivers> Drivers= new LinkedList<>();
-    private ConcurrentHashMap<String,Site> HashSites= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer,Drivers> Drivers= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer,Supplier> HashSuppliers= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer,Store> HashStore= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,Trucks> HashTrucks= new ConcurrentHashMap<>();
     private List<ItemsFile> ItemsFile= new LinkedList<>();
     private ConcurrentHashMap<Integer,Transportation> HashTransportation= new ConcurrentHashMap<>();
-    private List<MissingItems> MissingItems= new LinkedList<>();
+    private ConcurrentHashMap<Integer,MissingItems> MissingItems= new ConcurrentHashMap<>();
     public List<License> license_list = new LinkedList<>();
     private List<Area> area_list = new LinkedList<>();
 
@@ -59,8 +60,8 @@ public class Service {
                     License type = new License(license.get(j).getAsString());
                     licenses.add(type);
                 }
-                Drivers add=new Drivers(driver.get("name").getAsString(),licenses);
-                Drivers.add(add);
+                Drivers add=new Drivers(driver.get("license_number").getAsInt(),driver.get("name").getAsString(),licenses);
+                Drivers.put(driver.get("license_number").getAsInt(),add);
 
             }
             final JsonArray sites = jsonObject.get("Sites").getAsJsonArray();
@@ -69,11 +70,11 @@ public class Service {
                 String type=site.get("type").getAsString();
                 if(type.equals("store")){
                     Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
-                    HashSites.put(site.get("name").getAsString(),new Store(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString())));
+                    HashStore.put(site.get("id").getAsInt(),new Store(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString())));
                 }
                 else if(type.equals("supplier")){
                     Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
-                    HashSites.put(site.get("name").getAsString(),new Supplier(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString())));
+                    HashSuppliers.put(site.get("id").getAsInt(),new Supplier(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString())));
                    }
                 }
               /*  if(!area_list.contains(site.get("area").getAsString())){
@@ -100,7 +101,7 @@ public class Service {
                     map.put(items_to_add[1],Integer.parseInt(items_to_add[0]));
                 }
                 MissingItems items1=new MissingItems(missing.get("store_id").getAsInt(),missing.get("supplier_id").getAsInt(),map);
-                MissingItems.add(items1);
+                MissingItems.put(items1.getID(),items1);
             }
 
         }
@@ -112,31 +113,6 @@ public class Service {
 
     /*
     //missing items
-    public boolean createTransportation(Date date, LocalTime leaving_time, int driver_id,
-                                        int truck_license_number, List<Integer> suppliers, List<Integer> stores)
-    {
-        Transportation transportation =
-                new Transportation(date,leaving_time,driver_id,truck_license_number,suppliers,stores);
-        HashTransportation.put(transportation.getID(),transportation);
-        List<Integer> id_to_delete = new LinkedList<>();
-        for (MissingItems missingItems: HashMissingItems.values())
-        {
-            if(stores.contains(missingItems.getStoreId())&&suppliers.contains(missingItems.getSupplierId()))
-            {
-                ItemsFile itemFile = new ItemsFile(transportation.getID(),missingItems.getStoreId(),
-                        missingItems.getSupplierId(),missingItems.getItems_list());
-                HashItemsFile.put(itemFile.getID(),itemFile);
-                id_to_delete.add(missingItems.getID());
-            }
-        }
-        HashDrivers.get(driver_id).addDate(date);
-        HashTrucks.get(truck_license_number).addDate(date);
-        for (Integer id: id_to_delete)
-        {
-            HashMissingItems.remove(id);
-        }
-        return true;
-    }
 
     //create Regular Transportation
     public boolean createRegularTransportation(Date date, LocalTime leaving_time, int driver_id,
@@ -168,14 +144,14 @@ public class Service {
     {
         Gson gson = new Gson();
         String output = "";
-        for (MissingItems missingItems: MissingItems)
+        for (MissingItems missingItems: MissingItems.values())
         {
             output = output + gson.toJson(missingItems)+"\n";
         }
         return output;
     }
 
-    public String getAeras()
+    public String getAreas()
     {
         String output = "[ ";
         for (Area area: area_list)
@@ -186,6 +162,10 @@ public class Service {
         return output;
     }
 
+    public List<ItemsFile> getItemsFile(){
+        return ItemsFile;
+    }
+
     //print list of all the suppliers
 
 
@@ -193,84 +173,34 @@ public class Service {
 
 
 
-  /*  public String get_Store_id(String site){
-        String output = "";
-        for (Site sites: HashSites.values())
-        {
-            if(sites.getName().equals(site)) {
-                output = Integer.toString(sites.getId());
-            }
-        }
-        return output;
-    } */
-
- /*   public String getFreeDrivers(Date date)
-    {
-        String output = "";
-        for (Drivers driver: HashDrivers.values())
-        {
-            if(driver.checkIfFree(date))
-            {
-                output = output + driver.getId()+". "+driver.getName()+"\n";
-            }
-        }
-        return output;
-    }
-
-    public String getTrucksToDriver(String id, Date date)
-    {
-        int driverId = Integer.parseInt(id);
-        List<License> license_list = HashDrivers.get(driverId).getLicenses();
-        String output = "";
-        for (Trucks truck : HashTrucks.values())
-        {
-            if(truck.checkIfFree(date) && truck.checkLicense(license_list))
-            {
-                output = output + truck.getlicense_number()+". "+truck.getModel()+"\n";
-            }
-        }
-        return output;
-    }
-
-    public boolean delete_Transport(String id)
-    {
-        int transport_id = Integer.parseInt(id);
-        for(Map.Entry<Integer, Transportation> transport:HashTransportation.entrySet()){
-            if (transport.getValue().getID()==transport_id){
-                int driver=transport.getValue().getDriveId();
-                int truck=transport.getValue().getTrucklicense();
-                HashDrivers.get(driver).Remove_date(transport.getValue().getDate());
-                HashTrucks.get(truck).Remove_date(transport.getValue().getDate());
-                HashTransportation.remove(transport.getKey());
-            }
-        }
-        return true;
-    }
-
-    public String getTransport_id(){
-        String result="";
-        for(Transportation transportation: HashTransportation.values()){
-            result=result+transportation.getID()+" ,";
-        }
-        return result;
-    } */
 
 
 
-    public List<MissingItems> getMissing(){
+
+
+
+
+
+
+    public ConcurrentHashMap<Integer,MissingItems> getMissing(){
         return MissingItems;
     }
 
-    public ConcurrentHashMap<String,Site> getSitesMap()
+    public ConcurrentHashMap<Integer,Supplier> getSuppliersMap()
     {
-        return HashSites;
+        return HashSuppliers;
+    }
+
+    public ConcurrentHashMap<Integer,Store> getHashStoresMap()
+    {
+        return HashStore;
     }
 
     public ConcurrentHashMap<Integer,Transportation> getHashTransportation(){
         return HashTransportation;
     }
 
-    public List<Drivers> getDrivers(){
+    public ConcurrentHashMap<Integer,Drivers> getDrivers(){
         return Drivers;
     }
 

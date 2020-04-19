@@ -1,5 +1,6 @@
 package Business_Layer;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +17,7 @@ public class Trucks_Service {
         return Singelton_Trucks.instance;
     }
 
-    Service service=Service.getInstance();
+    private Service service=Service.getInstance();
 
     public String showtrucks(){
         String result="";
@@ -55,6 +56,22 @@ public class Trucks_Service {
         }
         return result;
     }
+
+    public String getTrucksToDriver(String id, Date date)
+    {
+        int driverId = Integer.parseInt(id);
+        List<License> license_list = service.getDrivers().get(driverId).getLicenses();
+        String output = "";
+        for (Trucks truck : service.getHashTrucks().values())
+        {
+            if(truck.checkIfFree(date) && truck.checkLicense(license_list))
+            {
+                output = output + truck.getlicense_number()+". "+truck.getModel()+"\n";
+            }
+        }
+        return output;
+    }
+
 
 
 }

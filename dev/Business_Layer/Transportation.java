@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -22,16 +23,16 @@ public class Transportation {
     private Drivers driver;
     private List<ItemsFile> itemsFiles;
 
-    public Transportation(int id,Date date, LocalTime leaving_time, Drivers drivers, Trucks truck, List<Supplier> suppliers, List<Store> stores, List<ItemsFile> itemsFiles)
+    public Transportation(Date date, LocalTime leaving_time, Drivers drivers, Trucks truck, List<Supplier> suppliers, List<Store> stores)
     {
-        this.id=id;
+        this.id=idcounter++;
         this.date=date;
         this.leaving_time=leaving_time;
         this.driver=drivers;
         this.truck=truck;
         this.suppliers=suppliers;
         this.stores=stores;
-        this.itemsFiles=itemsFiles;
+        this.itemsFiles=new LinkedList<>();
     }
 
   public Date getDate(){
@@ -68,5 +69,21 @@ public class Transportation {
 
     public List<ItemsFile> getItemsFiles() {
         return itemsFiles;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void addItemFile(ItemsFile file){
+        itemsFiles.add(file);
+    }
+
+    public int getDriveId(){
+        return driver.getId();
+    }
+
+    public int getTrucklicense(){
+        return truck.getlicense_number();
     }
 }

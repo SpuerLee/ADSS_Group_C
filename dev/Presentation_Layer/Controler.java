@@ -20,7 +20,7 @@ public class Controler {
     private Missing_items_Service missing_items_service=Missing_items_Service.getInstance();
     private Drivers_Service drivers_service=Drivers_Service.getInstance();
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static class SingletonControler {
         private static Controler instance = new Controler();
     }
@@ -37,7 +37,7 @@ public class Controler {
     }
 
 
-    /*
+
     public boolean Complete_stock_missing()
     {
         Scanner scan = new Scanner(System.in);
@@ -65,14 +65,14 @@ public class Controler {
             catch (ParseException e){
                 e.getErrorOffset();
             }
-            String freeDrivers=service.getFreeDrivers(date);
+            String freeDrivers=drivers_service.getFreeDrivers(date);
             if(freeDrivers!="")
             {
                 System.out.println("The drivers available for the date are:");
                 System.out.println(freeDrivers);
                 System.out.println("Please choose driver to transportation");
                 driverId= scan.nextLine();
-                String freeTrucks=service.getTrucksToDriver(driverId,date);
+                String freeTrucks=trucks_service.getTrucksToDriver(driverId,date);
                 if(freeTrucks!="")
                 {
                     System.out.println("The trucks available for the date are and driver:");
@@ -99,7 +99,7 @@ public class Controler {
         {
             supplier_list.add(Integer.parseInt(s));
         }
-        if(service.createTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
+        if(transportation_service.createTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
             Integer.parseInt(truckId),supplier_list,stores))
         {
             System.out.println("The transport was registered successfully");
@@ -111,8 +111,8 @@ public class Controler {
     {
         Scanner scan = new Scanner(System.in);;
         System.out.println(site_service.getSuppliers()); //print all the suppliers
-        System.out.println("Please choose supplier to transportation by id"); //choose supplier
-        String supplier = scan.nextLine();
+        System.out.println("Please choose suppliers to transportation by id"); //choose supplier
+        String[] supplier = scan.nextLine().split(" ");
         System.out.println(site_service.getStoresByarea()); //show all the area with all the stores in it
         System.out.println("Please choose area to transportation"); //chose area
         String area= scan.nextLine();
@@ -122,6 +122,10 @@ public class Controler {
         List<Integer> stores1=new LinkedList<>();
         for(String store:stores) {
             stores1.add(Integer.parseInt(store));
+        }
+        List<Integer> suppliers=new LinkedList<>();
+        for(String supplier1:supplier) {
+            suppliers.add(Integer.parseInt(supplier1));
         }
         String driverId="";
         String truckId="";
@@ -137,13 +141,13 @@ public class Controler {
             catch (ParseException e){
                 e.getErrorOffset();
             }
-            String freeDrivers = service.getFreeDrivers(date);
+            String freeDrivers = drivers_service.getFreeDrivers(date);
             if (freeDrivers != "") {
                 System.out.println("The drivers available for the date are:");
                 System.out.println(freeDrivers);
                 System.out.println("Please choose driver to transportation");
                 driverId = scan.nextLine();
-                String freeTrucks = service.getTrucksToDriver(driverId, date);
+                String freeTrucks = trucks_service.getTrucksToDriver(driverId, date);
                 if (freeTrucks != "") {
                     System.out.println("The trucks available for the date are and driver:");
                     System.out.println(freeTrucks);
@@ -157,9 +161,11 @@ public class Controler {
                 System.out.println("No drivers available on date");
             }
         }
-        if(service.createRegularTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
-                Integer.parseInt(truckId),Integer.parseInt(supplier),stores1))
-        for(String store:stores) {
+        if(transportation_service.createRegularTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
+                Integer.parseInt(truckId),suppliers,stores1))
+        for(String suppller: supplier) {
+            System.out.println("Please choose for every store the products you would like to supply");
+            for (String store : stores) {
                 System.out.println("Please enter the next detalis for store :" + store);
                 boolean exit = false;
                 HashMap<String, Integer> add = new HashMap<>();
@@ -171,19 +177,21 @@ public class Controler {
                         exit = true;
                     } else {
                         add.put(items[0], Integer.parseInt(items[1]));
+                    }
                 }
+                transportation_service.addItemFiletotransport(add,Integer.parseInt(store),Integer.parseInt(suppller));
             }
-            service.add_to_items_file(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
-                    Integer.parseInt(truckId),Integer.parseInt(supplier),Integer.parseInt(store),add);
-          }
+        }
         System.out.println("The transport was registered successfully");
         return true;
-        } */
+        }
 
     //Drivers
 
     public boolean Add_driver(){
         Scanner scan = new Scanner(System.in);
+        System.out.println("Please enter driver license's number");
+        String license= scan.nextLine();
         System.out.println("Please enter driver name");
         String name= scan.nextLine();
         String licenese=null;
@@ -197,7 +205,7 @@ public class Controler {
         while (!licenese.equals("q"));
 
         System.out.println("The driver was added successfully");
-        return drivers_service.addDriver(name,list);
+        return drivers_service.addDriver(new Integer(licenese),name,list);
     }
 
     public void Show_drivers_List(){
@@ -213,9 +221,9 @@ public class Controler {
     public void Remove_driver(){
         System.out.println(drivers_service.showDrivers());
         Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter the driver's name that you would like to delete");
-        String name= scan.nextLine();
-        boolean result=drivers_service.removeDriver(name);
+        System.out.println("Please enter the driver's license that you would like to delete");
+        String number= scan.nextLine();
+        boolean result=drivers_service.removeDriver(new Integer(number));
         if(result){
             System.out.println("The driver has removed successfully");
         }
@@ -232,8 +240,8 @@ public class Controler {
 
     }
 
-   /* public void Remove_transport(){
-        String transport=Transportation_Service.getTransport_id();
+    public void Remove_transport(){
+        String transport=transportation_service.getTransport_id();
         if(transport.equals("")){
             System.out.println("There are no transportations to delete");
         }
@@ -243,10 +251,10 @@ public class Controler {
             System.out.println(transport);
             System.out.println("Please enter the transport id that you would like to delete");
             String id = scan.nextLine();
-            service.delete_Transport(id);
+            transportation_service.delete_Transport(id);
         }
     }
- */
+
     //Sites
 
     public void Add_site(){
