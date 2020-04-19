@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ItemsFile {
 
-    private static int idcounter=0;
+    private static int idcounter=1;
     private HashMap<String,Integer> items_list;
     private Store store;
     private Supplier supplier;

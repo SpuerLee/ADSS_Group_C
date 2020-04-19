@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MissingItems {
 
-    private static int idcounter=0;
+    private static int idcounter=1;
 
     private int id;
     private int supplier_id;
@@ -25,9 +25,7 @@ public class MissingItems {
     {
         return this.id;
     }
-
     public Integer getStoreId() { return this.store_id;}
-
     public Integer getSupplierId()
     {
         return this.supplier_id;

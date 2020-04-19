@@ -1,5 +1,9 @@
-package Business_Layer;
+package Business_Layer.Services;
 
+import Business_Layer.*;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -109,7 +113,7 @@ public class Site_Service {
         {
             if((!sites.contains(site)&(site.getArea().toString().equals(area))))
             {
-                output = output+"name: "+site.getName()+ ", id "+site.getId()+"\n";
+                output = output+site.getId()+"."+"Name: "+site.getName()+"\n";
                 sites.add(site);
             }
         }
@@ -118,14 +122,17 @@ public class Site_Service {
 
     //print store and id
     public String get_Stores_By_specific_area(String area){
-        String output = "";
-        for (Site sites: service.getHashStoresMap().values())
+        String output = "[";
+        for (Store sites: service.getHashStoresMap().values())
         {
-            if(sites.getArea().equals(area) && sites instanceof Store)
+            if(sites.getArea().toString().equals(area))
             {
-                output = output + sites.getName();
+                output = output +sites.getId()+". "+ sites.getName()+", ";
             }
+            if(output.length()!=1)
+            output=output.substring(0,output.length()-1);
         }
+        output=output+"]";
         return output;
     }
 
@@ -181,6 +188,7 @@ public class Site_Service {
                 }
             }
         }
+        output=output.substring(0,output.length()-2);
         output = output +"]";
         return output;
     }

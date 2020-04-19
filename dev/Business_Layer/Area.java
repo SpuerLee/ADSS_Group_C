@@ -2,21 +2,6 @@ package Business_Layer;
 
 public class Area {
 
-    public area getAreaName() {
-        return AreaName;
-    }
-
-    public String toString(){
-        if(AreaName.equals(area.A))
-            return "A";
-        else if(AreaName.equals(area.B))
-            return "B";
-        else if(AreaName.equals(area.C))
-            return "C";
-        else
-            return "D";
-    }
-
     private enum area{
         A,
         B,
@@ -41,6 +26,21 @@ public class Area {
         else if(type.equals("D")){
             this.AreaName= area.D;
         }
+    }
+
+    public area getAreaName() {
+        return AreaName;
+    }
+
+    public String toString(){
+        if(AreaName.equals(area.A))
+            return "A";
+        else if(AreaName.equals(area.B))
+            return "B";
+        else if(AreaName.equals(area.C))
+            return "C";
+        else
+            return "D";
     }
 }
 

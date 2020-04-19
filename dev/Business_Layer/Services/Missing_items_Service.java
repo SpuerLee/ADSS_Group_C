@@ -1,9 +1,11 @@
-package Business_Layer;
+package Business_Layer.Services;
+
+import Business_Layer.ItemsFile;
+import Business_Layer.MissingItems;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Missing_items_Service {
 
@@ -32,7 +34,7 @@ public class Missing_items_Service {
                 id_stores_list.add(storeId);
                 String store = service.getHashStoresMap().get(storeId).getName();
                 String area=service.getHashStoresMap().get(storeId).getArea().toString();
-                output = output +storeId+". "+ store+" area: "+area+"\n";
+                output = output +storeId+". "+ store+", area: "+area+"\n";
             }
 
         }

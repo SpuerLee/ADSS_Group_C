@@ -1,15 +1,11 @@
-package Business_Layer;
+package Business_Layer.Services;
 
-import Presentation_Layer.Controler;
+import Business_Layer.*;
 
-import com.google.gson.stream.JsonReader;
 import com.google.gson.*;
-import jdk.nashorn.internal.parser.JSONParser;
 
 
 import java.io.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,11 +25,11 @@ public class Service {
         return SingletonService.instance;
     }
 
-    private ConcurrentHashMap<Integer,Drivers> Drivers= new ConcurrentHashMap<>();
-    private ConcurrentHashMap<Integer,Supplier> HashSuppliers= new ConcurrentHashMap<>();
-    private ConcurrentHashMap<Integer,Store> HashStore= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Business_Layer.Drivers> Drivers= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Supplier> HashSuppliers= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Store> HashStore= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,Trucks> HashTrucks= new ConcurrentHashMap<>();
-    private List<ItemsFile> ItemsFile= new LinkedList<>();
+    private List<Business_Layer.ItemsFile> ItemsFile= new LinkedList<>();
     private ConcurrentHashMap<Integer,Transportation> HashTransportation= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,MissingItems> MissingItems= new ConcurrentHashMap<>();
     public List<License> license_list = new LinkedList<>();
@@ -80,11 +76,13 @@ public class Service {
                     area_list.add(area);
                 if(type.equals("store")){
                     Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
-                    HashStore.put(site.get("id").getAsInt(),new Store(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString())));
+                    Store store=new Store(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString()));
+                    HashStore.put(store.getId(),store);
                 }
                 else if(type.equals("supplier")){
                     Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
-                    HashSuppliers.put(site.get("id").getAsInt(),new Supplier(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString())));
+                    Supplier supplier=new Supplier(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString()));
+                    HashSuppliers.put(supplier.getId(),supplier);
                    }
                 }
 

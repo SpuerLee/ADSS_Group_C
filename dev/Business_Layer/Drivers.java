@@ -7,11 +7,11 @@ import java.util.List;
 
     public class Drivers {
 
-     private static int idcounter=0;
+     private static int idcounter=1;
      private int id;
      private String name;
      private List<License> licenses;
-     private List<Date> do_transportation_days = new LinkedList<>();
+     private List<Transportation> transportations = new LinkedList<>();
 
 
     public Drivers(String name, List<License> licenses)
@@ -35,29 +35,42 @@ import java.util.List;
         return this.licenses;
     }
 
-    public void addDate(Date date)
+    public void addDate(Transportation transportation)
     {
-        this.do_transportation_days.add(date);
+        this.transportations.add(transportation);
     }
 
     public boolean checkIfFree(Date date)
     {
-        for(Date date1:do_transportation_days){
-            if (date1.equals(date))
+        for(Transportation transportation:transportations){
+            if (date.equals(transportation.getDate()))
             return false;
         }
         return true;
     }
 
-    public void Remove_date(Date date){
-        for(Date date1:do_transportation_days){
-            if (date1.equals(date))
-                do_transportation_days.remove(date1);
+    public void Remove_date(Transportation transportation){
+        for(Transportation transportation1:transportations){
+            if (transportation.getId()==transportation1.getId())
+                transportations.remove(transportation1);
         }
     }
 
-    public List<Date> getDo_transportation_days(){
-        return do_transportation_days;
+    public List<Transportation> getTransportations(){
+        return transportations;
     }
+
+        public boolean checkLicense(List<License> license_list) {
+            boolean output = false;
+            for (License license : this.licenses) {
+                for(License license1:license_list){
+                    if(license1.getType()==license.getType()) {
+                        output = true;
+                        break;
+                    }
+                }
+            }
+            return output;
+        }
 
 }

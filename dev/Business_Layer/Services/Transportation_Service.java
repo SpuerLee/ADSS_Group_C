@@ -1,8 +1,10 @@
-package Business_Layer;
+package Business_Layer.Services;
+
+import Business_Layer.*;
+import com.google.gson.Gson;
 
 import java.time.LocalTime;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Transportation_Service {
 
@@ -32,7 +34,7 @@ public class Transportation_Service {
         }
 
         for(Store site:service.getHashStoresMap().values()){
-            if(suppliers.contains(site.getId()))
+            if(stores.contains(site.getId()))
                 stores1.add(site);
         }
 
@@ -51,8 +53,8 @@ public class Transportation_Service {
                 transportation.addItemFile(itemFile);
             }
         }
-        service.getDrivers().get(driver_id).addDate(date);
-        service.getHashTrucks().get(truck_license_number).addDate(date);
+        service.getDrivers().get(driver_id).addDate(transportation);
+        service.getHashTrucks().get(truck_license_number).addDate(transportation);
         for (Integer id: id_to_delete)
         {
             service.getMissing().remove(id);
@@ -71,7 +73,7 @@ public class Transportation_Service {
         }
 
         for(Store site:service.getHashStoresMap().values()){
-            if(suppliers.contains(site.getId()))
+            if(stores.contains(site.getId()))
                 stores1.add(site);
         }
 
@@ -83,8 +85,8 @@ public class Transportation_Service {
             transportation.addItemFile(itemsFile);
             current.remove(itemsFile);
         }
-        service.getDrivers().get(driver_id).addDate(date);
-        service.getHashTrucks().get(truck_license_number).addDate(date);
+        service.getDrivers().get(driver_id).addDate(transportation);
+        service.getHashTrucks().get(truck_license_number).addDate(transportation);
         return true;
     }
 
@@ -96,8 +98,8 @@ public class Transportation_Service {
             if (transport.getValue().getId()==transport_id){
                 int driver=transport.getValue().getDriveId();
                 int truck=transport.getValue().getTrucklicense();
-                service.getDrivers().get(driver).Remove_date(transport.getValue().getDate());
-                service.getHashTrucks().get(truck).Remove_date(transport.getValue().getDate());
+                service.getDrivers().get(driver).Remove_date(transport.getValue());
+                service.getHashTrucks().get(truck).Remove_date(transport.getValue());
                 service.getHashTransportation().remove(transport.getKey());
             }
         }
@@ -116,6 +118,48 @@ public class Transportation_Service {
         ItemsFile itemsFile=new ItemsFile(items,service.getHashStoresMap().get(store),service.getSuppliersMap().get(supplier));
         current.add(itemsFile);
         service.getItemsFile().add(itemsFile);
+    }
+
+    public String Show_transports(){
+        String output="";
+        for (Transportation transportation:service.getHashTransportation().values())
+        {
+            output = output+transportation.toString()+'\n';
+
+        }
+        return output;
+    }
+
+    public String get_area_for_suppliers(){
+        List<String> areas=new LinkedList<>();
+        String output="[";
+        for(Supplier supplier:service.getSuppliersMap().values()){
+            if(!areas.contains(supplier.getArea().toString())){
+                areas.add(supplier.getArea().toString());
+            }
+        }
+        for(String area:areas){
+            output=output+area+" ,";
+        }
+        output=output.substring(0,output.length()-2);
+        output=output+"]";
+        return output;
+    }
+
+    public String get_area_for_stores(){
+        List<String> areas=new LinkedList<>();
+        String output="[";
+        for(Store store:service.getHashStoresMap().values()){
+            if(!areas.contains(store.getArea().toString())){
+                areas.add(store.getArea().toString());
+            }
+        }
+        for(String area:areas){
+            output=output+area+" ,";
+        }
+        output=output.substring(0,output.length()-2);
+        output=output+"]";
+        return output;
     }
 
 }

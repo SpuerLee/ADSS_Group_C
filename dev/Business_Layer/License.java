@@ -20,5 +20,10 @@ public class License {
             this.license=License.type.C1;
         }
         }
+
+        public type getType()
+        {
+            return this.license;
+        }
     }
 

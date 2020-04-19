@@ -1,9 +1,13 @@
-package Business_Layer;
+package Business_Layer.Services;
+
+import Business_Layer.Drivers;
+import Business_Layer.License;
+import Business_Layer.Transportation;
+import Business_Layer.Trucks;
 
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Trucks_Service {
 
@@ -66,6 +70,16 @@ public class Trucks_Service {
         {
             if(truck.checkIfFree(date) && truck.checkLicense(license_list))
             {
+                output = output + truck.getlicense_number()+". "+truck.getModel()+"\n";
+            }
+        }
+        return output;
+    }
+
+    public String getFreeTrucks(Date date) {
+        String output = "";
+        for (Trucks truck : service.getHashTrucks().values()) {
+            if (truck.checkIfFree(date)) {
                 output = output + truck.getlicense_number()+". "+truck.getModel()+"\n";
             }
         }
