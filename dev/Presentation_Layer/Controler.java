@@ -1,5 +1,5 @@
 package Presentation_Layer;
-
+import Business_Layer.Buisness_Exception;
 import Business_Layer.Services.*;
 
 import java.text.ParseException;
@@ -35,84 +35,87 @@ public class Controler {
         service.uploadData();
     }
 
-
-
-    public boolean Complete_stock_missing()
-    {
-
-        System.out.println(missing_items_service.getMissingItemsStores());
-        System.out.println("Please choose store to transportation by id");
-        String storeId= scan.nextLine();
-        System.out.println("Please choose area to transportation from the following choices");
-        System.out.println(site_service.getSupplierAreaByStore(storeId));
-        String area= scan.nextLine();
-        System.out.println("Please choose suppliers to transportation from the following, if you want to choose more than one, please seperate them by space");
-        System.out.println(site_service.getSupplierByStoreArea(storeId,area));
-        String[] suppliers = scan.nextLine().split(" ");
-        boolean find_truck_driver=false;
-        Date date = new Date();
-        String driverId="";
-        String truckId="";
-        while (!find_truck_driver)
-        {
-            System.out.println("Please choose date to transportation by the pattern MM-dd-yyyy");
-            String pattern = "MM-dd-yyyy";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            try {
-                date = simpleDateFormat.parse(scan.nextLine());
-            }
-            catch (ParseException e){
-                e.getErrorOffset();
-            }
-            String freeTrucks=trucks_service.getFreeTrucks(date);
-            if(freeTrucks!="")
-            {
-                System.out.println("The trucks available for the date are:");
-                System.out.println(freeTrucks);
-                System.out.println("Please choose truck to transportation by it's driving license");
-                truckId= scan.nextLine();
-                String freeDrivers=drivers_service.getDriverToTrucks(truckId,date);
-                if(freeDrivers!="")
-                {
-                    System.out.println("The Drivers available for the date are and truck:");
-                    System.out.println(freeDrivers);
-                    System.out.println("Please choose Driver to transportation by ut's id");
-                    driverId= scan.nextLine();
-                    find_truck_driver=true;
-                }
-                else
-                {
-                    System.out.println("There are no Drivers available for the truck at this date");
-                }
-            }
-            else
-            {
-                System.out.println("No trucks available on date");
-            }
+    static String Print_error(Exception e) {
+        Throwable current = e;
+        while (current.getCause() != null) {
+            current = current.getCause();
         }
-
-        List<Integer> stores=new LinkedList<>();
-        stores.add(Integer.parseInt(storeId));
-        List<Integer> supplier_list=new LinkedList<>();
-        for (String s:suppliers)
-        {
-            supplier_list.add(Integer.parseInt(s));
-        }
-        if(transportation_service.createTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
-            Integer.parseInt(truckId),supplier_list,stores))
-        {
-            System.out.println("The transport was registered successfully");
-        }
-        return true;
+        return current.getMessage();
     }
 
-    public boolean Regular_stock_transport()
+
+
+    public void Complete_stock_missing()
     {
+
+        try {
+            System.out.println(missing_items_service.getMissingItemsStores());
+            System.out.println("Please choose store to transportation by id");
+            String storeId = scan.nextLine();
+            System.out.println("Please choose area to transportation from the following choices");
+            System.out.println(site_service.getSupplierAreaByStore(storeId));
+            String area = scan.nextLine();
+            System.out.println("Please choose suppliers to transportation from the following, if you want to choose more than one, please separate them by space");
+            System.out.println(site_service.getSupplierByStoreArea(storeId, area));
+            String[] suppliers = scan.nextLine().split(" ");
+            boolean find_truck_driver = false;
+            Date date = new Date();
+            String driverId = "";
+            String truckId = "";
+            while (!find_truck_driver) {
+                System.out.println("Please choose date to transportation by the pattern MM-dd-yyyy");
+                String pattern = "MM-dd-yyyy";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                try {
+                    date = simpleDateFormat.parse(scan.nextLine());
+                } catch (ParseException e) {
+                    e.getErrorOffset();
+                }
+                String freeTrucks = trucks_service.getFreeTrucks(date);
+                if (freeTrucks != "") {
+                    System.out.println("The trucks available for the date are:");
+                    System.out.println(freeTrucks);
+                    System.out.println("Please choose truck to transportation by it's driving license");
+                    truckId = scan.nextLine();
+                    String freeDrivers = drivers_service.getDriverToTrucks(truckId, date);
+                    if (freeDrivers != "") {
+                        System.out.println("The Drivers available for the date are and truck:");
+                        System.out.println(freeDrivers);
+                        System.out.println("Please choose Driver to transportation by it's id");
+                        driverId = scan.nextLine();
+                        find_truck_driver = true;
+                    } else {
+                        System.out.println("There are no Drivers available for the truck at this date");
+                    }
+                } else {
+                    System.out.println("No trucks available on date");
+                }
+            }
+
+            List<Integer> stores = new LinkedList<Integer>();
+            stores.add(Integer.parseInt(storeId));
+            List<Integer> supplier_list = new LinkedList<Integer>();
+            for (String s : suppliers) {
+                supplier_list.add(Integer.parseInt(s));
+            }
+            if (transportation_service.createTransportation(date, LocalTime.parse("12:00:00"), Integer.parseInt(driverId),
+                    Integer.parseInt(truckId), supplier_list, stores)) {
+                System.out.println("The transport was registered successfully" + "\n");
+            }
+        }
+        catch (Buisness_Exception e){
+            System.out.println(Print_error(e));
+        }
+    }
+
+    public void Regular_stock_transport()
+    {
+        try {
         System.out.println(transportation_service.get_area_for_suppliers()); //print all the suppliers
         System.out.println("Please choose area for the suppliers");
         String area=scan.nextLine();
         System.out.println(site_service.getSuppliersbyarea(area));
-        System.out.println("Please choose suppliers to transportation by id"); //choose supplier
+        System.out.println("Please choose suppliers to transportation by id , if there are mant please separate by space"); //choose supplier
         String[] supplier = scan.nextLine().split(" ");
         System.out.println(transportation_service.get_area_for_stores()); //show all the area with all the stores in it
         System.out.println("Please choose area to transportation"); //chose area
@@ -140,21 +143,21 @@ public class Controler {
                 date = simpleDateFormat.parse(scan.nextLine());
             }
             catch (ParseException e){
-                e.getErrorOffset();
+                System.out.println(Print_error(e));
             }
             String freeTrucks=trucks_service.getFreeTrucks(date);
             if(freeTrucks!="")
             {
                 System.out.println("The trucks available for the date are:");
                 System.out.println(freeTrucks);
-                System.out.println("Please choose truck to transportation");
+                System.out.println("Please choose truck to transportation by it's license's number");
                 truckId= scan.nextLine();
                 String freeDrivers=drivers_service.getDriverToTrucks(truckId,date);
                 if(freeDrivers!="")
                 {
                     System.out.println("The Drivers available for the date are and truck:");
                     System.out.println(freeDrivers);
-                    System.out.println("Please choose Driver to transportation");
+                    System.out.println("Please choose Driver to transportation by it's id");
                     driverId= scan.nextLine();
                     find_truck_driver=true;
                 }
@@ -168,8 +171,7 @@ public class Controler {
                 System.out.println("No trucks available on date");
             }
         }
-        if(transportation_service.createRegularTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
-                Integer.parseInt(truckId),suppliers,stores1))
+
         for(String suppller: supplier) {
             System.out.println("For supplier "+suppller+" enter the next detalis");
             for (String store : stores) {
@@ -192,60 +194,60 @@ public class Controler {
                 }
             }
         }
-        System.out.println("The transport was registered successfully");
-        return true;
+            transportation_service.createRegularTransportation(date, LocalTime.parse("12:00:00"),Integer.parseInt(driverId),
+                    Integer.parseInt(truckId),suppliers,stores1);
         }
+        catch (Buisness_Exception e) {
+            System.out.println(Print_error(e));
+        }
+        System.out.println("The transport was registered successfully"+"\n");
+    }
 
     //Drivers
 
-    public boolean Add_driver(){
+    public void Add_driver(){
         Scanner scan = new Scanner(System.in);
         System.out.println("Please enter driver name");
         String name= scan.nextLine();
-        String licenese=null;
         List<String> list=new LinkedList<>();
-        System.out.println("Please enter driver's license (C/C1) "+"\n" + "If there many than enter license and than press enter to the next one.");
-        System.out.println("If you done enter the license please press q");
-        do{
-            licenese=scan.nextLine();
-            list.add(licenese);
-        }
-        while (!licenese.equals("q"));
+        System.out.println("Please enter driver's license (C/C1) "+"\n" + "If there many than enter license and than separate them by space.");
+        String [] licenses=scan.nextLine().split(" ");
+        for(String license:licenses)
+            list.add(license);
+        drivers_service.addDriver(name,list);
+        System.out.println("The driver was added successfully"+"\n");
 
-        System.out.println("The driver was added successfully");
-        return drivers_service.addDriver(name,list);
     }
 
     public void Show_drivers_List(){
-        String result=drivers_service.showDrivers();
-        if(result.equals("")){
-            System.out.println("there are no drivers to show");
-        }
-        else {
+        try {
+            String result=drivers_service.showDrivers();
             System.out.println(result);
+        }
+        catch (Buisness_Exception e){
+            System.out.println(Print_error(e));
         }
     }
 
     public void Remove_driver(){
-        System.out.println(drivers_service.showDrivers());
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter the driver's license that you would like to delete");
-        String number= scan.nextLine();
-        boolean result=drivers_service.removeDriver(new Integer(number));
-        if(result){
-            System.out.println("The driver has removed successfully");
+        try {
+            System.out.println(drivers_service.showDrivers());
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Please enter the driver's id that you would like to delete");
+            String number= scan.nextLine();
+            drivers_service.removeDriver(new Integer(number));
+            System.out.println("The driver has removed successfully+\n");
         }
-        else {
-            System.out.println("The deletion could not be performed");
+        catch (Buisness_Exception e){
+            System.out.println(Print_error(e));
         }
     }
-
     // Transportations
 
     public void Show_transports(){
         String result=transportation_service.Show_transports();
         if(result.equals("")){
-            System.out.println("there are no drivers to show");
+            System.out.println("There are no drivers to show"+ "\n");
         }
         else {
             System.out.println(result);
@@ -253,17 +255,17 @@ public class Controler {
     }
 
     public void Remove_transport(){
-        String transport=transportation_service.getTransport_id();
-        if(transport.equals("")){
-            System.out.println("There are no transportations to delete");
-        }
-        else {
+        try {
+            String transport=transportation_service.getTransport_id();
             Scanner scan = new Scanner(System.in);
             System.out.println("The transport that can be deleted (represented by their ID) are: ");
             System.out.println(transport);
             System.out.println("Please enter the transport id that you would like to delete");
             String id = scan.nextLine();
             transportation_service.delete_Transport(id);
+        }
+        catch (Buisness_Exception e){
+            System.out.println(Print_error(e));
         }
     }
 
@@ -288,83 +290,72 @@ public class Controler {
         System.out.println("Please choose site's area (A/B/C/D)");
         String area= scan.nextLine();
         site_service.addsite(type,name,city,street,number,name_of_contact,phone,area);
-        System.out.println("The site was added successfully");
+        System.out.println("The site was added successfully"+"\n");
 
     }
 
     public void Show_sites(){
-        String result=site_service.showsite();
-        if(result.equals("")){
-            System.out.println("there are no sites to show");
-        }
-        else {
+        try {
+            String result=site_service.showsite();
             System.out.println(result);
+        }
+        catch (Buisness_Exception e){
+            System.out.println(Print_error(e));
         }
     }
 
-    public void Remove_site(){
-        System.out.println(site_service.showsite());
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter the site name that you would like to delete");
-        String name= scan.nextLine();
-        boolean result=site_service.removeSite(name);
-        if(result){
-            System.out.println("The site has removed successfully");
-        }
-        else {
-            System.out.println("The deletion could not be performed");
-        }
-    }
 
     //Trucks
 
     public void Add_truck(){
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter truck's license_number");
-        String number= scan.nextLine();
-        System.out.println("Please enter licenses_types separated by a space");
-        String type= scan.nextLine();
-        String [] license=type.split(" ");
-        List<String> list=new LinkedList<>();
-        for(String L1:license){
-            list.add(L1);
+        try {
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Please enter truck's license_number (C/C1)");
+            String number= scan.nextLine();
+            System.out.println("Please enter licenses_types separated by a space");
+            String type= scan.nextLine();
+            String [] license=type.split(" ");
+            List<String> list=new LinkedList<>();
+            for(String L1:license){
+                list.add(L1);
+            }
+            System.out.println("Please enter truck's model");
+            String model= scan.nextLine();
+            System.out.println("Please enter truck's weight");
+            String weight= scan.nextLine();
+            System.out.println("Please enter truck's max weight");
+            String max_weight= scan.nextLine();
+            boolean result=trucks_service.addTruck(number,list,model,weight,max_weight);
+            System.out.println("Truck was added successfully");
         }
-        System.out.println("Please enter truck's model");
-        String model= scan.nextLine();
-        System.out.println("Please enter truck's weight");
-        String weight= scan.nextLine();
-        System.out.println("Please enter truck's max weight");
-        String max_weight= scan.nextLine();
-        boolean result=trucks_service.addTruck(number,list,model,weight,max_weight);
-        System.out.println("Truck was added successfully");
+        catch (Buisness_Exception e){
+            System.out.println(Print_error(e));
+        }
     }
 
     public void Show_trucks(){
-        String result=trucks_service.showtrucks();
-        if(result.equals("")){
-            System.out.println("there are no trucks to show");
-        }
-        else {
+        try {
+            String result=trucks_service.showtrucks();
             System.out.println(result);
+        }
+        catch (Buisness_Exception e){
+            System.out.println(Print_error(e));
         }
     }
 
     public void Remove_truck(){
-        System.out.println(trucks_service.showtrucks());
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter the truck's license number that you would like to delete");
-        String id= scan.nextLine();
-        boolean result=trucks_service.removeTruck(id);
-        if(result){
-            System.out.println("The truck has removed successfully");
-        }
-        else {
-            System.out.println("The deletion could not be performed");
-        }
-    }
+        try {
+            System.out.println(trucks_service.showtrucks());
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Please enter the truck's license number that you would like to delete");
+            String id= scan.nextLine();
+            trucks_service.removeTruck(id);
+            System.out.println("The truck has removed successfully"+"\n");
 
-    public void Show_Error(String error){
-        System.out.println(error);
-    }
+        }
+        catch (Buisness_Exception e){
+            System.out.println(Print_error(e));
+        }
 
+    }
 }
