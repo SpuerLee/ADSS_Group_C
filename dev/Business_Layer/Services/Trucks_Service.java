@@ -1,9 +1,7 @@
 package Business_Layer.Services;
 
-import Business_Layer.Drivers;
-import Business_Layer.License;
-import Business_Layer.Transportation;
-import Business_Layer.Trucks;
+import Business_Layer.*;
+import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -23,7 +21,10 @@ public class Trucks_Service {
 
     private Service service=Service.getInstance();
 
-    public String showtrucks(){
+    public String showtrucks() throws Buisness_Exception{
+        if(service.getHashTrucks().size()==0){
+            throw new Buisness_Exception("There are no trucks in the system"+ "\n");
+        }
         String result="";
         for(Trucks trucks: service.getHashTrucks().values()){
             result=result+"License Number: "+trucks.getlicense_number()+" , Model: "+trucks.getModel()+"\n";
@@ -32,33 +33,36 @@ public class Trucks_Service {
     }
 
 
-    public boolean addTruck(String license_number, List<String> licenses_types, String model, String weight, String max_weight){
+    public boolean addTruck(String license_number, List<String> licenses_types, String model, String weight, String max_weight) throws Buisness_Exception{
         List<License> licenses=new LinkedList<>();
-        for(String license:licenses_types){
-            licenses.add(new License(license));
+        Integer number=Integer.parseInt(license_number);
+        boolean result=true;
+        if(service.getHashTrucks().containsKey(number)){
+            result=false;
+            throw new Buisness_Exception("The truck driving license is already exist"+ "\n");
         }
-        Trucks trucks=new Trucks(Integer.parseInt(license_number),licenses,model,Double.parseDouble(weight),Double.parseDouble(max_weight));
-        service.getHashTrucks().put(Integer.parseInt(license_number),trucks);
-        return true;
+        else {
+            for (String license : licenses_types) {
+                licenses.add(new License(license));
+            }
+            Trucks trucks = new Trucks(Integer.parseInt(license_number), licenses, model, Double.parseDouble(weight), Double.parseDouble(max_weight));
+            service.getHashTrucks().put(Integer.parseInt(license_number), trucks);
+            return result;
+        }
     }
 
 
 
-    public boolean removeTruck(String license){
+    public boolean removeTruck(String license) throws Buisness_Exception{
         boolean result=false;
         Integer number=Integer.parseInt(license);
-        for(Trucks trucks:service.getHashTrucks().values()){
-            if ((trucks.getlicense_number().equals(number))){
-                result=true;
-                for(Transportation transportation:service.getHashTransportation().values()) {
-                    if (transportation.getTruck().getlicense_number()==number)
-                        result = false;
-                }
-                if(result)
-                    service.getHashTrucks().remove(trucks.getlicense_number());
-            }
-        }
-        return result;
+       if(!service.getHashTrucks().containsKey(number))
+           throw new Buisness_Exception("The truck's license number does'nt exist "+"\n");
+       else {
+           service.getHashTrucks().remove(number);
+           result=true;
+       }
+       return result;
     }
 
     public String getTrucksToDriver(String id, Date date)

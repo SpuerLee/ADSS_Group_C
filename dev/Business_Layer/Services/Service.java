@@ -32,8 +32,8 @@ public class Service {
     private List<Business_Layer.ItemsFile> ItemsFile= new LinkedList<>();
     private ConcurrentHashMap<Integer,Transportation> HashTransportation= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,MissingItems> MissingItems= new ConcurrentHashMap<>();
-    public List<License> license_list = new LinkedList<>();
-    private List<Area> area_list = new LinkedList<>();
+    public List<License> license_list = new LinkedList<License>();
+    private List<Area> area_list = new LinkedList<Area>();
 
 
 
@@ -51,7 +51,7 @@ public class Service {
             for (int i = 0; i < drivers.size(); i++) {
                 final JsonObject driver = drivers.get(i).getAsJsonObject();
                 final JsonArray license = driver.getAsJsonArray("licenses");
-                List<License> licenses=new LinkedList<>();
+                List<License> licenses=new LinkedList<License>();
                 for(int j=0;j<license.size();j++){
                     License type = new License(license.get(j).getAsString());
                     licenses.add(type);
@@ -90,7 +90,7 @@ public class Service {
             for (int i = 0; i < trucks.size(); i++) {
                 final JsonObject truck = trucks.get(i).getAsJsonObject();
                 final JsonArray license = truck.getAsJsonArray("licenses");
-                List<License> licenses=new LinkedList<>();
+                List<License> licenses=new LinkedList<License>();
                 for(int j=0;j<license.size();j++){
                     License type = new License(license.get(j).getAsString());
                     licenses.add(type);
@@ -101,7 +101,7 @@ public class Service {
             for (int i = 0; i < missing_items.size(); i++) {
                 final JsonObject missing = missing_items.get(i).getAsJsonObject();
                 final JsonArray items = missing.getAsJsonArray("items_list");
-                HashMap<String,Integer> map=new HashMap<>();
+                HashMap<String,Integer> map=new HashMap<String,Integer>();
                 for(int j=0;j<items.size();j++){
                     String [] items_to_add=items.get(j).getAsString().split(":");
                     map.put(items_to_add[1],Integer.parseInt(items_to_add[0]));

@@ -1,5 +1,6 @@
 package Business_Layer.Services;
 
+import Business_Layer.Buisness_Exception;
 import Business_Layer.ItemsFile;
 import Business_Layer.MissingItems;
 
@@ -22,23 +23,26 @@ public class Missing_items_Service {
   //  private ConcurrentHashMap<Integer,MissingItems> HashMissingItems= new ConcurrentHashMap<>();
     Service service=Service.getInstance();
 
-    public String getMissingItemsStores()
+    public String getMissingItemsStores() throws Buisness_Exception
     {
-        List<Integer> id_stores_list = new LinkedList<>();
-        String output = "";
-        for (MissingItems missingItems: service.getMissing().values())
-        {
-            Integer storeId=missingItems.getStoreId();
-            if(!id_stores_list.contains(storeId))
-            {
-                id_stores_list.add(storeId);
-                String store = service.getHashStoresMap().get(storeId).getName();
-                String area=service.getHashStoresMap().get(storeId).getArea().toString();
-                output = output +storeId+". "+ store+", area: "+area+"\n";
-            }
-
+        if(service.getMissing().size()==0){
+            throw new Buisness_Exception("The are no missing items in any store");
         }
-        return output;
+        else {
+            List<Integer> id_stores_list = new LinkedList<Integer>();
+            String output = "";
+            for (MissingItems missingItems : service.getMissing().values()) {
+                Integer storeId = missingItems.getStoreId();
+                if (!id_stores_list.contains(storeId)) {
+                    id_stores_list.add(storeId);
+                    String store = service.getHashStoresMap().get(storeId).getName();
+                    String area = service.getHashStoresMap().get(storeId).getArea().toString();
+                    output = output + storeId + ". " + store + ", area: " + area + "\n";
+                }
+
+            }
+            return output;
+        }
     }
 
     public void add_to_items_file(HashMap<String,Integer> itemsList,Integer store,Integer supplier){

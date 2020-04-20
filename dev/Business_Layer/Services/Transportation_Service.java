@@ -2,6 +2,7 @@ package Business_Layer.Services;
 
 import Business_Layer.*;
 import com.google.gson.Gson;
+import com.sun.corba.se.spi.ior.TaggedProfileTemplate;
 
 import java.time.LocalTime;
 import java.util.*;
@@ -18,7 +19,7 @@ public class Transportation_Service {
         return Singelton_Transport.instance;
     }
 
-    List<ItemsFile> current=new LinkedList<>();
+    List<ItemsFile> current=new LinkedList<ItemsFile>();
 
     private Service service=Service.getInstance();
 
@@ -26,8 +27,8 @@ public class Transportation_Service {
     public boolean createTransportation(Date date, LocalTime leaving_time, int driver_id,
                                         int truck_license_number, List<Integer> suppliers, List<Integer> stores)
     {
-        List<Supplier> suppliers1=new LinkedList<>();
-        List<Store> stores1=new LinkedList<>();
+        List<Supplier> suppliers1=new LinkedList<Supplier>();
+        List<Store> stores1=new LinkedList<Store>();
         for(Supplier site:service.getSuppliersMap().values()){
             if(suppliers.contains(site.getId()))
                 suppliers1.add(site);
@@ -42,7 +43,7 @@ public class Transportation_Service {
         Transportation transportation =
                 new Transportation(date,leaving_time,service.getDrivers().get(driver_id),service.getHashTrucks().get(truck_license_number),suppliers1,stores1);
         service.getHashTransportation().put(transportation.getId(),transportation);
-        List<Integer> id_to_delete = new LinkedList<>();
+        List<Integer> id_to_delete = new LinkedList<Integer>();
         for (MissingItems missingItems: service.getMissing().values())
         {
             if(stores.contains(missingItems.getStoreId())&&suppliers.contains(missingItems.getSupplierId()))
@@ -62,11 +63,11 @@ public class Transportation_Service {
         return true;
     }
 
-    public boolean createRegularTransportation(Date date, LocalTime leaving_time, int driver_id,
+    public void createRegularTransportation(Date date, LocalTime leaving_time, int driver_id,
                                         int truck_license_number, List<Integer> suppliers, List<Integer> stores)
     {
-        List<Supplier> suppliers1=new LinkedList<>();
-        List<Store> stores1=new LinkedList<>();
+        List<Supplier> suppliers1=new LinkedList<Supplier>();
+        List<Store> stores1=new LinkedList<Store>();
         for(Supplier site:service.getSuppliersMap().values()){
             if(suppliers.contains(site.getId()))
                 suppliers1.add(site);
@@ -83,35 +84,49 @@ public class Transportation_Service {
         for (ItemsFile itemsFile: current)
         {
             transportation.addItemFile(itemsFile);
-            current.remove(itemsFile);
         }
+        this.current=new LinkedList<>();
         service.getDrivers().get(driver_id).addDate(transportation);
         service.getHashTrucks().get(truck_license_number).addDate(transportation);
-        return true;
     }
 
 
-    public boolean delete_Transport(String id)
+    public void delete_Transport(String id) throws Buisness_Exception
     {
+        if(service.getHashTransportation().size()==0){
+            throw new Buisness_Exception("There are no transportations to delete");
+        }
+
         int transport_id = Integer.parseInt(id);
-        for(Map.Entry<Integer, Transportation> transport:service.getHashTransportation().entrySet()){
-            if (transport.getValue().getId()==transport_id){
-                int driver=transport.getValue().getDriveId();
-                int truck=transport.getValue().getTrucklicense();
-                service.getDrivers().get(driver).Remove_date(transport.getValue());
-                service.getHashTrucks().get(truck).Remove_date(transport.getValue());
-                service.getHashTransportation().remove(transport.getKey());
+
+        if(!service.getHashTransportation().containsKey(transport_id)){
+            throw new Buisness_Exception("The transport id doesnt exist");
+        }
+
+        else {
+            for (Map.Entry<Integer, Transportation> transport : service.getHashTransportation().entrySet()) {
+                if (transport.getValue().getId() == transport_id) {
+                    int driver = transport.getValue().getDriveId();
+                    int truck = transport.getValue().getTrucklicense();
+                    service.getDrivers().get(driver).Remove_date(transport.getValue());
+                    service.getHashTrucks().get(truck).Remove_date(transport.getValue());
+                    service.getHashTransportation().remove(transport.getKey());
+                }
             }
         }
-        return true;
     }
 
-    public String getTransport_id(){
-        String result="";
-        for(Transportation transportation: service.getHashTransportation().values()){
-            result=result+transportation.getId()+" ,";
+    public String getTransport_id() throws Buisness_Exception{
+        if(service.getHashTransportation().size()==0){
+            throw new Buisness_Exception("There are no transportations to delete"+"\n");
         }
-        return result;
+        else {
+            String result = "";
+            for (Transportation transportation : service.getHashTransportation().values()) {
+                result = result + transportation.getId() + " ,";
+            }
+            return result;
+        }
     }
 
     public void addItemFiletotransport(HashMap<String,Integer> items,int store,int supplier){
@@ -130,9 +145,12 @@ public class Transportation_Service {
         return output;
     }
 
-    public String get_area_for_suppliers(){
-        List<String> areas=new LinkedList<>();
+    public String get_area_for_suppliers() throws Buisness_Exception{
+        List<String> areas=new LinkedList<String>();
         String output="[";
+        if(service.getSuppliersMap().size()==0){
+            throw new Buisness_Exception("There are no suppliers to make a transport");
+        }
         for(Supplier supplier:service.getSuppliersMap().values()){
             if(!areas.contains(supplier.getArea().toString())){
                 areas.add(supplier.getArea().toString());
@@ -146,20 +164,25 @@ public class Transportation_Service {
         return output;
     }
 
-    public String get_area_for_stores(){
+    public String get_area_for_stores() throws Buisness_Exception{
         List<String> areas=new LinkedList<>();
         String output="[";
-        for(Store store:service.getHashStoresMap().values()){
-            if(!areas.contains(store.getArea().toString())){
-                areas.add(store.getArea().toString());
+        if(service.getHashStoresMap().size()==0){
+            throw new Buisness_Exception("There are no stores to supply to");
+        }
+
+        else {
+            for (Store store : service.getHashStoresMap().values()) {
+                if (!areas.contains(store.getArea().toString())) {
+                    areas.add(store.getArea().toString());
+                }
             }
+            for (String area : areas) {
+                output = output + area + " ,";
+            }
+            output = output + "]";
+            return output;
         }
-        for(String area:areas){
-            output=output+area+" ,";
-        }
-        output=output.substring(0,output.length()-2);
-        output=output+"]";
-        return output;
     }
 
 }

@@ -1,9 +1,6 @@
 package Business_Layer.Services;
 
-import Business_Layer.Drivers;
-import Business_Layer.License;
-import Business_Layer.Transportation;
-import Business_Layer.Trucks;
+import Business_Layer.*;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -25,35 +22,26 @@ public class Drivers_Service {
 
     private Service service = Service.getInstance();
 
-    public boolean addDriver(String name, List<String> license_list) {
-        List<License> licenses = new LinkedList<>();
+    public void addDriver(String name, List<String> license_list) {
+        List<License> licenses = new LinkedList<License>();
         for (String license : license_list) {
             licenses.add(new License(license));
         }
         Drivers drivers = new Drivers(name, licenses);
         service.getDrivers().put(drivers.getId(), drivers);
-        return true;
     }
 
-
-    public boolean removeDriver(int id) {
-        boolean result = true;
-        for (Drivers drivers : service.getDrivers().values()) {
-            if ((drivers.getId() == id)) {
-                // result=true;
-                for (Transportation transportation : service.getHashTransportation().values()) {
-                    if (transportation.getDriver().equals(drivers)) {
-                        result = false;
-                    }
-                }
-                if (result)
-                    service.getDrivers().remove(id);
-            }
+    public void removeDriver(int id) throws Buisness_Exception{
+        if(!service.getDrivers().containsKey(id))
+            throw new Buisness_Exception("The drives's id doesn't exist "+"\n");
+        else {
+            service.getDrivers().remove(id);
         }
-        return result;
     }
 
-    public String showDrivers() {
+    public String showDrivers() throws Buisness_Exception {
+        if(service.getDrivers().size()==0)
+            throw new Buisness_Exception("There are no drivers in the system"+ "\n");
         String result = "";
         for (Drivers drivers : service.getDrivers().values()) {
             result = result + "Name:" + drivers.getName() + ", Id " + drivers.getId() + "\n";

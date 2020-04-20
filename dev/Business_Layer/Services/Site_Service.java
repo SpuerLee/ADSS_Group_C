@@ -24,18 +24,6 @@ public class Site_Service {
 
 
     public boolean addsite(String site_type, String name, String city, String street, String number, String name_of_contact, String phone, String site_area){
-        boolean result=false;
-        for(Site sites:service.getSuppliersMap().values()){
-            if(sites.getName().equals(name)){
-                result=true;
-            }
-        }
-        for(Site sites:service.getHashStoresMap().values()){
-            if(sites.getName().equals(name)){
-                result=true;
-            }
-        }
-        if(result){
             if(site_type.equals("store")){
                 Store store=new Store(name,phone,name_of_contact, new Address(city,street,Integer.parseInt(number)), new Area(site_area));
                 service.getHashStoresMap().put(store.getId(),store);
@@ -46,68 +34,25 @@ public class Site_Service {
                 service.getSuppliersMap().put(supplier.getId(),supplier);
 
             }
-        }
-        return result;
+        return true;
     }
 
-    public String showsite(){
-        String result="";
-        for(Store sites: service.getHashStoresMap().values())
-                result=result+"Name :"+sites.getName()+" ,Type : Store"+"\n";
-        for(Supplier sites: service.getSuppliersMap().values())
-                result=result+"Name :"+sites.getName()+" ,Type : Supplier"+"\n";
-        return result;
-    }
-
-    public boolean removeSite(String name){
-        boolean result=false;
-        for(Site sites:service.getSuppliersMap().values()){
-            if ((sites.getName().equals(name))){
-                result=true;
-                for(Transportation transportation:service.getHashTransportation().values()){
-                    if ((transportation.getStores().contains((sites)))||(transportation.getSuppliers().contains(sites))){
-                        result=false;
-                    }
-                }
-                if(result){
-                    service.getSuppliersMap().remove(sites.getName());
-                }
-            }
+    public String showsite() throws Buisness_Exception{
+        if(service.getHashStoresMap().size()+service.getSuppliersMap().size()==0)
+            throw new Buisness_Exception("There are no sites in the system"+ "\n");
+        else {
+            String result="";
+            for (Store sites : service.getHashStoresMap().values())
+                result = result + "Name :" + sites.getName() + " ,Type : Store" + "\n";
+            for (Supplier sites : service.getSuppliersMap().values())
+                result = result + "Name :" + sites.getName() + " ,Type : Supplier" + "\n";
+            return result;
         }
-        for(Site sites:service.getHashStoresMap().values()){
-            if ((sites.getName().equals(name))){
-                result=true;
-                for(Transportation transportation:service.getHashTransportation().values()){
-                    if ((transportation.getStores().contains((sites)))||(transportation.getSuppliers().contains(sites))){
-                        result=false;
-                    }
-                }
-                if(result){
-                    service.getHashStoresMap().remove(sites.getName());
-                }
-            }
-        }
-        return result;
-    }
-
-    public String getSuppliers()
-    {
-        List<Site> sites=new LinkedList<>();
-        String output = "";
-        for (Site site: service.getSuppliersMap().values())
-        {
-            if((site instanceof Supplier & (!sites.contains(site))))
-            {
-                output = output +"area ,"+ site.getArea().toString()+ " name: "+site.getName()+ ", id "+site.getId()+"\n";
-                sites.add(site);
-            }
-        }
-        return output;
     }
 
     public String getSuppliersbyarea(String area)
     {
-        List<Site> sites=new LinkedList<>();
+        List<Site> sites=new LinkedList<Site>();
         String output = "";
         for (Site site: service.getSuppliersMap().values())
         {
@@ -129,8 +74,6 @@ public class Site_Service {
             {
                 output = output +sites.getId()+". "+ sites.getName()+", ";
             }
-            if(output.length()!=1)
-            output=output.substring(0,output.length()-1);
         }
         output=output+"]";
         return output;
@@ -152,28 +95,11 @@ public class Site_Service {
         return output;
     }
 
-    //print the area and the stores that are in the area
-    public String getStoresByarea()
-    {
-        String result="";
-        for(Area area: service.getArea_list()) {
-            String output = "Area "+area+ ": [ ";
-            for (Site sites : service.getHashStoresMap().values()) {
-                if ((sites.getArea().toString().equals(area.toString()))) {
-                    output = output + "id "+ sites.getId()+", name :"+sites.getName() + " ,";
-                }
-            }
-            output = output +"]\n";
-            result=result+output;
-        }
-        return result;
-    }
-
 
     public String getSupplierAreaByStore(String id)
     {
         int storeId = Integer.parseInt(id);
-        List<Area> area_list = new LinkedList<>();
+        List<Area> area_list = new LinkedList<Area>();
         String output = "[ ";
         for (MissingItems missingItems: service.getMissing().values())
         {
