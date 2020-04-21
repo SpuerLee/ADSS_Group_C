@@ -1,10 +1,11 @@
 package Workers.BusinessLayer;
 
-import Workers.BusinessLayer.Utils.Shift;
-import Workers.BusinessLayer.Utils.Worker;
+import Workers.BusinessLayer.Utils.InfoObject;
+import Workers.BusinessLayer.Modules.Shift;
+import Workers.BusinessLayer.Modules.Worker;
 import Workers.BusinessLayer.Utils.enums;
+import sun.text.resources.FormatData;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,40 +25,139 @@ public class ShiftController{
         this.snFactory = 0;
     }
 
+    public InfoObject printAllShits() {
+        InfoObject infoObject = new InfoObject("",true);
+        if(shiftHistory.isEmpty()){
+            infoObject.setIsSucceeded(false);
+            infoObject.setMessage("There are no shifts to display");
+            return infoObject;
+        }
+        System.out.println("Select shift by SN");
+        for (Shift shift : shiftHistory.values()) {
+            SimpleDateFormat day = new SimpleDateFormat("dd/MM/yyyy");
+            String date = day.format(shift.getDate());
+            System.out.println(shift.getShiftSn() + ". Date: " + date + " Type: " + shift.getShiftType());
+        }
+        return infoObject;
+    }
+
     public int getSnFactory(){
         return this.snFactory++;
     }
 
-    public boolean validateNewShift(Date date, enums shiftType){
+    public InfoObject validateNewShiftDate(Date date, enums shiftType){
+        InfoObject infoObject = new InfoObject("",true);
         for (Shift shifty: this.shiftHistory.values()) {
             if((shifty.getDate().compareTo(date)==0) && shifty.getShiftType().equals(shiftType)){
-                return false;
+                infoObject.setIsSucceeded(false);
+                infoObject.setMessage("There is already a shift on this date");
+                return infoObject;
             }
         }
-        return true;
+        Date toDay= new Date();
+        if(date.compareTo(toDay)<0){
+            infoObject.setIsSucceeded(false);
+            infoObject.setMessage("Date already passed");
+            return infoObject;
+        }
+        return infoObject;
     }
 
-    public void createShift(String shiftType, int managerSn, String listOfWorkersSn, String _date) throws ParseException {
-        enums sType = enums.valueOf(shiftType);
-        Worker manager = workerController.getWorkerBySn(managerSn);
-        String[] workersSn = listOfWorkersSn.split(",");
+    public InfoObject createShift(String shiftType, int managerSn, String listOfWorkersSn, String _date) {
+        InfoObject infoObject = new InfoObject("Shift created successfully",true);
+        enums sType;
+        try {
+            sType = enums.valueOf(shiftType);
+        }
+        catch (Exception e){
+            infoObject.setIsSucceeded(false);
+            infoObject.setMessage("Invalid shift type");
+            return infoObject;
+        }
+
+        Date date = parseDate(_date);
+        if(date==null){
+            infoObject.setIsSucceeded(false);
+            infoObject.setMessage("Invalid date format");
+            return infoObject;
+        }
+
+        if(!(workerController.getWorkerList().containsKey(managerSn))){
+            infoObject.setIsSucceeded(false);
+            infoObject.setMessage("Invalid manager SN");
+            return infoObject;
+        }
+        if(!(workerController.getWorkerList().get(managerSn).getWorkerJobTitle().toUpperCase().equals("MANAGER"))){
+            infoObject.setIsSucceeded(false);
+            infoObject.setMessage("Invalid manager SN");
+            return infoObject;
+        }
+        Worker manager = workerController.getWorkerList().get(managerSn);
+        String[] workersSn;
         List<Worker> workersListOfCurrentShift = new LinkedList<>();
-        for (String workerSn : workersSn) {
-            Worker workerToAdd = workerController.getWorkerBySn(Integer.parseInt(workerSn));
-            workersListOfCurrentShift.add(workerToAdd);
+        infoObject = validateManagerConstrains(manager,sType,date);
+        if(!infoObject.isSucceeded()){
+            return infoObject;
         }
-        Date date = new SimpleDateFormat("dd-MM-yyyy").parse(_date);
-        Shift shiftToAdd = new Shift(date,sType,manager,workersListOfCurrentShift,getSnFactory());
-        if(this.validateNewShift(date,sType)) {
-            this.shiftHistory.put(shiftToAdd.getShiftSn(), shiftToAdd);
-            System.out.println("New shift has been added successfully" +"\n");
+        workersListOfCurrentShift.add(manager);
+        try {
+            workersSn = listOfWorkersSn.split(",");
         }
-        else{
-            System.out.println("We're sorry, Shift already exists"+"\n");
+        catch (Exception e){
+            workersSn = null;
         }
+        if(workersSn==null){
+            infoObject.setIsSucceeded(false);
+            infoObject.setMessage("Invalid workers SN format input");
+            return infoObject;
+        }
+        if(workersSn.length > 1) {
+            // validate workers SN
+            for (String workerSn : workersSn) {
+                if (!(workerController.getWorkerList().containsKey(Integer.parseInt(workerSn)))) {
+                    infoObject.setIsSucceeded(false);
+                    infoObject.setMessage("There is no worker with " + Integer.parseInt(workerSn) + " SN");
+                    return infoObject;
+                }
+            }
+
+            // validate workers starting date and shift date
+            for (String workerSn : workersSn) {
+                Date workersDate = workerController.getWorkerList().get(Integer.parseInt(workerSn)).getWorkerStartingDate();
+                if (date.compareTo(workersDate) < 0) {
+                    infoObject.setIsSucceeded(false);
+                    infoObject.setMessage("This worker : " + workerController.getWorkerList().get(Integer.parseInt(workerSn)).getWorkerName() + " Start working only from " +
+                            workerController.getWorkerList().get(Integer.parseInt(workerSn)).getWorkerStartingDate());
+                    return infoObject;
+                }
+            }
+
+            // validate workers constrains  with shift date
+            for (String workerSn : workersSn) {
+                Worker workerToAdd = workerController.getWorkerList().get(Integer.parseInt(workerSn));
+                if (!(workerToAdd.available(date, sType))) {
+                    infoObject.setIsSucceeded(false);
+                    infoObject.setMessage(workerToAdd.getWorkerName() + " Can't work on this shift because of his constrains");
+                    return infoObject;
+                }
+                workersListOfCurrentShift.add(workerToAdd);
+            }
+        }
+        Shift shiftToAdd = new Shift(date, sType, manager, workersListOfCurrentShift, getSnFactory());
+        infoObject = validateNewShiftDate(date,sType);
+        if(infoObject.isSucceeded()){
+            this.shiftHistory.put(shiftToAdd.getShiftSn(),shiftToAdd);
+        }
+        return infoObject;
     }
 
-    public void printShift(int shiftIndex){
+    public InfoObject printShift(int shiftIndex){
+        InfoObject infoObject = new InfoObject("",true);
+        if(!(shiftHistory.containsKey(shiftIndex))){
+            infoObject.setMessage("There is no shift with this SN");
+            infoObject.setIsSucceeded(false);
+            return infoObject;
+        }
         Shift shift = this.shiftHistory.get(shiftIndex);
         shift.printShift();
         System.out.println("\n"+"Workers: ");
@@ -67,11 +167,46 @@ public class ShiftController{
             }
         }
         System.out.println("\n");
+        return infoObject;
     }
 
     public HashMap<Integer, Shift> getShiftHistory() {
         return this.shiftHistory;
     }
 
+    public WorkerController getWorkerController() {
+        return this.workerController;
+    }
+
+    private Date parseDate(String _date){
+        Date date;
+        try {
+            date = new SimpleDateFormat("yyyy-M-d").parse(_date);
+        }
+        catch (Exception e){
+            return null;
+        }
+        return date;
+    }
+
+    private InfoObject validateManagerConstrains(Worker manager,enums shiftType,Date shiftDate){
+        InfoObject infoObject = new InfoObject("",true);
+        Date date = new Date();
+        Date workersDate = manager.getWorkerStartingDate();
+        if (date.compareTo(workersDate) < 0) {
+            infoObject.setIsSucceeded(false);
+            infoObject.setMessage("This worker : " + manager.getWorkerName() + " Start working only from " +
+                    manager.getWorkerStartingDate());
+            return infoObject;
+        }
+
+        if (!(manager.available(shiftDate, shiftType))) {
+            infoObject.setIsSucceeded(false);
+            infoObject.setMessage(manager.getWorkerName() + " Can't work on this shift because of his constrains");
+            return infoObject;
+        }
+
+        return infoObject;
+    }
 }
 

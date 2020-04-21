@@ -1,5 +1,6 @@
-package Workers.BusinessLayer.Utils;
+package Workers.BusinessLayer.Modules;
 
+import Workers.BusinessLayer.Utils.enums;
 import javafx.util.Pair;
 
 import java.text.SimpleDateFormat;
@@ -73,8 +74,8 @@ public class Worker {
         return name;
     }
 
-    public void getWorkerSalary(int salary) {
-        this.salary = salary;
+    public int getWorkerSalary() {
+        return this.salary;
     }
 
     public String getWorkerJobTitle() {
@@ -94,6 +95,12 @@ public class Worker {
         this.constrains = new HashMap<>();
     }
 
+    public void setWorkerSalary(int newSalary){
+        if(salary >= 0) {
+            this.salary = newSalary;
+        }
+    }
+
     public void printWorker(){
         System.out.println(this.sn + ". ID: " + this.id + " Name: " + this.name+" Job Title: "+this.jobTitle);
     }
@@ -104,4 +111,7 @@ public class Worker {
         return !this.constrains.containsKey(new Pair<>(selectedDay,sType));
     }
 
+    public Date getWorkerStartingDate() {
+        return this.date;
+    }
 }

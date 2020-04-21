@@ -1,4 +1,7 @@
-package Workers.BusinessLayer.Utils;
+package Workers.BusinessLayer.Modules;
+
+import Workers.BusinessLayer.Modules.Worker;
+import Workers.BusinessLayer.Utils.enums;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,4 +45,7 @@ public class Shift {
         return shiftWorkers;
     }
 
+    public Worker getManager() {
+        return manager;
+    }
 }

@@ -1,13 +1,9 @@
 package Workers.InterfaceLayer;
 
 import Workers.BusinessLayer.ShiftController;
+import Workers.BusinessLayer.Utils.InfoObject;
 import Workers.BusinessLayer.WorkerController;
-import Workers.BusinessLayer.Utils.Shift;
-import Workers.BusinessLayer.Utils.Worker;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import Workers.BusinessLayer.Modules.Worker;
 
 public class SystemInterface {
 
@@ -27,62 +23,60 @@ public class SystemInterface {
         return systemInterface;
     }
 
-    public boolean printAllManagers(String date,String shiftType) throws ParseException {
-        return workerController.printAllManagers(date,shiftType);
+    public InfoObject printAllManagers(String date, String shiftType) {
+        return workerController.printAllManagersAvailableInThisDate(date,shiftType);
     }
 
-    public boolean printAllWorkers(){
+    public InfoObject printAllWorkers(){
         return workerController.printAllWorker();
     }
 
-    public void printAllWorkers(String date,String shiftType) throws ParseException {
-        workerController.printAllWorkers(date, shiftType);
+    public InfoObject printAllWorkers(String date,String shiftType) {
+        return workerController.printAllWorkersAvailableInThisDate(date, shiftType);
     }
 
-    public void createShift(String shiftType, int selectedManagerSn,String chosenWorkersSn,String date) throws ParseException {
-        shiftController.createShift(shiftType, selectedManagerSn, chosenWorkersSn, date);
+    public InfoObject createShift(String shiftType, int selectedManagerSn,String chosenWorkersSn,String date) {
+        return shiftController.createShift(shiftType, selectedManagerSn, chosenWorkersSn, date);
     }
 
-    public HashMap<Integer,Shift> getShiftHistory(){
-        return shiftController.getShiftHistory();
+    public InfoObject printShift(int shiftSn){
+        return shiftController.printShift(shiftSn);
     }
 
-    public void printShift(int shiftSn){
-        shiftController.printShift(shiftSn);
-    }
-
-    public int addWorker(int workerId,String workerName,int workerPhoneNumber,int workerBankAccount,int workerSalary,String dateOfStart,String workerJobTitle) throws ParseException {
+    public InfoObject addWorker(int workerId,String workerName,int workerPhoneNumber,int workerBankAccount,int workerSalary,String dateOfStart,String workerJobTitle) {
         return workerController.addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle);
     }
 
-    public void addConstrainsToWorkerByWorkerSn(int workerToAddSn,String constrainsDay,String _shiftType){
-        workerController.addConstrainsToWorkerByWorkerSn(workerToAddSn,constrainsDay,_shiftType);
+    public InfoObject addConstrainsToWorkerByWorkerSn(int workerToAddSn,String constrainsDay,String _shiftType){
+        return workerController.addConstrainsToWorkerByWorkerSn(workerToAddSn,constrainsDay,_shiftType);
     }
 
-    public void printWorkerBySn(int workerSn){
-        workerController.printWorkerBySn(workerSn);
+    public InfoObject printWorkerBySn(int workerSn){
+        return workerController.printWorkerBySn(workerSn);
     }
 
-    public void setWorkerConstrains(int workerSn){
-        workerController.getWorkerBySn(workerSn).setWorkerConstrains();
+    public InfoObject printWorkerConstrains(int workerSn){
+        return workerController.printWorkersConstrainsBySn(workerSn);
     }
 
-    public void printWorkerConstrains(int workerSn){
-        System.out.println(workerController.getWorkerBySn(workerSn).printConstrains());
+    public InfoObject setNewSalaryBySn(int workerSn,int newSalary){
+        return workerController.setNewSalaryBySn(workerSn, newSalary);
     }
 
-    public void setNewSalaryBySn(int workerSn,int newSalary){
-        workerController.setNewSalaryBySn(workerSn, newSalary);
+    public InfoObject removeWorker(int workerSn){
+        return workerController.removeWorkerBySn(workerSn);
     }
 
-    public void removeWorker(int workerSn){
-        workerController.removeWorker(workerSn);
+    public InfoObject setWorkerConstrains(int workerSn){
+        return workerController.setWorkerConstrainsBySn(workerSn);
     }
 
-    public HashMap<Integer,Worker> getWorkerList(){
-        return workerController.getWorkerList();
+    public InfoObject printAllShifts(){
+        return shiftController.printAllShits();
     }
 
-
+    public Worker getWorkerById(int workerId){
+        return workerController.getWorkerById(workerId);
+    }
 
 }
