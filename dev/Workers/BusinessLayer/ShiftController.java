@@ -4,7 +4,6 @@ import Workers.BusinessLayer.Utils.InfoObject;
 import Workers.BusinessLayer.Modules.Shift;
 import Workers.BusinessLayer.Modules.Worker;
 import Workers.BusinessLayer.Utils.enums;
-import sun.text.resources.FormatData;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,9 +18,9 @@ public class ShiftController{
     private WorkerController workerController;
     private int snFactory;
 
-    public ShiftController() {
+    public ShiftController(WorkerController workerController) {
         this.shiftHistory = new HashMap<>();
-        this.workerController = new WorkerController();
+        this.workerController = workerController;
         this.snFactory = 0;
     }
 
@@ -42,7 +41,7 @@ public class ShiftController{
     }
 
     public int getSnFactory(){
-        return this.snFactory++;
+        return ++this.snFactory;
     }
 
     public InfoObject validateNewShiftDate(Date date, enums shiftType){
@@ -181,7 +180,7 @@ public class ShiftController{
     private Date parseDate(String _date){
         Date date;
         try {
-            date = new SimpleDateFormat("yyyy-M-d").parse(_date);
+            date = new SimpleDateFormat("d-MM-yyyy").parse(_date);
         }
         catch (Exception e){
             return null;

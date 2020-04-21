@@ -247,7 +247,7 @@ public class WorkerController {
     private Date parseDate(String _date){
         Date date;
         try {
-            date = new SimpleDateFormat("yyyy-M-d").parse(_date);
+            date = new SimpleDateFormat("d-MM-yyyy").parse(_date);
         }
         catch (Exception e){
             return null;

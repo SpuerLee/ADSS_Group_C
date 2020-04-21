@@ -22,23 +22,23 @@ public class projectTests {
 
     @BeforeEach
     void init() {
-        shiftController = new ShiftController();
         workerController = new WorkerController();
+        shiftController = new ShiftController(workerController);
     }
 
     @Test
     @DisplayName("Add new Worker")
     void test1() {
-        workerController.addWorker(100, "Andrey Palman", 100, 123, 100, "2020-04-15", "Cashier");
+        workerController.addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
         assertEquals(1, workerController.getWorkerList().size());
     }
 
     @Test
     @DisplayName("Add new Shift with date that already passed")
     void test2() {
-        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "2020-04-15", "Cashier");
-        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "2020-04-15", "Manager");
-        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "2020-04-15", "Storekeeper");
+        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
+        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "15-04-2020", "Manager");
+        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "15-04-2020", "Storekeeper");
         shiftController.createShift("MORNING", 2, "1,3", "19-04-2020");
         assertEquals(0, shiftController.getShiftHistory().size());
     }
@@ -46,25 +46,25 @@ public class projectTests {
     @Test
     @DisplayName("Create Shift without manager")
     void test4() {
-        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "2020-04-15", "Cashier");
-        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "2020-04-15", "Storekeeper");
-        shiftController.createShift("NIGHT", 1, "1,3", "2020-12-19");
+        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
+        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "15-04-2020", "Storekeeper");
+        shiftController.createShift("NIGHT", 1, "1,3", "19-12-2020");
         assertEquals(0, shiftController.getShiftHistory().values().size());
     }
 
     @Test
     @DisplayName("Add worker to a shift that there is a conflict with his constrains")
     void test5() {
-        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "2020-04-10", "Manager");
+        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "10-04-2020", "Manager");
         shiftController.getWorkerController().addConstrainsToWorkerByWorkerSn(1, "SATURDAY", "MORNING");
-        shiftController.createShift("MORNING", 2, "", "2020-12-26");
+        shiftController.createShift("MORNING", 2, "", "26-12-2020");
         assertEquals(0, shiftController.getShiftHistory().size());
     }
 
     @Test
     @DisplayName("Remove worker")
     void test6() {
-        workerController.addWorker(100, "Andrey Palman", 100, 123, 100, "2020-04-15", "Cashier");
+        workerController.addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
         workerController.removeWorkerBySn(1);
         assertEquals(0, workerController.getWorkerList().size());
     }
@@ -72,14 +72,14 @@ public class projectTests {
     @Test
     @DisplayName("Add worker Id to a shift that the worker id doesnt exists")
     void test7() {
-        shiftController.createShift("NIGHT", 2, "", "2020-12-25");
+        shiftController.createShift("NIGHT", 2, "", "25-12-2020");
         assertEquals(0, shiftController.getShiftHistory().size());
     }
 
     @Test
     @DisplayName("Edit worker salary")
     void test8() {
-        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "2020-04-15", "Cashier");
+        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
         shiftController.getWorkerController().setNewSalaryBySn(1, 200);
         assertEquals(200, shiftController.getWorkerController().getWorkerList().get(1).getWorkerSalary());
     }
@@ -87,7 +87,7 @@ public class projectTests {
     @Test
     @DisplayName("Edit constrains")
     void test9() {
-        workerController.addWorker(100, "Andrey Palman", 100, 123, 100, "2020-04-15", "Cashier");
+        workerController.addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
         workerController.addConstrainsToWorkerByWorkerSn(1, "SUNDAY", "MORNING");
         workerController.setWorkerConstrainsBySn(1);
         workerController.addConstrainsToWorkerByWorkerSn(1, "MONDAY", "MORNING");
@@ -100,21 +100,21 @@ public class projectTests {
     @Test
     @DisplayName("Create shift with invalid manager id")
     void test10() {
-        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "2020-04-15", "Cashier");
-        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "2020-04-15", "Manager");
-        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "2020-04-15", "Storekeeper");
-        shiftController.createShift("MORNING", 4, "1,3", "2020-12-19");
+        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
+        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "15-04-2020", "Manager");
+        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "15-04-2020", "Storekeeper");
+        shiftController.createShift("MORNING", 4, "1,3", "19-12-2020");
         assertEquals(0, shiftController.getShiftHistory().size());
     }
 
     @Test
     @DisplayName("Create shift with date and shift type that already exists")
     void test11() {
-        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "2020-04-15", "Cashier");
-        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "2020-04-15", "Manager");
-        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "2020-04-15", "Storekeeper");
-        shiftController.createShift("MORNING", 2, "1,3", "2020-12-26");
-        shiftController.createShift("MORNING", 2, "1,3", "2020-12-26");
+        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
+        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "15-04-2020", "Manager");
+        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "15-04-2020", "Storekeeper");
+        shiftController.createShift("MORNING", 2, "1,3", "26-12-2020");
+        shiftController.createShift("MORNING", 2, "1,3", "26-12-2020");
         assertEquals(1, shiftController.getShiftHistory().size());
     }
 
@@ -122,30 +122,30 @@ public class projectTests {
     @DisplayName("Add worker to a shift before he starts to work")
     void test12() {
 
-        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "2020-012-15", "Cashier");
-        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "2020-04-15", "Manager");
-        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "2020-04-15", "Storekeeper");
-        shiftController.createShift("MORNING", 4, "1,3", "2020-12-26");
+        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
+        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "15-04-2020", "Manager");
+        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "15-04-2020", "Storekeeper");
+        shiftController.createShift("MORNING", 4, "1,3", "26-12-2020");
         assertEquals(0, shiftController.getShiftHistory().size());
     }
 
     @Test
     @DisplayName("Create shift with date that already passed")
     void test13() {
-        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "2020-04-15", "Cashier");
-        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "2020-04-15", "Manager");
-        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "2020-04-15", "Storekeeper");
-        shiftController.createShift("MORNING", 4, "1,3", "2020-03-26");
+        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
+        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "15-04-2020", "Manager");
+        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "15-04-2020", "Storekeeper");
+        shiftController.createShift("MORNING", 4, "1,3", "26-03-2020");
         assertEquals(0, shiftController.getShiftHistory().size());
     }
 
     @Test
     @DisplayName("Add new Shift")
     void test14() {
-        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "2020-04-15", "Cashier");
-        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "2020-04-15", "Manager");
-        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "2020-04-15", "Storekeeper");
-        shiftController.createShift("MORNING", 2, "1,3", "2020-12-26");
+        shiftController.getWorkerController().addWorker(100, "Andrey Palman", 100, 123, 100, "15-04-2020", "Cashier");
+        shiftController.getWorkerController().addWorker(101, "Hadar Korny", 101, 124, 2500, "15-04-2020", "Manager");
+        shiftController.getWorkerController().addWorker(102, "Tomer Hacham", 102, 125, 10000, "15-04-2020", "Storekeeper");
+        shiftController.createShift("MORNING", 2, "1,3", "26-12-2020");
         assertEquals(1, shiftController.getShiftHistory().values().size());
     }
 }

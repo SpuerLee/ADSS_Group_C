@@ -13,7 +13,7 @@ public class SystemInterface {
 
     private SystemInterface() {
         workerController = new WorkerController();
-        shiftController = new ShiftController();
+        shiftController = new ShiftController(workerController);
     }
 
     public static SystemInterface getInstance(){
