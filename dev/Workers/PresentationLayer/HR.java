@@ -95,7 +95,6 @@ public class HR {
         workerName = sc.nextLine();
         System.out.println("Enter phone:");
         String workerPhoneNumber = sc.nextLine();
-        workerPhoneNumber = sc.nextLine();
         System.out.println("Enter bank account:");
         int workerBankAccount = sc.nextInt();
         System.out.println("Enter salary:");
