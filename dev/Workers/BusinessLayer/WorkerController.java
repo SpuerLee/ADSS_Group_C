@@ -186,7 +186,7 @@ public class WorkerController {
         return infoObject;
     }
 
-    public InfoObject addWorker(int id, String name, int phoneNumber, int bankAccount, int salary, String _date, String jobTitle) {
+    public InfoObject addWorker(int id, String name, String phoneNumber, int bankAccount, int salary, String _date, String jobTitle) {
         InfoObject infoObject = new InfoObject("Worker added successfully",true);
         Date date = parseDate(_date);
         infoObject = validateWorkerCredentials(id, name, phoneNumber, bankAccount, salary, jobTitle, infoObject, date);
@@ -198,7 +198,7 @@ public class WorkerController {
         return infoObject;
     }
 
-    private InfoObject validateWorkerCredentials(int id, String name, int phoneNumber, int bankAccount, int salary, String jobTitle, InfoObject infoObject, Date date) {
+    private InfoObject validateWorkerCredentials(int id, String name, String phoneNumber, int bankAccount, int salary, String jobTitle, InfoObject infoObject, Date date) {
         if(date==null){
             infoObject.setMessage("Invalid date format");
             infoObject.setIsSucceeded(false);
@@ -216,7 +216,7 @@ public class WorkerController {
                 return infoObject;
             }
         }
-        if(phoneNumber<0){
+        if(phoneNumber.equals("")){
             infoObject.setMessage("Invalid phone number");
             infoObject.setIsSucceeded(false);
             return infoObject;

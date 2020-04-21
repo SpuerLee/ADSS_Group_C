@@ -94,7 +94,8 @@ public class HR {
         String workerName = sc.nextLine();
         workerName = sc.nextLine();
         System.out.println("Enter phone:");
-        int workerPhoneNumber = sc.nextInt();
+        String workerPhoneNumber = sc.nextLine();
+        workerPhoneNumber = sc.nextLine();
         System.out.println("Enter bank account:");
         int workerBankAccount = sc.nextInt();
         System.out.println("Enter salary:");
@@ -165,9 +166,9 @@ public class HR {
     }
 
     public static void initSuperLeeWithWorkers() {
-        SystemInterface.getInstance().addWorker(100,"Andrey Palman",100,123,100,"15-04-2020","Cashier");
-        SystemInterface.getInstance().addWorker(101,"Hadar Kor",101,124,2500,"15-04-2020","Manager");
-        SystemInterface.getInstance().addWorker(102,"Tomer Hacham",102,125,10000,"15-04-2020","Storekeeper");
+        SystemInterface.getInstance().addWorker(100,"Andrey Palman","100",123,100,"15-04-2020","Cashier");
+        SystemInterface.getInstance().addWorker(101,"Hadar Kor","101",124,2500,"15-04-2020","Manager");
+        SystemInterface.getInstance().addWorker(102,"Tomer Hacham","102",125,10000,"15-04-2020","Storekeeper");
         SystemInterface.getInstance().createShift("MORNING",2,"1,3","19-12-2020");
     }
 

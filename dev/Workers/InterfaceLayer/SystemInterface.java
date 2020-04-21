@@ -43,7 +43,7 @@ public class SystemInterface {
         return shiftController.printShift(shiftSn);
     }
 
-    public InfoObject addWorker(int workerId,String workerName,int workerPhoneNumber,int workerBankAccount,int workerSalary,String dateOfStart,String workerJobTitle) {
+    public InfoObject addWorker(int workerId,String workerName,String workerPhoneNumber,int workerBankAccount,int workerSalary,String dateOfStart,String workerJobTitle) {
         return workerController.addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle);
     }
 

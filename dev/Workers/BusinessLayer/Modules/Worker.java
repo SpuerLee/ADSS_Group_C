@@ -14,7 +14,7 @@ public class Worker {
     private int sn;
     private int id;
     private String name;
-    private int phoneNumber;
+    private String phoneNumber;
     private int bankAccount;
     private int salary;
     private Date date;
@@ -36,7 +36,7 @@ public class Worker {
                 "constrains: " + printConstrains()  + "\n" ;
     }
 
-    public Worker(int id, String name, int phoneNumber, int bankAccount, int salary, Date date, String jobTitle,int Sn) {
+    public Worker(int id, String name, String phoneNumber, int bankAccount, int salary, Date date, String jobTitle, int Sn) {
         this.sn = Sn;
         this.id = id;
         this.name = name;
