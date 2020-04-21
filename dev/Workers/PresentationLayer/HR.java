@@ -155,7 +155,18 @@ public class HR {
         SystemInterface.getInstance().addWorker(100,"Andrey Palman","100",123,100,"15-04-2020","Cashier","");
         SystemInterface.getInstance().addWorker(101,"Hadar Kor","101",124,2500,"15-04-2020","Manager","");
         SystemInterface.getInstance().addWorker(102,"Tomer Hacham","102",125,10000,"15-04-2020","Storekeeper","");
+        SystemInterface.getInstance().addWorker(103,"Amit Rubin","102",125,10000,"15-04-2020","Storekeeper","");
+        SystemInterface.getInstance().addWorker(104,"Reut Levy","102",125,10000,"15-04-2020","Storekeeper","");
+        SystemInterface.getInstance().addWorker(105,"Hadas Zaira","102",125,10000,"15-04-2020","Storekeeper","");
+        SystemInterface.getInstance().addWorker(106,"Roi Benhus","102",125,10000,"15-04-2020","Storekeeper","");
         SystemInterface.getInstance().createShift("MORNING",2,"1,3","19-12-2020");
+        SystemInterface.getInstance().createShift("NIGHT",2,"1,3,4","19-12-2020");
+        SystemInterface.getInstance().createShift("MORNING",2,"1,3,5","20-12-2020");
+        SystemInterface.getInstance().createShift("NIGHT",2,"1,3,6,7","20-12-2020");
+        SystemInterface.getInstance().createShift("MORNING",2,"1,3,4,5,6,7","21-12-2020");
+        SystemInterface.getInstance().createShift("NIGHT",2,"1,3,5","21-12-2020");
+        SystemInterface.getInstance().createShift("MORNING",2,"1,6,7","22-12-2020");
+        SystemInterface.getInstance().createShift("NIGHT",2,"1,4,5","22-12-2020");
     }
 
     private static void checkResponse(InfoObject infoObject,Scanner sc){
