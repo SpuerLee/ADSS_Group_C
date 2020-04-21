@@ -1,15 +1,10 @@
 package Workers.PresentationLayer;
 
 
-import Workers.BusinessLayer.Modules.Shift;
-import Workers.BusinessLayer.Modules.Worker;
 import Workers.BusinessLayer.Utils.InfoObject;
 import Workers.InterfaceLayer.SystemInterface;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class HR {
@@ -70,10 +65,10 @@ public class HR {
         System.out.println("Please select shift type Morning or Night");
         String shiftType = sc.next().toUpperCase(); // { Morning , Night }
         System.out.println("Please select manager SN for the shift");
-        checkResponse(SystemInterface.getInstance().printAllManagers(date, shiftType), sc);
+        checkResponse(SystemInterface.getInstance().printAllManagersAvailableInDates(date, shiftType), sc);
         int selectedManagerSn = sc.nextInt();
         System.out.println("Please select workers SN's for the shift");
-        checkResponse(SystemInterface.getInstance().printAllWorkers(date, shiftType), sc);
+        checkResponse(SystemInterface.getInstance().printAllWorkersAvailableInDates(date, shiftType), sc);
         String chosenWorkersSn = sc.next(); // 1,2,6,9
         checkResponse(SystemInterface.getInstance().createShift(shiftType, selectedManagerSn, chosenWorkersSn, date), sc);
     }
@@ -130,7 +125,7 @@ public class HR {
                 EditWorkerSalary(sc, workerSn);
                 break;
             case 3: // Fire worker
-                checkResponse(SystemInterface.getInstance().removeWorker(workerSn), sc);
+                checkResponse(SystemInterface.getInstance().removeWorkerBySn(workerSn), sc);
                 break;
             case 0: // quit
                 workingLoop(sc);
@@ -147,8 +142,8 @@ public class HR {
         checkResponse(SystemInterface.getInstance().resetWorkerConstrainsBySn(workerSn), sc);
         System.out.println("Enter constrains: - Day-ShiftType , Day-ShiftType, etc...");
         String constrains = sc.nextLine();
-        checkResponse(SystemInterface.getInstance().editWorkerConstrainsBySN(workerSn,constrains),sc);
-        checkResponse(SystemInterface.getInstance().printWorkerConstrains(workerSn), sc);
+        checkResponse(SystemInterface.getInstance().editWorkerConstrainsBySn(workerSn,constrains),sc);
+        checkResponse(SystemInterface.getInstance().printWorkerConstrainsBySn(workerSn), sc);
     }
 
     public static void initSuperLeeWithWorkers() {

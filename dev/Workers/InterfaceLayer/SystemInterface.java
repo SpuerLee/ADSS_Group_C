@@ -23,7 +23,7 @@ public class SystemInterface {
         return systemInterface;
     }
 
-    public InfoObject printAllManagers(String date, String shiftType) {
+    public InfoObject printAllManagersAvailableInDates(String date, String shiftType) {
         return workerController.printAllManagersAvailableInThisDate(date,shiftType);
     }
 
@@ -31,7 +31,7 @@ public class SystemInterface {
         return workerController.printAllWorker();
     }
 
-    public InfoObject printAllWorkers(String date,String shiftType) {
+    public InfoObject printAllWorkersAvailableInDates(String date, String shiftType) {
         return workerController.printAllWorkersAvailableInThisDate(date, shiftType);
     }
 
@@ -51,7 +51,7 @@ public class SystemInterface {
         return workerController.printWorkerBySn(workerSn);
     }
 
-    public InfoObject printWorkerConstrains(int workerSn){
+    public InfoObject printWorkerConstrainsBySn(int workerSn){
         return workerController.printWorkersConstrainsBySn(workerSn);
     }
 
@@ -59,7 +59,7 @@ public class SystemInterface {
         return workerController.setNewSalaryBySn(workerSn, newSalary);
     }
 
-    public InfoObject removeWorker(int workerSn){
+    public InfoObject removeWorkerBySn(int workerSn){
         return workerController.removeWorkerBySn(workerSn);
     }
 
@@ -71,7 +71,7 @@ public class SystemInterface {
         return shiftController.printAllShits();
     }
 
-    public InfoObject editWorkerConstrainsBySN(int workerSn,String newConstrains){
+    public InfoObject editWorkerConstrainsBySn(int workerSn, String newConstrains){
         return workerController.editWorkerConstrainsBySn(workerSn,newConstrains);
     }
 
