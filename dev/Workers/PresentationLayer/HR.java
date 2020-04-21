@@ -102,9 +102,9 @@ public class HR {
         String dateOfStart = sc.next();
         System.out.println("Enter job title:");
         String workerJobTitle = sc.next();
+        checkResponse(SystemInterface.getInstance().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle),sc);
         System.out.println("Enter constrains day:");
         System.out.println("Enter 0 to stop");
-        checkResponse(SystemInterface.getInstance().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle),sc);
         String constrainsDay = sc.next(); // { Day }
         addConstrains(sc, SystemInterface.getInstance().getWorkerById(workerId).getWorkerSn(), constrainsDay);
     }
