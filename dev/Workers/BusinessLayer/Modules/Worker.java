@@ -90,7 +90,7 @@ public class Worker {
         this.constrains.put( new Pair<>(day,shiftType),false);
     }
 
-    public void setWorkerConstrains() {
+    public void resetConstrains() {
         System.out.println("All constrains has been removed");
         this.constrains = new HashMap<>();
     }

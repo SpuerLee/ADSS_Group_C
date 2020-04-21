@@ -43,12 +43,8 @@ public class SystemInterface {
         return shiftController.printShift(shiftSn);
     }
 
-    public InfoObject addWorker(int workerId,String workerName,String workerPhoneNumber,int workerBankAccount,int workerSalary,String dateOfStart,String workerJobTitle) {
-        return workerController.addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle);
-    }
-
-    public InfoObject addConstrainsToWorkerByWorkerSn(int workerToAddSn,String constrainsDay,String _shiftType){
-        return workerController.addConstrainsToWorkerByWorkerSn(workerToAddSn,constrainsDay,_shiftType);
+    public InfoObject addWorker(int workerId,String workerName,String workerPhoneNumber,int workerBankAccount,int workerSalary,String dateOfStart,String workerJobTitle,String constrains) {
+        return workerController.addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle,constrains);
     }
 
     public InfoObject printWorkerBySn(int workerSn){
@@ -67,16 +63,16 @@ public class SystemInterface {
         return workerController.removeWorkerBySn(workerSn);
     }
 
-    public InfoObject setWorkerConstrains(int workerSn){
-        return workerController.setWorkerConstrainsBySn(workerSn);
+    public InfoObject resetWorkerConstrainsBySn(int workerSn){
+        return workerController.resetWorkerConstrainsBySn(workerSn);
     }
 
     public InfoObject printAllShifts(){
         return shiftController.printAllShits();
     }
 
-    public Worker getWorkerById(int workerId){
-        return workerController.getWorkerById(workerId);
+    public InfoObject editWorkerConstrainsBySN(int workerSn,String newConstrains){
+        return workerController.editWorkerConstrainsBySn(workerSn,newConstrains);
     }
 
 }

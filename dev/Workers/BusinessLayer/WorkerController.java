@@ -156,7 +156,7 @@ public class WorkerController {
         return infoObject;
     }
 
-    public InfoObject addConstrainsToWorkerByWorkerSn(int workerSn, String day, String shiftType){
+    private InfoObject addConstrainsToWorkerByWorkerSn(int workerSn, String day, String shiftType){
         InfoObject infoObject = new InfoObject("Worker constrains updated successfully",true);
         enums selectedDay;
         enums sType;
@@ -186,15 +186,33 @@ public class WorkerController {
         return infoObject;
     }
 
-    public InfoObject addWorker(int id, String name, String phoneNumber, int bankAccount, int salary, String _date, String jobTitle) {
-        InfoObject infoObject = new InfoObject("",true);
+    public InfoObject addWorker(int id, String name, String phoneNumber, int bankAccount, int salary, String _date, String jobTitle,String constrains) {
+        InfoObject infoObject = new InfoObject("Worker added successful",true);
         Date date = parseDate(_date);
+        String[] workerConstrains;
+        try{
+            workerConstrains = constrains.split(",");
+        }
+        catch (Exception e){
+            workerConstrains = null;
+        }
         infoObject = validateWorkerCredentials(id, name, phoneNumber, bankAccount, salary, jobTitle, infoObject, date);
         if(!infoObject.isSucceeded()){
             return infoObject;
         }
         Worker workerToAdD = new Worker(id,name,phoneNumber,bankAccount,salary,date,jobTitle,getSnFactory());
         workerList.put(workerToAdD.getWorkerSn(),workerToAdD);
+        if(!workerConstrains[0].equals("")) {
+            for (String workerConstrain : workerConstrains) {
+                String day = workerConstrain.split("-")[0].toUpperCase();
+                String shiftType = workerConstrain.split("-")[1].toUpperCase();
+                infoObject = addConstrainsToWorkerByWorkerSn(workerToAdD.getWorkerSn(), day, shiftType);
+                if (!(infoObject.isSucceeded())) {
+                    workerList.remove(workerToAdD.getWorkerSn());
+                    return infoObject;
+                }
+            }
+        }
         return infoObject;
     }
 
@@ -266,24 +284,32 @@ public class WorkerController {
         return infoObject;
     }
 
-    public InfoObject setWorkerConstrainsBySn(int workerSn) {
+    public InfoObject resetWorkerConstrainsBySn(int workerSn) {
         InfoObject infoObject = new InfoObject("",true);
         if(!(this.getWorkerList().containsValue(getWorkerBySn(workerSn)))){
             infoObject.setMessage("There is no worker with this SN");
             infoObject.setIsSucceeded(false);
             return infoObject;
         }
-        getWorkerBySn(workerSn).setWorkerConstrains();
+        getWorkerBySn(workerSn).resetConstrains();
         return infoObject;
     }
 
-    public Worker getWorkerById(int workerId) {
-        Worker workerToReturn=null;
-        for(Worker worker : workerList.values()){
-            if(worker.getWorkerId() == workerId){
-                workerToReturn = worker;
+    public InfoObject editWorkerConstrainsBySn(int workerSn,String newConstrains) {
+        InfoObject infoObject = new InfoObject("Edit workers constrains successfully",true);
+        String[] workersConstrains = newConstrains.split(",");
+        if(workersConstrains[0].equals("")){
+            return infoObject;
+        } else {
+            for (String workerConstrain : workersConstrains) {
+                String day = workerConstrain.split("-")[0].toUpperCase();
+                String shiftType = workerConstrain.split("-")[1].toUpperCase();
+                infoObject = this.addConstrainsToWorkerByWorkerSn(workerSn, day, shiftType);
+                if (!infoObject.isSucceeded()) {
+                    return infoObject;
+                }
             }
         }
-        return workerToReturn;
+        return infoObject;
     }
 }

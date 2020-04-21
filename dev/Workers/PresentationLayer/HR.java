@@ -103,22 +103,9 @@ public class HR {
         String dateOfStart = sc.next();
         System.out.println("Enter job title:");
         String workerJobTitle = sc.next();
-        checkResponse(SystemInterface.getInstance().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle),sc);
-        System.out.println("Enter constrains day:");
-        System.out.println("Enter 0 to stop");
-        String constrainsDay = sc.next().toUpperCase(); // { Day }
-        addConstrains(sc, SystemInterface.getInstance().getWorkerById(workerId).getWorkerSn(), constrainsDay);
-        System.out.println("Worker added successfully");
-    }
-
-    private static void addConstrains(Scanner sc, int workerToAddSn, String constrainsDay) {
-        while (!constrainsDay.equals("0")) {
-            System.out.println("Enter shift type Morning or Night");
-            String _shiftType = sc.next().toUpperCase(); // { Type }
-            checkResponse(SystemInterface.getInstance().addConstrainsToWorkerByWorkerSn(workerToAddSn, constrainsDay, _shiftType), sc);
-            System.out.println("Enter constrains day:");
-            constrainsDay = sc.next().toUpperCase(); // { Day }
-        }
+        System.out.println("Enter constrains: - Day-ShiftType , Day-ShiftType, etc...");
+        String constrains = sc.nextLine();
+        checkResponse(SystemInterface.getInstance().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle,constrains),sc);
     }
 
     public static void displayWorkers(Scanner sc) {
@@ -157,18 +144,17 @@ public class HR {
     }
 
     private static void EditWorkerConstrains(Scanner sc, int workerSn) {
-        checkResponse(SystemInterface.getInstance().setWorkerConstrains(workerSn), sc);
-        System.out.println("Enter constrains day:");
-        String constrainsDay = sc.next().toUpperCase(); // { Day }
-        addConstrains(sc, workerSn, constrainsDay);
-        System.out.println("These constrains have been added:");
+        checkResponse(SystemInterface.getInstance().resetWorkerConstrainsBySn(workerSn), sc);
+        System.out.println("Enter constrains: - Day-ShiftType , Day-ShiftType, etc...");
+        String constrains = sc.nextLine();
+        checkResponse(SystemInterface.getInstance().editWorkerConstrainsBySN(workerSn,constrains),sc);
         checkResponse(SystemInterface.getInstance().printWorkerConstrains(workerSn), sc);
     }
 
     public static void initSuperLeeWithWorkers() {
-        SystemInterface.getInstance().addWorker(100,"Andrey Palman","100",123,100,"15-04-2020","Cashier");
-        SystemInterface.getInstance().addWorker(101,"Hadar Kor","101",124,2500,"15-04-2020","Manager");
-        SystemInterface.getInstance().addWorker(102,"Tomer Hacham","102",125,10000,"15-04-2020","Storekeeper");
+        SystemInterface.getInstance().addWorker(100,"Andrey Palman","100",123,100,"15-04-2020","Cashier","");
+        SystemInterface.getInstance().addWorker(101,"Hadar Kor","101",124,2500,"15-04-2020","Manager","");
+        SystemInterface.getInstance().addWorker(102,"Tomer Hacham","102",125,10000,"15-04-2020","Storekeeper","");
         SystemInterface.getInstance().createShift("MORNING",2,"1,3","19-12-2020");
     }
 
