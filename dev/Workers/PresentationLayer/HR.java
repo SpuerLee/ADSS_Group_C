@@ -106,7 +106,7 @@ public class HR {
         checkResponse(SystemInterface.getInstance().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle),sc);
         System.out.println("Enter constrains day:");
         System.out.println("Enter 0 to stop");
-        String constrainsDay = sc.next(); // { Day }
+        String constrainsDay = sc.next().toUpperCase(); // { Day }
         addConstrains(sc, SystemInterface.getInstance().getWorkerById(workerId).getWorkerSn(), constrainsDay);
         System.out.println("Worker added successfully");
     }
