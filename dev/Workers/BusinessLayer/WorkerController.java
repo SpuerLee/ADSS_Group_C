@@ -187,7 +187,7 @@ public class WorkerController {
     }
 
     public InfoObject addWorker(int id, String name, String phoneNumber, int bankAccount, int salary, String _date, String jobTitle) {
-        InfoObject infoObject = new InfoObject("Worker added successfully",true);
+        InfoObject infoObject = new InfoObject("",true);
         Date date = parseDate(_date);
         infoObject = validateWorkerCredentials(id, name, phoneNumber, bankAccount, salary, jobTitle, infoObject, date);
         if(!infoObject.isSucceeded()){

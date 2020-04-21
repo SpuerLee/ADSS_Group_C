@@ -108,6 +108,7 @@ public class HR {
         System.out.println("Enter 0 to stop");
         String constrainsDay = sc.next(); // { Day }
         addConstrains(sc, SystemInterface.getInstance().getWorkerById(workerId).getWorkerSn(), constrainsDay);
+        System.out.println("Worker added successfully");
     }
 
     private static void addConstrains(Scanner sc, int workerToAddSn, String constrainsDay) {
