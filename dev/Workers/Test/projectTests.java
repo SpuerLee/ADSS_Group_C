@@ -1,17 +1,16 @@
 package Workers.Test;
 
 import Workers.BusinessLayer.ShiftController;
-import Workers.BusinessLayer.Modules.Worker;
 import Workers.BusinessLayer.Utils.enums;
 import Workers.BusinessLayer.WorkerController;
 import javafx.util.Pair;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class projectTests {
 
