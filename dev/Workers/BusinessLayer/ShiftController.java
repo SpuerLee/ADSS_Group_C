@@ -80,6 +80,10 @@ public class ShiftController{
             infoObject.setMessage("Invalid date format");
             return infoObject;
         }
+        infoObject = validateNewShiftDate(date,sType);
+        if(!infoObject.isSucceeded()){
+            return infoObject;
+        }
 
         if(!(workerController.getWorkerList().containsKey(managerSn))){
             infoObject.setIsSucceeded(false);
@@ -115,7 +119,7 @@ public class ShiftController{
             for (String workerSn : workersSn) {
                 if (!(workerController.getWorkerList().containsKey(Integer.parseInt(workerSn)))) {
                     infoObject.setIsSucceeded(false);
-                    infoObject.setMessage("There is no worker with " + Integer.parseInt(workerSn) + " SN");
+                    infoObject.setMessage("There is no worker with serial number" + Integer.parseInt(workerSn));
                     return infoObject;
                 }
             }
@@ -143,10 +147,7 @@ public class ShiftController{
             }
         }
         Shift shiftToAdd = new Shift(date, sType, manager, workersListOfCurrentShift, getSnFactory());
-        infoObject = validateNewShiftDate(date,sType);
-        if(infoObject.isSucceeded()){
-            this.shiftHistory.put(shiftToAdd.getShiftSn(),shiftToAdd);
-        }
+        this.shiftHistory.put(shiftToAdd.getShiftSn(),shiftToAdd);
         return infoObject;
     }
 
