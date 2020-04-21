@@ -94,7 +94,6 @@ public class projectTests {
         assertEquals(constrains, workerController.getWorkerList().get(1).getWorkerConstrains());
     }
 
-
     @Test
     @DisplayName("Create shift with invalid manager id")
     void test10() {

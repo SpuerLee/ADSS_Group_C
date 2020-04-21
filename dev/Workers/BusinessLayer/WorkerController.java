@@ -137,7 +137,7 @@ public class WorkerController {
         return infoObject;
     }
 
-    public int getSnFactory(){
+    private int getSnFactory(){
         return ++this.snFactory;
     }
 
