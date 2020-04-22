@@ -186,9 +186,9 @@ public class WorkerController {
         return infoObject;
     }
 
-    public InfoObject addWorker(int id, String name, String phoneNumber, int bankAccount, int salary, String _date, String jobTitle,String constrains) {
+    public InfoObject addWorker(int id, String name, String phoneNumber, int bankAccount, int salary, String dateToParse, String jobTitle,String constrains) {
         InfoObject infoObject = new InfoObject("",true);
-        Date date = parseDate(_date);
+        Date date = parseDate(dateToParse);
         String[] workerConstrains=null;
         if(!constrains.toUpperCase().equals("NONE")){
             try{
@@ -267,10 +267,10 @@ public class WorkerController {
         return infoObject;
     }
 
-    private Date parseDate(String _date){
+    private Date parseDate(String dateToParse){
         Date date;
         try {
-            date = new SimpleDateFormat("d-MM-yyyy").parse(_date);
+            date = new SimpleDateFormat("d-MM-yyyy").parse(dateToParse);
         }
         catch (Exception e){
             return null;

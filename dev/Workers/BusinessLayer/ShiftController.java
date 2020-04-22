@@ -61,7 +61,7 @@ public class ShiftController{
         return infoObject;
     }
 
-    public InfoObject createShift(String shiftType, int managerSn, String listOfWorkersSn, String _date) {
+    public InfoObject createShift(String shiftType, int managerSn, String listOfWorkersSn, String dateToParse) {
         InfoObject infoObject = new InfoObject("",true);
         enums sType;
         try {
@@ -73,7 +73,7 @@ public class ShiftController{
             return infoObject;
         }
 
-        Date date = parseDate(_date);
+        Date date = parseDate(dateToParse);
         if(date==null){
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("Invalid date format");
@@ -192,10 +192,10 @@ public class ShiftController{
         return this.workerController;
     }
 
-    private Date parseDate(String _date){
+    private Date parseDate(String dateToParse){
         Date date;
         try {
-            date = new SimpleDateFormat("d-MM-yyyy").parse(_date);
+            date = new SimpleDateFormat("d-MM-yyyy").parse(dateToParse);
         }
         catch (Exception e){
             return null;
