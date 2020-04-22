@@ -18,6 +18,10 @@ public class HR {
         System.out.println("Welcome to SuperLee");
         System.out.println("1. Choose start with data");
         System.out.println("2. Start new system");
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         int selectedOption = sc.nextInt();
         if(selectedOption == 1){
             initSuperLeeWithWorkers();
@@ -27,6 +31,10 @@ public class HR {
 
     private static void workingLoop(Scanner sc){
         printMenu();
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         int userChoose = sc.nextInt();
         while(userChoose != 0) {
             switch (userChoose) {
@@ -46,6 +54,10 @@ public class HR {
                     System.exit(0);
             }
             printMenu();
+            while(!sc.hasNextInt()){
+                System.out.println("Invalid input, please try again");
+                sc.next();
+            }
             userChoose = sc.nextInt();
         }
         System.exit(0);
@@ -62,11 +74,23 @@ public class HR {
 
     public static void addShift(Scanner sc) {
         System.out.println("Please select a date - dd-mm-yyyy");
+        while(!sc.hasNext()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         String date = sc.next();
         System.out.println("Please select shift type Morning or Night");
+        while(!sc.hasNext()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         String shiftType = sc.next().toUpperCase(); // { Morning , Night }
         System.out.println("Please select manager SN for the shift");
         checkResponse(SystemInterface.getInstance().printAllManagersAvailableInDates(date, shiftType), sc);
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         int selectedManagerSn = sc.nextInt();
         System.out.println("Please select workers SN's for the shift");
         InfoObject infoObject = SystemInterface.getInstance().printAllWorkersAvailableInDates(date, shiftType);
@@ -74,6 +98,10 @@ public class HR {
             System.out.println(infoObject.getMessage());
             checkResponse(SystemInterface.getInstance().createShift(shiftType, selectedManagerSn, "", date), sc);
         } else {
+            while(!sc.hasNext()){
+                System.out.println("Invalid input, please try again");
+                sc.next();
+            }
             String chosenWorkersSn = sc.next(); // 1,2,6,9
             chosenWorkersSn = chosenWorkersSn.replaceAll("\\s+", "");
             checkResponse(SystemInterface.getInstance().createShift(shiftType, selectedManagerSn, chosenWorkersSn, date), sc);
@@ -82,6 +110,10 @@ public class HR {
 
     public static void displayShifts(Scanner sc){
         checkResponse(SystemInterface.getInstance().printAllShifts(),sc);
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         int shiftSn = sc.nextInt();
         if(shiftSn == 0){
             workingLoop(sc);
@@ -91,21 +123,49 @@ public class HR {
 
     public static void addWorker(Scanner sc)  {
         System.out.println("Enter worker Id:");
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         int workerId = sc.nextInt();
         System.out.println("Enter worker name:");
         String workerName = sc.nextLine();
         workerName = sc.nextLine();
         System.out.println("Enter phone:");
+        while(!sc.hasNext()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         String workerPhoneNumber = sc.nextLine();
         System.out.println("Enter bank account:");
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         int workerBankAccount = sc.nextInt();
         System.out.println("Enter salary:");
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         int workerSalary = sc.nextInt();
         System.out.println("Enter starting date - dd-mm-yyyy");
+        while(!sc.hasNext()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         String dateOfStart = sc.next();
         System.out.println("Enter job title:");
+        while(!sc.hasNext()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         String workerJobTitle = sc.next();
         System.out.println("Enter constrains: - Day-ShiftType , Day-ShiftType, etc...");
+        while(!sc.hasNext()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         String constrains = sc.next();
         constrains = constrains.replaceAll("\\s+","");
         checkResponse(SystemInterface.getInstance().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle,constrains),sc);
@@ -113,6 +173,10 @@ public class HR {
 
     public static void displayWorkers(Scanner sc) {
         checkResponse(SystemInterface.getInstance().printAllWorkers(), sc);
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         int workerSn = sc.nextInt();
         if(workerSn == 0){
             workingLoop(sc);
@@ -123,6 +187,10 @@ public class HR {
         System.out.println("2. Edit worker salary");
         System.out.println("3. Fire worker");
         System.out.println("Enter 0 to stop");
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         int userChooseForWorker = sc.nextInt();
 
         switch (userChooseForWorker) {
@@ -143,6 +211,10 @@ public class HR {
 
     private static void EditWorkerSalary(Scanner sc, int workerSn) {
         System.out.println("Enter new salary");
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         int newSalary = sc.nextInt();
         checkResponse(SystemInterface.getInstance().setNewSalaryBySn(workerSn, newSalary),sc);
     }
@@ -150,6 +222,10 @@ public class HR {
     private static void EditWorkerConstrains(Scanner sc, int workerSn) {
         checkResponse(SystemInterface.getInstance().resetWorkerConstrainsBySn(workerSn), sc);
         System.out.println("Enter constrains: - Day-ShiftType , Day-ShiftType, etc...");
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
         String constrains = sc.next();
         constrains = constrains.replaceAll("\\s+","");
         checkResponse(SystemInterface.getInstance().editWorkerConstrainsBySn(workerSn,constrains),sc);
