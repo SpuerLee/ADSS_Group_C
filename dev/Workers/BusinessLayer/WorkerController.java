@@ -52,7 +52,7 @@ public class WorkerController {
         boolean availableManager=false;
         List<Worker> listOfAvailableWorkers = getAllAvailableWorkers(date,sType);
         for (Worker manager : listOfAvailableWorkers) {
-            if(manager.getWorkerJobTitle().equals("Manager")) {
+            if(manager.getWorkerJobTitle().toUpperCase().equals("MANAGER")) {
                 System.out.println(manager.getWorkerSn() + ". ID: " + manager.getWorkerId() + " Name: " + manager.getWorkerName());
                 availableManager = true;
             }
@@ -84,14 +84,14 @@ public class WorkerController {
         List<Worker> listOfAvailableWorkers = getAllAvailableWorkers(date,sType);
         boolean availableWorker = false;
         for (Worker listOfAvailableWorker : listOfAvailableWorkers) {
-            if(!listOfAvailableWorker.getWorkerJobTitle().equals("Manager")) {
+            if(!listOfAvailableWorker.getWorkerJobTitle().toUpperCase().equals("MANAGER")) {
                 System.out.println(listOfAvailableWorker.getWorkerSn() + ". ID: " + listOfAvailableWorker.getWorkerId() + " Name: " + listOfAvailableWorker.getWorkerName() + " Job title: " + listOfAvailableWorker.getWorkerJobTitle());
                 availableWorker = true;
             }
         }
         if(!availableWorker){
             infoObject.setMessage("There are no available workers");
-            infoObject.setIsSucceeded(false);
+            infoObject.setIsSucceeded(true);
         }
         return infoObject;
     }

@@ -69,10 +69,15 @@ public class HR {
         checkResponse(SystemInterface.getInstance().printAllManagersAvailableInDates(date, shiftType), sc);
         int selectedManagerSn = sc.nextInt();
         System.out.println("Please select workers SN's for the shift");
-        checkResponse(SystemInterface.getInstance().printAllWorkersAvailableInDates(date, shiftType), sc);
-        String chosenWorkersSn = sc.next(); // 1,2,6,9
-        chosenWorkersSn = chosenWorkersSn.replaceAll("\\s+","");
-        checkResponse(SystemInterface.getInstance().createShift(shiftType, selectedManagerSn, chosenWorkersSn, date), sc);
+        InfoObject infoObject = SystemInterface.getInstance().printAllWorkersAvailableInDates(date, shiftType);
+        if(infoObject.getMessage().equals("There are no available workers")){
+            System.out.println(infoObject.getMessage());
+            checkResponse(SystemInterface.getInstance().createShift(shiftType, selectedManagerSn, "", date), sc);
+        } else {
+            String chosenWorkersSn = sc.next(); // 1,2,6,9
+            chosenWorkersSn = chosenWorkersSn.replaceAll("\\s+", "");
+            checkResponse(SystemInterface.getInstance().createShift(shiftType, selectedManagerSn, chosenWorkersSn, date), sc);
+        }
     }
 
     public static void displayShifts(Scanner sc){

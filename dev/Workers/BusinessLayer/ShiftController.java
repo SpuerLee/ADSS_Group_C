@@ -169,7 +169,7 @@ public class ShiftController{
         }
         Shift shift = this.shiftHistory.get(shiftIndex);
         shift.printShift();
-        if (shift.getShiftWorkers().isEmpty()) {
+        if (shift.getShiftWorkers().size() == 1) {
             System.out.println("\n" + "Workers: No workers for this shift");
         } else {
             System.out.println("\n" + "Workers: ");
@@ -206,9 +206,8 @@ public class ShiftController{
 
     private InfoObject validateManagerConstrains(Worker manager,enums shiftType,Date shiftDate){
         InfoObject infoObject = new InfoObject("",true);
-        Date date = new Date();
         Date workersDate = manager.getWorkerStartingDate();
-        if (date.compareTo(workersDate) < 0) {
+        if (shiftDate.compareTo(workersDate) < 0) {
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("This worker : " + manager.getWorkerName() + " Start working only from " +
                     manager.getWorkerStartingDate());
