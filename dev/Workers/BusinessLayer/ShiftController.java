@@ -29,8 +29,7 @@ public class ShiftController{
             return infoObject;
         }
         System.out.println("Select shift by SN");
-        List<Shift> shiftToDisplay = new LinkedList<>();
-        shiftToDisplay.addAll(shiftHistory.values());
+        List<Shift> shiftToDisplay = new LinkedList<>(shiftHistory.values());
         Collections.sort(shiftToDisplay);
         for (Shift shift : shiftToDisplay) {
             SimpleDateFormat day = new SimpleDateFormat("dd-MM-yyyy");
@@ -243,7 +242,7 @@ public class ShiftController{
         System.out.println("This shifts has been removed : \n");
         for(Shift deletedShift : listOfShiftsRemoved){
             deletedShift.printShift();
-            System.out.println("");
+            System.out.println();
         }
 
         return infoObject;
