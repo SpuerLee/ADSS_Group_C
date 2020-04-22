@@ -13,6 +13,7 @@ public class HR {
     }
 
     public static void start() {
+
         Scanner sc=new Scanner(System.in);
         System.out.println("Welcome to SuperLee");
         System.out.println("1. Choose start with data");
@@ -70,6 +71,7 @@ public class HR {
         System.out.println("Please select workers SN's for the shift");
         checkResponse(SystemInterface.getInstance().printAllWorkersAvailableInDates(date, shiftType), sc);
         String chosenWorkersSn = sc.next(); // 1,2,6,9
+        chosenWorkersSn = chosenWorkersSn.replaceAll("\\s+","");
         checkResponse(SystemInterface.getInstance().createShift(shiftType, selectedManagerSn, chosenWorkersSn, date), sc);
     }
 
@@ -99,7 +101,8 @@ public class HR {
         System.out.println("Enter job title:");
         String workerJobTitle = sc.next();
         System.out.println("Enter constrains: - Day-ShiftType , Day-ShiftType, etc...");
-        String constrains = sc.nextLine();
+        String constrains = sc.next();
+        constrains = constrains.replaceAll("\\s+","");
         checkResponse(SystemInterface.getInstance().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle,constrains),sc);
     }
 
@@ -126,6 +129,7 @@ public class HR {
                 break;
             case 3: // Fire worker
                 checkResponse(SystemInterface.getInstance().removeWorkerBySn(workerSn), sc);
+                checkResponse(SystemInterface.getInstance().removeLaterShiftForFiredManagerByManagerSn(workerSn),sc);
                 break;
             case 0: // quit
                 workingLoop(sc);
@@ -141,7 +145,8 @@ public class HR {
     private static void EditWorkerConstrains(Scanner sc, int workerSn) {
         checkResponse(SystemInterface.getInstance().resetWorkerConstrainsBySn(workerSn), sc);
         System.out.println("Enter constrains: - Day-ShiftType , Day-ShiftType, etc...");
-        String constrains = sc.nextLine();
+        String constrains = sc.next();
+        constrains = constrains.replaceAll("\\s+","");
         checkResponse(SystemInterface.getInstance().editWorkerConstrainsBySn(workerSn,constrains),sc);
         checkResponse(SystemInterface.getInstance().printWorkerConstrainsBySn(workerSn), sc);
     }

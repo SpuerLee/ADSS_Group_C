@@ -187,14 +187,16 @@ public class WorkerController {
     }
 
     public InfoObject addWorker(int id, String name, String phoneNumber, int bankAccount, int salary, String _date, String jobTitle,String constrains) {
-        InfoObject infoObject = new InfoObject("Worker added successful",true);
+        InfoObject infoObject = new InfoObject("",true);
         Date date = parseDate(_date);
-        String[] workerConstrains;
-        try{
-            workerConstrains = constrains.split(",");
-        }
-        catch (Exception e){
-            workerConstrains = null;
+        String[] workerConstrains=null;
+        if(!constrains.toUpperCase().equals("NONE")){
+            try{
+                workerConstrains = constrains.split(",");
+            }
+            catch (Exception e){
+                workerConstrains = null;
+            }
         }
         infoObject = validateWorkerCredentials(id, name, phoneNumber, bankAccount, salary, jobTitle, infoObject, date);
         if(!infoObject.isSucceeded()){
@@ -202,17 +204,20 @@ public class WorkerController {
         }
         Worker workerToAdD = new Worker(id,name,phoneNumber,bankAccount,salary,date,jobTitle,getSnFactory());
         workerList.put(workerToAdD.getWorkerSn(),workerToAdD);
-        if(!workerConstrains[0].equals("")) {
-            for (String workerConstrain : workerConstrains) {
-                String day = workerConstrain.split("-")[0].toUpperCase();
-                String shiftType = workerConstrain.split("-")[1].toUpperCase();
-                infoObject = addConstrainsToWorkerByWorkerSn(workerToAdD.getWorkerSn(), day, shiftType);
-                if (!(infoObject.isSucceeded())) {
-                    workerList.remove(workerToAdD.getWorkerSn());
-                    return infoObject;
+        if(!constrains.toUpperCase().equals("NONE")) {
+            if (!workerConstrains[0].equals("")) {
+                for (String workerConstrain : workerConstrains) {
+                    String day = workerConstrain.split("-")[0].toUpperCase();
+                    String shiftType = workerConstrain.split("-")[1].toUpperCase();
+                    infoObject = addConstrainsToWorkerByWorkerSn(workerToAdD.getWorkerSn(), day, shiftType);
+                    if (!(infoObject.isSucceeded())) {
+                        workerList.remove(workerToAdD.getWorkerSn());
+                        return infoObject;
+                    }
                 }
             }
         }
+        infoObject.setMessage("Worker added successful");
         return infoObject;
     }
 
@@ -297,18 +302,22 @@ public class WorkerController {
 
     public InfoObject editWorkerConstrainsBySn(int workerSn,String newConstrains) {
         InfoObject infoObject = new InfoObject("Edit workers constrains successfully",true);
-        String[] workersConstrains = newConstrains.split(",");
-        if(workersConstrains[0].equals("")){
-            return infoObject;
-        } else {
-            for (String workerConstrain : workersConstrains) {
-                String day = workerConstrain.split("-")[0].toUpperCase();
-                String shiftType = workerConstrain.split("-")[1].toUpperCase();
-                infoObject = this.addConstrainsToWorkerByWorkerSn(workerSn, day, shiftType);
-                if (!infoObject.isSucceeded()) {
-                    return infoObject;
+        if(!newConstrains.toUpperCase().equals("NONE")) {
+            String[] workersConstrains = newConstrains.split(",");
+            if (workersConstrains[0].equals("")) {
+                return infoObject;
+            } else {
+                for (String workerConstrain : workersConstrains) {
+                    String day = workerConstrain.split("-")[0].toUpperCase();
+                    String shiftType = workerConstrain.split("-")[1].toUpperCase();
+                    infoObject = this.addConstrainsToWorkerByWorkerSn(workerSn, day, shiftType);
+                    if (!infoObject.isSucceeded()) {
+                        return infoObject;
+                    }
                 }
             }
+        }else{
+            resetWorkerConstrainsBySn(workerSn);
         }
         return infoObject;
     }

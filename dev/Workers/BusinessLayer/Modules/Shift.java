@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class Shift {
+public class Shift implements Comparable<Shift>{
     private enums shiftType;
     private Worker manager;
     private List<Worker> shiftWorkers;
@@ -23,7 +23,7 @@ public class Shift {
     }
 
     public void printShift() {
-        SimpleDateFormat daty = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat daty = new SimpleDateFormat("dd-MM-yyyy");
         String dat = daty.format(date);
         System.out.println("Shift SN. " + this.sn);
         System.out.println("Manager SN: " + this.manager.getWorkerSn() + " Manager Name: " + this.manager.getWorkerName());
@@ -47,5 +47,13 @@ public class Shift {
 
     public Worker getManager() {
         return manager;
+    }
+
+    @Override
+    public int compareTo(Shift shiftToCompare) {
+        if(shiftToCompare.equals(this)){
+            return 0;
+        }
+        return this.getDate().compareTo(shiftToCompare.date);
     }
 }

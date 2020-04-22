@@ -75,4 +75,7 @@ public class SystemInterface {
         return workerController.editWorkerConstrainsBySn(workerSn,newConstrains);
     }
 
+    public InfoObject removeLaterShiftForFiredManagerByManagerSn(int workerSn) {
+        return shiftController.removeLaterShiftForFiredManagerByManagerSn(workerSn);
+    }
 }
