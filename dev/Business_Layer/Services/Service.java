@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Service {
 
-    public ConcurrentHashMap<Integer, Trucks> getHashTrucks() {
+    public ConcurrentHashMap<Integer, Truck> getHashTrucks() {
         return HashTrucks;
     }
 
@@ -25,10 +25,10 @@ public class Service {
         return SingletonService.instance;
     }
 
-    private ConcurrentHashMap<Integer, Business_Layer.Drivers> Drivers= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Driver> Drivers= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Supplier> HashSuppliers= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Store> HashStore= new ConcurrentHashMap<>();
-    private ConcurrentHashMap<Integer,Trucks> HashTrucks= new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Truck> HashTrucks= new ConcurrentHashMap<>();
     private List<Business_Layer.ItemsFile> ItemsFile= new LinkedList<>();
     private ConcurrentHashMap<Integer,Transportation> HashTransportation= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,MissingItems> MissingItems= new ConcurrentHashMap<>();
@@ -56,7 +56,7 @@ public class Service {
                     License type = new License(license.get(j).getAsString());
                     licenses.add(type);
                 }
-                Drivers add=new Drivers(driver.get("name").getAsString(),licenses);
+                Driver add=new Driver(driver.get("name").getAsString(),licenses);
                 Drivers.put(add.getId(),add);
 
             }
@@ -95,7 +95,8 @@ public class Service {
                     License type = new License(license.get(j).getAsString());
                     licenses.add(type);
                 }
-                HashTrucks.put(truck.get("license_number").getAsInt(),new Trucks(truck.get("license_number").getAsInt(),licenses,truck.get("model").getAsString(),truck.get("weight").getAsDouble(),truck.get("max weight").getAsDouble()));
+                Truck truck1 = new Truck(truck.get("license_number").getAsInt(),licenses,truck.get("model").getAsString(),truck.get("weight").getAsDouble(),truck.get("max weight").getAsDouble());
+                HashTrucks.put(truck1.getId(),truck1);
             }
             final JsonArray missing_items = jsonObject.get("Missing_Items").getAsJsonArray();
             for (int i = 0; i < missing_items.size(); i++) {
@@ -192,7 +193,7 @@ public class Service {
         return HashTransportation;
     }
 
-    public ConcurrentHashMap<Integer,Drivers> getDrivers(){
+    public ConcurrentHashMap<Integer, Driver> getDrivers(){
         return Drivers;
     }
 

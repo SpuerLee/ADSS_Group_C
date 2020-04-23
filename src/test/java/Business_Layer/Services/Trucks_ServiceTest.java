@@ -2,9 +2,8 @@ package Business_Layer.Services;
 
 import Business_Layer.Buisness_Exception;
 import Business_Layer.License;
-import Business_Layer.Trucks;
+import Business_Layer.Truck;
 import org.junit.Assert;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class Trucks_ServiceTest {
     Service service;
     Trucks_Service trucks_service;
-    Trucks trucks;
-    Trucks trucks1;
-    Trucks trucks2;
+    Truck trucks;
+    Truck trucks1;
+    Truck trucks2;
 
     @BeforeEach
     void setup(){
@@ -27,11 +26,11 @@ class Trucks_ServiceTest {
         trucks_service= Trucks_Service.getInstance();
         List<License> licenses=new LinkedList<>();
         licenses.add(new License("C"));
-        trucks=new Trucks(12345678,licenses,"skoda",180,300);
-        service.getHashTrucks().put(trucks.getlicense_number(),trucks);
+        trucks=new Truck(12345678,licenses,"skoda",180,300);
+        service.getHashTrucks().put(trucks.getId(),trucks);
         licenses.add(new License("C1"));
-        trucks1=new Trucks(12345867,licenses,"picanto",200,450);
-        service.getHashTrucks().put(trucks1.getlicense_number(),trucks1);
+        trucks1=new Truck(12345867,licenses,"picanto",200,450);
+        service.getHashTrucks().put(trucks1.getId(),trucks1);
     }
 
     @Test
@@ -66,7 +65,7 @@ class Trucks_ServiceTest {
         int size=service.getHashTrucks().size();
 
         try {
-            trucks_service.removeTruck("12345867");
+            trucks_service.removeTruck(1);
         }
         catch (Buisness_Exception e){
             e.printStackTrace();

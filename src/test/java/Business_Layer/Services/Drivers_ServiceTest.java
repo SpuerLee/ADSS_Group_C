@@ -1,7 +1,7 @@
 package Business_Layer.Services;
 
 import Business_Layer.Buisness_Exception;
-import Business_Layer.Drivers;
+import Business_Layer.Driver;
 import Business_Layer.License;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,9 +19,9 @@ class Drivers_ServiceTest {
 
     Service service;
     Drivers_Service drivers_service;
-    Drivers driver1;
-    Drivers driver2;
-    Drivers driver3;
+    Driver driver1;
+    Driver driver2;
+    Driver driver3;
 
     @BeforeEach
     void setUp() {
@@ -29,15 +29,15 @@ class Drivers_ServiceTest {
         drivers_service= Drivers_Service.getInstance();
         List<License> licenses= new LinkedList<>();
         licenses.add(new License("C"));
-        driver1=new Drivers("amit",licenses);
+        driver1=new Driver("amit",licenses);
         List<License> licenses1= new LinkedList<>();
         licenses.add(new License("C1"));
         service.getDrivers().put(driver1.getId(),driver1);
-        driver2=new Drivers("reut",licenses);
+        driver2=new Driver("reut",licenses);
         service.getDrivers().put(driver2.getId(),driver2);
         List<License> licenses2= new LinkedList<>();
         licenses.add(new License("C"));
-        driver3=new Drivers("reut1",licenses);
+        driver3=new Driver("reut1",licenses);
         service.getDrivers().put(driver3.getId(),driver3);
     }
 

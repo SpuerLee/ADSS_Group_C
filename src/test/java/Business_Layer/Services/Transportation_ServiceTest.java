@@ -20,8 +20,8 @@ class Transportation_ServiceTest {
     Transportation_Service transportation_service;
     String pattern = "MM-dd-yyyy";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-    Drivers driver1;
-    Trucks trucks;
+    Driver driver1;
+    Truck trucks;
     Store site2;
     Supplier site;
     MissingItems missingItems;
@@ -33,10 +33,10 @@ class Transportation_ServiceTest {
         service=Service.getInstance();
         List<License> licenses= new LinkedList<>();
         licenses.add(new License("C"));
-        driver1=new Drivers("amit",licenses);
+        driver1=new Driver("amit",licenses);
         service.getDrivers().put(driver1.getId(),driver1);
         licenses.add(new License("C"));
-        trucks=new Trucks(12345678,licenses,"skoda",180,300);
+        trucks=new Truck(12345678,licenses,"skoda",180,300);
         service.getHashTrucks().put(trucks.getlicense_number(),trucks);
         site2=new Store("store2","0546343167","reut1",new Address("Haifa","Kadesh",18), new Area("B"));
         service.getHashStoresMap().put(site2.getId(),site2);

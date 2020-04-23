@@ -1,7 +1,6 @@
 package Business_Layer.Services;
 
 import Business_Layer.*;
-import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -26,8 +25,14 @@ public class Trucks_Service {
             throw new Buisness_Exception("There are no trucks in the system"+ "\n");
         }
         String result="";
-        for(Trucks trucks: service.getHashTrucks().values()){
-            result=result+"License Number: "+trucks.getlicense_number()+" , Model: "+trucks.getModel()+"\n";
+        for(Truck trucks: service.getHashTrucks().values()){
+            result=result+"Id: " + trucks.getId()+", License Number: "+
+                    trucks.getlicense_number()+", Model: "+trucks.getModel()+ ", Licenses: ";
+            for(License license :trucks.getLicenses())
+            {
+                result += license.getType()+", ";
+            }
+            result+="\n";
         }
         return result;
     }
@@ -45,21 +50,20 @@ public class Trucks_Service {
             for (String license : licenses_types) {
                 licenses.add(new License(license));
             }
-            Trucks trucks = new Trucks(Integer.parseInt(license_number), licenses, model, Double.parseDouble(weight), Double.parseDouble(max_weight));
-            service.getHashTrucks().put(Integer.parseInt(license_number), trucks);
+            Truck trucks = new Truck(Integer.parseInt(license_number), licenses, model, Double.parseDouble(weight), Double.parseDouble(max_weight));
+            service.getHashTrucks().put(trucks.getId(), trucks);
             return result;
         }
     }
 
 
 
-    public boolean removeTruck(String license) throws Buisness_Exception{
+    public boolean removeTruck(int id) throws Buisness_Exception{
         boolean result=false;
-        Integer number=Integer.parseInt(license);
-       if(!service.getHashTrucks().containsKey(number))
+       if(!service.getHashTrucks().containsKey(id))
            throw new Buisness_Exception("The truck's license number does'nt exist "+"\n");
        else {
-           service.getHashTrucks().remove(number);
+           service.getHashTrucks().remove(id);
            result=true;
        }
        return result;
@@ -70,7 +74,7 @@ public class Trucks_Service {
         int driverId = Integer.parseInt(id);
         List<License> license_list = service.getDrivers().get(driverId).getLicenses();
         String output = "";
-        for (Trucks truck : service.getHashTrucks().values())
+        for (Truck truck : service.getHashTrucks().values())
         {
             if(truck.checkIfFree(date) && truck.checkLicense(license_list))
             {
@@ -82,9 +86,10 @@ public class Trucks_Service {
 
     public String getFreeTrucks(Date date) {
         String output = "";
-        for (Trucks truck : service.getHashTrucks().values()) {
+        for (Truck truck : service.getHashTrucks().values()) {
             if (truck.checkIfFree(date)) {
-                output = output + truck.getlicense_number()+". "+truck.getModel()+"\n";
+                output = output + truck.getId()+". "+"license number: "+truck.getlicense_number()+
+                        ", Model: "+truck.getModel()+"\n";
             }
         }
         return output;

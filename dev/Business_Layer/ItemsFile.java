@@ -7,9 +7,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ItemsFile {
 
     private static int idcounter=1;
+    private int transportationID=-1;
     private HashMap<String,Integer> items_list;
     private Store store;
     private Supplier supplier;
+    boolean from_missing_items=false;
     private int id;
 
     public ItemsFile(HashMap<String,Integer> items_list, Store store,Supplier supplier)
@@ -29,5 +31,16 @@ public class ItemsFile {
     public int getId(){
         return id;
     }
+    public Supplier getSupplier() {return this.supplier;}
+    public Store getStore(){return this.store;}
+    public void setTransportationID(int id)
+    {
+        this.transportationID=id;
+    }
+    public void setFrom_missing_items()
+    {
+        this.from_missing_items=true;
+    }
+
 
 }

@@ -36,6 +36,8 @@
       "phone": "0545774339",
       "area":"A"
     },
+	  
+
 
     {
       "id":2,
@@ -48,6 +50,7 @@
       "phone": "0545774339",
       "area":"B"
     },
+	  
     {
       "name": "Osem",
       "site_type": "supplier",
@@ -88,16 +91,17 @@
       "phone": "0546343169",
       "area":"B"
     },
-    {
-      "name": "store4",
+	  {
+      "name": "store311",
       "site_type": "store",
-      "city": "Haifa",
-      "street": "Remez",
-      "number": 64,
-      "name_of_contact": "Hadar",
-      "phone": "0546328694",
-      "area":"C"
+      "city": "beersheva",
+      "street": "takov cohen",
+      "number": 3,
+      "name_of_contact": "reut",
+      "phone": "0545774339",
+      "area":"A"
     },
+    
     {
       "name": "Neviot",
       "site_type": "supplier",
@@ -108,7 +112,7 @@
       "phone": "0546323494",
       "area":"D"
     },
-    {
+	  {
       "name": "aaa",
       "site_type": "supplier",
       "city": "Tel Aviv",
@@ -117,7 +121,29 @@
       "name_of_contact": "amit7",
       "phone": "0546323544",
       "area":"D"
+    },
+	  {
+      "name": "store4",
+      "site_type": "store",
+      "city": "Haifa",
+      "street": "Remez",
+      "number": 64,
+      "name_of_contact": "Hadar",
+      "phone": "0546328694",
+      "area":"C"
+    },
+	  {
+      "id":2,
+      "name": "tnova21",
+      "site_type": "supplier",
+      "city": "ramat gan",
+      "street": "takov cohen",
+      "number": 3,
+      "name_of_contact": "roi",
+      "phone": "0545774339",
+      "area":"B"
     }
+    
   ],
   "Trucks": [
     {

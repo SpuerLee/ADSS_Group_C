@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Trucks {
+public class Truck {
 
     private static int idcounter=1;
     private int id;
@@ -20,13 +20,18 @@ public class Trucks {
     private double max_weight;
     private List<Transportation> transportations = new LinkedList<>();
 
-    public Trucks(int license_number, List<License> licenses_types, String model, double weight, double max_weight) {
+    public Truck(int license_number, List<License> licenses_types, String model, double weight, double max_weight) {
         this.id=idcounter++;
         this.license_number = license_number;
         this.licenses_types = licenses_types;
         this.model = model;
         this.weight = weight;
         this.max_weight = max_weight;
+    }
+
+    public int getId()
+    {
+        return this.id;
     }
 
     public List<License> getLicenses()
@@ -58,10 +63,18 @@ public class Trucks {
     }
 
     public void Remove_date(Transportation transportation){
-        for(Transportation transportation1:transportations){
-            if (transportation.getId()==transportation1.getId())
-                transportations.remove(transportation1);
+        try
+        {
+            for(Transportation transportation1:transportations){
+                if (transportation.getId()==transportation1.getId())
+                    transportations.remove(transportation1);
+            }
         }
+        catch (Exception e)
+        {
+
+        }
+
     }
 
     public List<Transportation> getTransportations(){

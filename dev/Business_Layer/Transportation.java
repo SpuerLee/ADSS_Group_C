@@ -1,13 +1,9 @@
 package Business_Layer;
 
-import com.google.gson.Gson;
-
-import java.time.LocalDate;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 public class Transportation {
@@ -18,14 +14,14 @@ public class Transportation {
     private int id;
     private Date date;
     private LocalTime leaving_time;
-    private Trucks truck;
+    private Truck truck;
     private List<Supplier> suppliers;
     private List<Store> stores;
     private double weight_truck = -1;
-    private Drivers driver;
+    private Driver driver;
     private List<ItemsFile> itemsFiles;
 
-    public Transportation(Date date, LocalTime leaving_time, Drivers drivers, Trucks truck, List<Supplier> suppliers, List<Store> stores) {
+    public Transportation(Date date, LocalTime leaving_time, Driver drivers, Truck truck, List<Supplier> suppliers, List<Store> stores) {
         this.id = idcounter++;
         this.date = date;
         this.leaving_time = leaving_time;
@@ -37,25 +33,27 @@ public class Transportation {
     }
 
     public String toString() {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         String output = "";
-        output += "{\n\tid: " + this.id + "\n\tdate: " + this.date.toString() + "\n\tleaving_time: " + this.leaving_time.toString()
-                + "\n\tdriver: " + this.driver.getName() + "\n\ttruck: \n\t\t{\n\t\t\tlicense_number:" + this.truck.getlicense_number()
-                + "\n\t\t\tModel:" + this.truck.getModel() + "\n\t\t}\n";
-        Gson gson = new Gson();
-        output += "\tstores:\n\t[\n";
+        output += "id: " + this.id + "\n\tdate: " + dateFormat.format(this.date) + "\n\tleaving_time: " + this.leaving_time.toString()
+                + "\n\tdriver: " + this.driver.getName() + "\n\ttruck- license_number:" + this.truck.getlicense_number()
+                + ", Model:" + this.truck.getModel() + "\n";
+        output += "\tstores: ";
         for (Store sites : stores) {
 
-            output = output + "\t\t" + sites.getName() + '\n';
+            output = output + sites.getName() + ", ";
         }
-        output += "\t]\n";
-        output += "\tsuppliers:\n\t[\n";
-
+        output += "\n\tsuppliers: ";
         for (Supplier sites : suppliers) {
-            output = output + "\t\t" + sites.getName() + '\n';
+            output = output + sites.getName() + ", ";
         }
-        output += "\t]\n";
-        output += "}";
-
+        output += "\n\titemsFiles: ";
+        for (ItemsFile itemsFile: itemsFiles) {
+            output = output +"\n\t"+ itemsFile.getSupplier().getName()+"->"+itemsFile.getStore().getName()+":";
+            for (Map.Entry me : itemsFile.getItems_list().entrySet()) {
+                output = output +"\n\t-"+ me.getKey()+"-"+me.getValue();
+            }
+        }
         return output;
 
     }
@@ -72,11 +70,11 @@ public class Transportation {
         return leaving_time;
     }
 
-    public Trucks getTruck() {
+    public Truck getTruck() {
         return truck;
     }
 
-    public void setTruck(Trucks truck) {
+    public void setTruck(Truck truck) {
         this.truck = truck;
     }
 
@@ -88,7 +86,7 @@ public class Transportation {
         return weight_truck;
     }
 
-    public Drivers getDriver() {
+    public Driver getDriver() {
         return driver;
     }
 

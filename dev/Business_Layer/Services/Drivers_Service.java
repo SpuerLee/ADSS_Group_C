@@ -27,7 +27,7 @@ public class Drivers_Service {
         for (String license : license_list) {
             licenses.add(new License(license));
         }
-        Drivers drivers = new Drivers(name, licenses);
+        Driver drivers = new Driver(name, licenses);
         service.getDrivers().put(drivers.getId(), drivers);
     }
 
@@ -43,15 +43,20 @@ public class Drivers_Service {
         if(service.getDrivers().size()==0)
             throw new Buisness_Exception("There are no drivers in the system"+ "\n");
         String result = "";
-        for (Drivers drivers : service.getDrivers().values()) {
-            result = result + "Name:" + drivers.getName() + ", Id " + drivers.getId() + "\n";
+        for (Driver drivers : service.getDrivers().values()) {
+            result = result +"Id: " + drivers.getId()+ ", Name: " + drivers.getName() + ", Licenses: ";
+            for(License license :drivers.getLicenses())
+            {
+                result += license.getType()+", ";
+            }
+            result+="\n";
         }
         return result;
     }
 
     public String getFreeDrivers(Date date) {
         String output = "";
-        for (Drivers driver : service.getDrivers().values()) {
+        for (Driver driver : service.getDrivers().values()) {
             if (driver.checkIfFree(date)) {
                 output = output + driver.getId() + ". " + driver.getName() + "\n";
             }
@@ -64,7 +69,7 @@ public class Drivers_Service {
         int truckId = Integer.parseInt(id);
         List<License> license_list = service.getHashTrucks().get(truckId).getLicenses();
         String output = "";
-        for (Drivers driver : service.getDrivers().values())
+        for (Driver driver : service.getDrivers().values())
         {
             if(driver.checkIfFree(date) && driver.checkLicense(license_list))
             {

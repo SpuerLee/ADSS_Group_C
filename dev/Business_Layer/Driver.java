@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-    public class Drivers {
+    public class Driver {
 
      private static int idcounter=1;
      private int id;
@@ -14,7 +14,7 @@ import java.util.List;
      private List<Transportation> transportations = new LinkedList<>();
 
 
-    public Drivers(String name, List<License> licenses)
+    public Driver(String name, List<License> licenses)
     {
         this.id=idcounter++;
         this.name=name;
