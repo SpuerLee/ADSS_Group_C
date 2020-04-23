@@ -322,11 +322,8 @@ public class HR {
     private static void EditWorkerConstrains(Scanner sc, int workerSn) {
         checkResponse(SystemInterface.getInstance().resetWorkerConstrainsBySn(workerSn), sc);
         System.out.println("Enter constrains: - Day-ShiftType , Day-ShiftType, etc...");
-        while(!sc.hasNextInt()){
-            System.out.println("Invalid input, please try again");
-            sc.next();
-        }
-        String constrains = sc.next();
+        String constrains = sc.nextLine();
+        constrains = sc.nextLine();
         constrains = constrains.replaceAll("\\s+","");
         checkResponse(SystemInterface.getInstance().editWorkerConstrainsBySn(workerSn,constrains),sc);
         checkResponse(SystemInterface.getInstance().printWorkerConstrainsBySn(workerSn), sc);

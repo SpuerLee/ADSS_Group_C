@@ -322,7 +322,7 @@ public class WorkerController {
                     String shiftType = "";
                     try {
                         day = workerConstrain.split("-")[0].toUpperCase();
-                        shiftType = workerConstrain.split("-")[1].toUpperCssssssssssssssssssssssssssssssssssssssase();
+                        shiftType = workerConstrain.split("-")[1].toUpperCase();
                     }
                     catch (Exception e){
                         infoObject.setMessage("Invalid constrains format");
