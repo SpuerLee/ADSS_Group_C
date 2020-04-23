@@ -3,18 +3,95 @@ package Workers.PresentationLayer;
 
 import Workers.BusinessLayer.Utils.InfoObject;
 import Workers.InterfaceLayer.SystemInterface;
+import Workers.Test.projectTests;
 
+import javax.xml.transform.Result;
 import java.text.ParseException;
 import java.util.Scanner;
 
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.function.Executable;
+
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.core.LauncherFactory;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.junit.platform.launcher.listeners.TestExecutionSummary.Failure;
+import java.util.List;
+
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+
 public class HR {
-    public static void main(String[] args) throws ParseException {
-        start();
+    public static void main(String[] args) {
+        System.out.println("Welcome! Enter you choice");
+        run();
     }
 
-    public static void start() {
-
+    public static void run(){
+        System.out.println("1. Run tests");
+        System.out.println("2. Start system");
+        System.out.println("Enter 0 to exit program");
         Scanner sc=new Scanner(System.in);
+        while(!sc.hasNextInt()){
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
+        int selectedOption = sc.nextInt();
+        if(selectedOption == 1){
+            runTest();
+            System.out.println();
+        }
+        if(selectedOption == 2){
+            start(sc);
+        }
+        if(selectedOption == 0){
+            System.exit(0);
+        }
+        if(selectedOption<0 || selectedOption > 2){
+            System.out.println("Invalid input, please try again");
+            run();
+        }
+        run();
+
+    }
+
+    public static void runTest(){
+        final LauncherDiscoveryRequest request =
+                LauncherDiscoveryRequestBuilder.request()
+                        .selectors(selectClass(projectTests.class))
+                        .build();
+
+        final Launcher launcher = LauncherFactory.create();
+        final SummaryGeneratingListener listener = new SummaryGeneratingListener();
+
+        launcher.registerTestExecutionListeners(listener);
+        launcher.execute(request);
+
+        final TestExecutionSummary summary = listener.getSummary();
+
+        final long testsFoundCount = summary.getTestsFoundCount();
+
+        System.out.println("Starting Tests");
+
+        final long succeededTests = summary.getTestsSucceededCount();
+        System.out.println("Total tests Count  " + succeededTests + "/" + testsFoundCount);
+
+        final long testsSkippedCount = summary.getTestsSkippedCount();
+        System.out.println("tests Skipped Count  " + testsSkippedCount+ "/" + testsFoundCount);
+
+        final long testsFailed = summary.getTestsFailedCount();
+        System.out.println("tests Failed Count  " + testsFailed+ "/" + testsFoundCount);
+
+        final long testAborted = summary.getTestsAbortedCount();
+        System.out.println("tests Aborted Count  " + testAborted+ "/" + testsFoundCount);
+    }
+
+    public static void start(Scanner sc) {
         systemStart(sc);
     }
 

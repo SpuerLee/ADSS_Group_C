@@ -91,7 +91,6 @@ public class Worker {
     }
 
     public void resetConstrains() {
-        System.out.println("All constrains has been removed");
         this.constrains = new HashMap<>();
     }
 

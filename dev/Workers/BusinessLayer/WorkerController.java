@@ -290,7 +290,7 @@ public class WorkerController {
     }
 
     public InfoObject resetWorkerConstrainsBySn(int workerSn) {
-        InfoObject infoObject = new InfoObject("",true);
+        InfoObject infoObject = new InfoObject("All constrains has been removed",true);
         if(!(this.getWorkerList().containsValue(getWorkerBySn(workerSn)))){
             infoObject.setMessage("There is no worker with this SN");
             infoObject.setIsSucceeded(false);
