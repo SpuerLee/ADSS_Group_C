@@ -18,6 +18,8 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherFactory;
+
+import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -61,6 +63,7 @@ public class HR {
     }
 
     public static void runTest(){
+        System.out.println("Starting Tests\n");
         final LauncherDiscoveryRequest request =
                 LauncherDiscoveryRequestBuilder.request()
                         .selectors(selectClass(projectTests.class))
@@ -76,10 +79,12 @@ public class HR {
 
         final long testsFoundCount = summary.getTestsFoundCount();
 
-        System.out.println("Starting Tests");
+        System.out.println("");
+
+
 
         final long succeededTests = summary.getTestsSucceededCount();
-        System.out.println("Total tests Count  " + succeededTests + "/" + testsFoundCount);
+        System.out.println("Total tests Succeeded  " + succeededTests + "/" + testsFoundCount);
 
         final long testsSkippedCount = summary.getTestsSkippedCount();
         System.out.println("tests Skipped Count  " + testsSkippedCount+ "/" + testsFoundCount);
@@ -89,6 +94,8 @@ public class HR {
 
         final long testAborted = summary.getTestsAbortedCount();
         System.out.println("tests Aborted Count  " + testAborted+ "/" + testsFoundCount);
+        System.out.println();
+
     }
 
     public static void start(Scanner sc) {

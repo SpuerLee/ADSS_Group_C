@@ -4,9 +4,7 @@ import Workers.BusinessLayer.ShiftController;
 import Workers.BusinessLayer.Utils.enums;
 import Workers.BusinessLayer.WorkerController;
 import javafx.util.Pair;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.HashMap;
 
@@ -21,9 +19,15 @@ public class projectTests {
     }
 
     @BeforeEach
-    void init() {
+    void init(TestInfo testInfo) {
         workerController = new WorkerController();
         shiftController = new ShiftController(workerController);
+        System.out.println(testInfo.getTestMethod().get().getName() + " - " + testInfo.getDisplayName());
+    }
+
+    @AfterEach
+    void afterEachTest(TestInfo testInfo){
+
     }
 
     @Test
