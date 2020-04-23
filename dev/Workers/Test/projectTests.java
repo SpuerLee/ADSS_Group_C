@@ -15,9 +15,7 @@ public class projectTests {
 
     private static ShiftController shiftController;
     private static WorkerController workerController;
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_RED = "\u001B[31m";
+
 
     public projectTests() {
     }
@@ -33,9 +31,9 @@ public class projectTests {
     void afterEachTest(TestInfo testInfo){
         String result = testInfo.getTestMethod().isPresent() ? "Pass" : "Failed";
         if(result.equals("Pass")) {
-            System.out.println(testInfo.getTestMethod().get().getName() + " - " + ANSI_GREEN + result + ANSI_RESET);
+            System.out.println(testInfo.getTestMethod().get().getName() + " - "  + result);
         } else {
-            System.out.println(testInfo.getTestMethod().get().getName() + " - " + ANSI_RED + result + ANSI_RESET);
+            System.out.println(testInfo.getTestMethod().get().getName() + " - "  + result);
         }
     }
 

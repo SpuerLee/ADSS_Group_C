@@ -53,7 +53,7 @@ public class WorkerController {
         List<Worker> listOfAvailableWorkers = getAllAvailableWorkers(date,sType);
         for (Worker manager : listOfAvailableWorkers) {
             if(manager.getWorkerJobTitle().toUpperCase().equals("MANAGER")) {
-                System.out.println(manager.getWorkerSn() + ". ID: " + manager.getWorkerId() + " Name: " + manager.getWorkerName());
+                System.out.println(manager.getWorkerSn() + ". ID: " + manager.getWorkerId() + " Name: " + manager.getWorkerName() + " Job title: " + manager.getWorkerJobTitle());
                 availableManager = true;
             }
         }
@@ -132,7 +132,7 @@ public class WorkerController {
         }
         System.out.println("Choose worker by SN");
         for(Worker worker : workerList.values()){
-            System.out.println(worker.getWorkerSn() + ". ID: " + worker.getWorkerId() + " Name: " + worker.getWorkerName());
+            System.out.println(worker.getWorkerSn() + ". ID: " + worker.getWorkerId() + " Name: " + worker.getWorkerName() + " Job title: " + worker.getWorkerJobTitle());
         }
         return infoObject;
     }
