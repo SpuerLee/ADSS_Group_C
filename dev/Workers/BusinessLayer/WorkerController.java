@@ -195,7 +195,9 @@ public class WorkerController {
                 workerConstrains = constrains.split(",");
             }
             catch (Exception e){
-                workerConstrains = null;
+                infoObject.setMessage("Invalid constrains format");
+                infoObject.setIsSucceeded(false);
+                return infoObject;
             }
         }
         infoObject = validateWorkerCredentials(id, name, phoneNumber, bankAccount, salary, jobTitle, infoObject, date);
@@ -207,8 +209,16 @@ public class WorkerController {
         if(!constrains.toUpperCase().equals("NONE")) {
             if (!workerConstrains[0].equals("")) {
                 for (String workerConstrain : workerConstrains) {
-                    String day = workerConstrain.split("-")[0].toUpperCase();
-                    String shiftType = workerConstrain.split("-")[1].toUpperCase();
+                    String day = "";
+                    String shiftType = "";
+                    try {
+                        day = workerConstrain.split("-")[0].toUpperCase();
+                        shiftType = workerConstrain.split("-")[1].toUpperCase();
+                    }catch (Exception e){
+                        infoObject.setIsSucceeded(false);
+                        infoObject.setMessage("Invalid constrains format");
+                        return infoObject;
+                    }
                     infoObject = addConstrainsToWorkerByWorkerSn(workerToAdD.getWorkerSn(), day, shiftType);
                     if (!(infoObject.isSucceeded())) {
                         workerList.remove(workerToAdD.getWorkerSn());
@@ -308,8 +318,17 @@ public class WorkerController {
                 return infoObject;
             } else {
                 for (String workerConstrain : workersConstrains) {
-                    String day = workerConstrain.split("-")[0].toUpperCase();
-                    String shiftType = workerConstrain.split("-")[1].toUpperCase();
+                    String day= "";
+                    String shiftType = "";
+                    try {
+                        day = workerConstrain.split("-")[0].toUpperCase();
+                        shiftType = workerConstrain.split("-")[1].toUpperCssssssssssssssssssssssssssssssssssssssase();
+                    }
+                    catch (Exception e){
+                        infoObject.setMessage("Invalid constrains format");
+                        infoObject.setIsSucceeded(false);
+                        return infoObject;
+                    }
                     infoObject = this.addConstrainsToWorkerByWorkerSn(workerSn, day, shiftType);
                     if (!infoObject.isSucceeded()) {
                         return infoObject;

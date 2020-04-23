@@ -196,12 +196,9 @@ public class HR {
             System.out.println(infoObject.getMessage());
             checkResponse(SystemInterface.getInstance().createShift(shiftType, selectedManagerSn, "", date), sc);
         } else {
-            while(!sc.hasNext()){
-                System.out.println("Invalid input, please try again");
-                sc.next();
-            }
-            String chosenWorkersSn = sc.next(); // 1,2,6,9
-            chosenWorkersSn = chosenWorkersSn.replaceAll("\\s+", "");
+            String chosenWorkersSn = sc.nextLine();
+            chosenWorkersSn = sc.nextLine();
+            chosenWorkersSn = chosenWorkersSn.replaceAll(" ", "");
             checkResponse(SystemInterface.getInstance().createShift(shiftType, selectedManagerSn, chosenWorkersSn, date), sc);
         }
     }
@@ -264,8 +261,9 @@ public class HR {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
-        String constrains = sc.next();
-        constrains = constrains.replaceAll("\\s+","");
+        String constrains = sc.nextLine();
+        constrains = sc.nextLine();
+        constrains = constrains.replaceAll(" ","");
         checkResponse(SystemInterface.getInstance().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle,constrains),sc);
     }
 
@@ -302,9 +300,12 @@ public class HR {
                 checkResponse(SystemInterface.getInstance().removeWorkerBySn(workerSn), sc);
                 checkResponse(SystemInterface.getInstance().removeLaterShiftForFiredManagerByManagerSn(workerSn),sc);
                 break;
-            default: // quit
-                System.out.println("Invalid input, going back to main menu");
+            case 0: // quit
                 workingLoop(sc);
+                break;
+            default:
+                System.out.println("Invalid input, going back to display workers");
+                displayWorkers(sc);
         }
     }
 
