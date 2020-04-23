@@ -49,9 +49,9 @@ import java.util.List;
         return true;
     }
 
-    public void Remove_date(Transportation transportation){
+    public void Remove_date(Integer transportationID){
         for(Transportation transportation1:transportations){
-            if (transportation.getId()==transportation1.getId())
+            if (transportationID==transportation1.getId())
                 transportations.remove(transportation1);
         }
     }

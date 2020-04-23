@@ -22,7 +22,7 @@
     },
     {
       "name": "daniel",
-      "licenses": ["C,C1"]
+      "licenses": ["C","C1"]
     }
   ],
   "Sites": [

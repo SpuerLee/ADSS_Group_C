@@ -51,9 +51,9 @@ public class Site_Service {
         else {
             String result = "";
             for (Store sites : service.getHashStoresMap().values())
-                result = result + "Name :" + sites.getName() + " ,Type : Store" + "\n";
+                result = result +sites.getId()+ " .Name :" + sites.getName() + " ,Type: Store" + "\n";
             for (Supplier sites : service.getSuppliersMap().values())
-                result = result + "Name :" + sites.getName() + " ,Type : Supplier" + "\n";
+                result = result +sites.getId()+ " .Name :" + sites.getName() + " ,Type: Supplier" + "\n";
             return result;
         }
     }

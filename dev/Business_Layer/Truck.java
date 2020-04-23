@@ -29,6 +29,10 @@ public class Truck {
         this.max_weight = max_weight;
     }
 
+    public double getMax_weight()
+    {
+        return this.weight+this.max_weight;
+    }
     public int getId()
     {
         return this.id;
@@ -62,11 +66,11 @@ public class Truck {
         return true;
     }
 
-    public void Remove_date(Transportation transportation){
+    public void Remove_date(Integer transportationID){
         try
         {
             for(Transportation transportation1:transportations){
-                if (transportation.getId()==transportation1.getId())
+                if (transportationID==transportation1.getId())
                     transportations.remove(transportation1);
             }
         }

@@ -47,8 +47,133 @@ public class Controler {
     }
 
 
-    public void Complete_stock_missing() {
+    public void Change_remove_store_or_supplier(int transportationID) {
+        try {
+            boolean OkToRemove= false, toBreak=false;
+            while (!OkToRemove)
+            {
+                System.out.println(transportation_service.store_and_supplier_list(transportationID));
+                System.out.println("Please choose store id to remove from the transportation, if you want to choose more than one,\n" +
+                        "please separate them by space, if you dont want to remove store press enter\n" +
+                        "write Cancel fo exit");
+                String[] stores = scan.nextLine().split(" ");
+                for (String s:stores)
+                {
+                    if(s.equals("Cancel"))
+                        toBreak=true;
+                }
+                if (toBreak)
+                {
+                    break;
+                }
+                System.out.println("Please choose supplier id to remove from the transportation, if you want to choose more than one,\n" +
+                        "please separate them by space, if you dont want to remove supplier press enter\n" +
+                        "write Cancel fo exit");
+                String[] suppliers = scan.nextLine().split(" ");
+                for (String s:suppliers)
+                {
+                    if(s.equals("Cancel"))
+                        toBreak=true;
+                }
+                if (toBreak)
+                {
+                    break;
+                }
+                String out=transportation_service.RemoveSites(transportationID,stores,suppliers);
+                if (out=="Ok")
+                {
+                    OkToRemove=true;
+                }
+                else
+                {
+                    System.out.println(out);
+                }
 
+            }
+            if (OkToRemove)
+            {
+                System.out.println("The sites remove successfully\n");
+            }
+
+
+
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println("The could not remove the sites\n");
+        }
+    }
+
+    public void Change_truck_and_driver(int transportationID) {
+        try {
+            Date date = transportation_service.Free_truck_and_driver(transportationID);
+            boolean find_truck_driver= false;
+            String driverId = "";
+            String truckId = "";
+            while (!find_truck_driver) {
+                String freeTrucks = trucks_service.getFreeTrucks(date);
+                if (freeTrucks != "") {
+                    System.out.println("The trucks available for the date are:");
+                    System.out.println(freeTrucks);
+                    System.out.println("Please choose truck to transportation by it's id");
+                    truckId = scan.nextLine();
+                    String freeDrivers = drivers_service.getDriverToTrucks(truckId, date);
+                    if (freeDrivers != "") {
+                        System.out.println("The Drivers available for the date are and truck:");
+                        System.out.println(freeDrivers);
+                        System.out.println("Please choose Driver to transportation by it's id");
+                        driverId = scan.nextLine();
+                        find_truck_driver = true;
+                    } else {
+                        System.out.println("There are no Drivers available for the truck at this date");
+                    }
+                }
+            }
+            transportation_service.Change_truck_and_driver(transportationID,
+                    Integer.parseInt(driverId),Integer.parseInt(truckId));
+            System.out.println("The truck and driver change successfully\n");
+        } catch (Exception e) {
+            transportation_service.Change_Back_truck_and_driver(transportationID);
+            System.out.println("could not change truck and driver\n");
+        }
+    }
+
+
+    public HashMap<Boolean,Integer> Truck_weight_in_supplier() {
+        HashMap<Boolean,Integer> output= new HashMap<>();
+        String result = transportation_service.Show_transports();
+        if (result.equals("")) {
+            System.out.println("There are no transports to show" + "\n");
+        } else {
+            System.out.println(result);
+            System.out.println("Please choose transportation id to enter truck weight");
+            String transportationId = scan.nextLine();
+            System.out.println("Enter weight of truck");
+            String truckWeightSTR = scan.nextLine();
+            Boolean canSet=transportation_service.SetTruckWeight(transportationId,truckWeightSTR);
+            if(canSet==null)
+            {
+                System.out.println("Incorrect input");
+                return output;
+            }
+            else if(canSet)
+            {
+                System.out.println("The truck weight change successfully\n");
+                output.put(true,Integer.parseInt(transportationId));
+                return output;
+            }
+            else
+            {
+                System.out.println("Truck weight exceeds the maximum allowed\n");
+                output.put(false,Integer.parseInt(transportationId));
+
+            }
+        }
+        return output;
+
+    }
+
+
+    public void Complete_stock_missing() {
         try {
             System.out.println(missing_items_service.getMissingItemsStores());
             System.out.println("Please choose store to transportation by id");
@@ -114,7 +239,7 @@ public class Controler {
             System.out.println("Please choose area for the suppliers");
             String area = scan.nextLine();
             System.out.println(site_service.getSuppliersbyarea(area));
-            System.out.println("Please choose suppliers to transportation by id , if there are mant please separate by space"); //choose supplier
+            System.out.println("Please choose suppliers to transportation by id , if there are many please separate by space"); //choose supplier
             String[] supplier = scan.nextLine().split(" ");
             System.out.println(transportation_service.get_area_for_stores()); //show all the area with all the stores in it
             System.out.println("Please choose area for stors to transportation"); //chose area
@@ -241,7 +366,7 @@ public class Controler {
     public void Show_transports() {
         String result = transportation_service.Show_transports();
         if (result.equals("")) {
-            System.out.println("There are no drivers to show" + "\n");
+            System.out.println("There are no transports to show" + "\n");
         } else {
             System.out.println(result);
         }

@@ -25,6 +25,139 @@ public class Transportation_Service {
 
     private Service service = Service.getInstance();
 
+    public String RemoveSites(int transportationID,String[] storesToRemove,String[] suppliersToRemove)
+    {
+        Transportation transportation = service.getHashTransportation().get(transportationID);
+        List<Supplier> suppliers = transportation.getSuppliers();
+        List<Store> stores= transportation.getStores();
+        if(suppliers.size()==suppliersToRemove.length)
+        {
+            return "cant remove all the suppliers";
+        }
+        else if(stores.size()==storesToRemove.length)
+        {
+            return "cant remove all the stores";
+        }
+        else {
+            List<ItemsFile> itemsFiles= transportation.getItemsFiles();
+            for (String s:storesToRemove)
+            {
+                int id = Integer.parseInt(s);
+                Store store= service.getHashStoresMap().get(id);
+                stores.remove(stores.indexOf(store));
+                for (ItemsFile itemsFile:itemsFiles)
+                {
+                    if(itemsFile.getStore().getId()==id)
+                    {
+                        itemsFiles.remove(itemsFiles.indexOf(itemsFile));
+                    }
+                }
+            }
+            for (String s : suppliersToRemove)
+            {
+                int id = Integer.parseInt(s);
+                Supplier supplier= service.getSuppliersMap().get(id);
+                suppliers.remove(suppliers.indexOf(supplier));
+                for (ItemsFile itemsFile:itemsFiles)
+                {
+                    if(itemsFile.getSupplier().getId()==id)
+                    {
+                        itemsFiles.remove(itemsFiles.indexOf(itemsFile));
+                    }
+                }
+            }
+            return "Ok";
+        }
+    }
+
+
+    public String store_and_supplier_list(int transportationID)
+    {
+        String output="";
+        Transportation transportation = service.getHashTransportation().get(transportationID);
+        output+="Stores:\n";
+        for(Store store:transportation.getStores())
+        {
+            output+=store.getId()+". "+store.getName()+"\n";
+        }
+        output+="Suppliers:";
+        for(Supplier supplier:transportation.getSuppliers())
+        {
+            output+="\n"+supplier.getId()+". "+supplier.getName();
+        }
+        return output;
+    }
+
+
+    public Date Free_truck_and_driver(int transportationID) {
+        try {
+            Transportation transportation = service.getHashTransportation().get(transportationID);
+            int driverID = transportation.getDriveId();
+            int truckID = transportation.getTruck().getId();
+            service.getDrivers().get(driverID).Remove_date(transportationID);
+            service.getHashTrucks().get(truckID).Remove_date(transportationID);
+            return transportation.getDate();
+        }
+        catch (Exception e){return null;}
+    }
+
+    public Boolean SetTruckWeight(String transportationIdSTR,String truckWeightSTR)
+    {
+        try {
+            int transportationId= Integer.parseInt(transportationIdSTR);
+            int truckWeight = Integer.parseInt(truckWeightSTR);
+            Transportation transportation = service.getHashTransportation().get(transportationId);
+            if(transportation.getTruck().getMax_weight()>truckWeight)
+            {
+                transportation.setWeight_truck(truckWeight);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+
+    }
+
+
+    public void Change_truck_and_driver(int transportationID,int driver_id, int truck_id) {
+        Transportation transportation = service.getHashTransportation().get(transportationID);
+        int oldDriver = transportation.getDriveId();
+        int oldTruck = transportation.getTruck().getId();
+        try {
+
+            transportation.setTruck(service.getHashTrucks().get(truck_id));
+            transportation.setDriver(service.getDrivers().get(driver_id));
+            service.getDrivers().get(driver_id).addDate(transportation);
+            service.getHashTrucks().get(truck_id).addDate(transportation);
+        }
+        catch (Exception e)
+        {
+            transportation.setTruck(service.getHashTrucks().get(oldTruck));
+            transportation.setDriver(service.getDrivers().get(oldDriver));
+            service.getDrivers().get(transportation.getDriveId()).addDate(transportation);
+            service.getHashTrucks().get(transportation.getTruck().getId()).addDate(transportation);
+        }
+
+    }
+    public boolean Change_Back_truck_and_driver(int transportationID) {
+        try {
+            Transportation transportation = service.getHashTransportation().get(transportationID);
+            service.getDrivers().get(transportation.getDriveId()).addDate(transportation);
+            service.getHashTrucks().get(transportation.getTruck().getId()).addDate(transportation);
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+
+    }
+
 
     public boolean createTransportation(Date date, LocalTime leaving_time, int driver_id,
                                         int truck_id, List<Integer> suppliers, List<Integer> stores) {
@@ -106,11 +239,11 @@ public class Transportation_Service {
                     int driver = transport.getValue().getDriveId();
                     int truck = transport.getValue().getId();
                     try {
-                        service.getDrivers().get(driver).Remove_date(transport.getValue());
+                        service.getDrivers().get(driver).Remove_date(transport_id);
                     /*for (Map.Entry me : service.getHashTrucks().entrySet()) {
                         System.out.println(me.getKey()+"-"+me.getValue());
                     }*/
-                        service.getHashTrucks().get(truck).Remove_date(transport.getValue());
+                        service.getHashTrucks().get(truck).Remove_date(transport_id);
                     } catch (Exception e) {}
                     service.getHashTransportation().remove(transport.getKey());
                 }

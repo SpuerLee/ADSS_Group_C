@@ -3,6 +3,7 @@ package Presentation_Layer;
 import com.google.gson.Gson;
 
 import javax.swing.*;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
@@ -22,7 +23,8 @@ public class Main {
 
             choice = scan.nextLine();
             if (choice.equals("1")) {
-                String[] transports = new String[]{"Add new transport", "Show transport list", "Remove transport","Cancel"};
+                String[] transports = new String[]{"Add new transport", "Show transport list", "Remove transport",
+                        "Enter truck weight at supplier","Cancel"};
                 String option = "";
                 for (int i = 0; i < transports.length; i++) {
                     System.out.println(i + 1 + ". " + transports[i]);
@@ -43,9 +45,25 @@ public class Main {
                     controler.Show_transports();
                 }
                 else if (option.equals("3")) {
-
                     controler.Remove_transport();
-
+                }
+                else if (option.equals("4")) {
+                    HashMap<Boolean,Integer> check=controler.Truck_weight_in_supplier();
+                    if(check.containsKey(false))
+                    {
+                        System.out.println("Choose how to fix the transport");
+                        String option2 = "";
+                        String[] transports_change = new String[]{"Change Truck and driver",
+                                "Remove Store/supplier and there items ", "Cancel"};
+                        for (int i = 0; i < transports_change.length; i++) {
+                            System.out.println(i + 1 + ". " + transports_change[i]);
+                        }
+                        option2 = scan.nextLine();
+                        if (option2.equals("1"))
+                            controler.Change_truck_and_driver(check.get(false));
+                        else if (option2.equals("2"))
+                            controler.Change_remove_store_or_supplier(check.get(false));
+                    }
                 }
             } else if (choice.equals("2")) {
                 String[] drivers = new String[]{"Add new driver", "Show drivers list", "Remove driver","Cancel"};

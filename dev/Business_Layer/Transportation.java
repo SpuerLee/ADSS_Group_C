@@ -54,8 +54,25 @@ public class Transportation {
                 output = output +"\n\t-"+ me.getKey()+"-"+me.getValue();
             }
         }
+        if(weight_truck!=-1)
+        {
+            output+="\ntruck weight= "+weight_truck;
+        }
         return output;
 
+    }
+    public void setDriver(Driver driver)
+    {
+        this.driver=driver;
+    }
+    public void setTruck(Truck truck)
+    {
+        this.truck=truck;
+    }
+
+    public void setWeight_truck(int weight_truck)
+    {
+        this.weight_truck=weight_truck;
     }
 
     public Date getDate() {
@@ -74,9 +91,6 @@ public class Transportation {
         return truck;
     }
 
-    public void setTruck(Truck truck) {
-        this.truck = truck;
-    }
 
     public List<Store> getStores() {
         return stores;
