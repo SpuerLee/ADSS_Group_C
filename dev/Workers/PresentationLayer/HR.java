@@ -22,6 +22,7 @@ public class HR {
         System.out.println("Welcome to SuperLee");
         System.out.println("1. Choose start with data");
         System.out.println("2. Start new system");
+        System.out.println("Enter 0 to exit program");
         while(!sc.hasNextInt()){
             System.out.println("Invalid input, please try again");
             sc.next();
@@ -82,7 +83,7 @@ public class HR {
         System.out.println("2. Display shifts");
         System.out.println("3. Add worker");
         System.out.println("4. Display workers");
-        System.out.println("Enter 0 to stop");
+        System.out.println("Enter 0 to exit program");
     }
 
     public static void addShift(Scanner sc) {
@@ -199,7 +200,7 @@ public class HR {
         System.out.println("1. Edit worker constrains");
         System.out.println("2. Edit worker salary");
         System.out.println("3. Fire worker");
-        System.out.println("Enter 0 to go back");
+        System.out.println("Enter 0 to go back to main menu");
         while(!sc.hasNextInt()){
             System.out.println("Invalid input, please try again");
             sc.next();
