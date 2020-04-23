@@ -15,6 +15,10 @@ public class HR {
     public static void start() {
 
         Scanner sc=new Scanner(System.in);
+        systemStart(sc);
+    }
+
+    private static void systemStart(Scanner sc){
         System.out.println("Welcome to SuperLee");
         System.out.println("1. Choose start with data");
         System.out.println("2. Start new system");
@@ -25,6 +29,13 @@ public class HR {
         int selectedOption = sc.nextInt();
         if(selectedOption == 1){
             initSuperLeeWithWorkers();
+        }
+        if(selectedOption== 0){
+            System.exit(0);
+        }
+        if(selectedOption<0 || selectedOption > 2){
+            System.out.println("Invalid input, please try again");
+            systemStart(sc);
         }
         workingLoop(sc);
     }
@@ -52,6 +63,8 @@ public class HR {
                     break;
                 case 0: // quit
                     System.exit(0);
+                default:
+                    System.out.println("Invalid input, please try again");
             }
             printMenu();
             while(!sc.hasNextInt()){
@@ -186,7 +199,7 @@ public class HR {
         System.out.println("1. Edit worker constrains");
         System.out.println("2. Edit worker salary");
         System.out.println("3. Fire worker");
-        System.out.println("Enter 0 to stop");
+        System.out.println("Enter 0 to go back");
         while(!sc.hasNextInt()){
             System.out.println("Invalid input, please try again");
             sc.next();
@@ -204,7 +217,8 @@ public class HR {
                 checkResponse(SystemInterface.getInstance().removeWorkerBySn(workerSn), sc);
                 checkResponse(SystemInterface.getInstance().removeLaterShiftForFiredManagerByManagerSn(workerSn),sc);
                 break;
-            case 0: // quit
+            default: // quit
+                System.out.println("Invalid input, going back to main menu");
                 workingLoop(sc);
         }
     }

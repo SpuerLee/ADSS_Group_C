@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-public class ShiftController{
+public class ShiftController {
 
     private HashMap<Integer, Shift> shiftHistory;
     private WorkerController workerController;
@@ -22,8 +22,8 @@ public class ShiftController{
     }
 
     public InfoObject printAllShits() {
-        InfoObject infoObject = new InfoObject("",true);
-        if(shiftHistory.isEmpty()){
+        InfoObject infoObject = new InfoObject("", true);
+        if (shiftHistory.isEmpty()) {
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("There are no shifts to display");
             return infoObject;
@@ -39,21 +39,21 @@ public class ShiftController{
         return infoObject;
     }
 
-    private int getSnFactory(){
+    private int getSnFactory() {
         return ++this.snFactory;
     }
 
-    public InfoObject validateNewShiftDate(Date date, enums shiftType){
-        InfoObject infoObject = new InfoObject("",true);
-        for (Shift shifty: this.shiftHistory.values()) {
-            if((shifty.getDate().compareTo(date)==0) && shifty.getShiftType().equals(shiftType)){
+    public InfoObject validateNewShiftDate(Date date, enums shiftType) {
+        InfoObject infoObject = new InfoObject("", true);
+        for (Shift shifty : this.shiftHistory.values()) {
+            if ((shifty.getDate().compareTo(date) == 0) && shifty.getShiftType().equals(shiftType)) {
                 infoObject.setIsSucceeded(false);
                 infoObject.setMessage("There is already a shift on this date");
                 return infoObject;
             }
         }
-        Date toDay= new Date();
-        if(date.compareTo(toDay)<0){
+        Date toDay = new Date();
+        if (date.compareTo(toDay) < 0) {
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("Date already passed");
             return infoObject;
@@ -62,34 +62,33 @@ public class ShiftController{
     }
 
     public InfoObject createShift(String shiftType, int managerSn, String listOfWorkersSn, String dateToParse) {
-        InfoObject infoObject = new InfoObject("",true);
+        InfoObject infoObject = new InfoObject("", true);
         enums sType;
         try {
             sType = enums.valueOf(shiftType);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("Invalid shift type");
             return infoObject;
         }
 
         Date date = parseDate(dateToParse);
-        if(date==null){
+        if (date == null) {
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("Invalid date format");
             return infoObject;
         }
-        infoObject = validateNewShiftDate(date,sType);
-        if(!infoObject.isSucceeded()){
+        infoObject = validateNewShiftDate(date, sType);
+        if (!infoObject.isSucceeded()) {
             return infoObject;
         }
 
-        if(!(workerController.getWorkerList().containsKey(managerSn))){
+        if (!(workerController.getWorkerList().containsKey(managerSn))) {
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("Invalid manager SN");
             return infoObject;
         }
-        if(!(workerController.getWorkerList().get(managerSn).getWorkerJobTitle().toUpperCase().equals("MANAGER"))){
+        if (!(workerController.getWorkerList().get(managerSn).getWorkerJobTitle().toUpperCase().equals("MANAGER"))) {
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("Invalid manager SN");
             return infoObject;
@@ -97,12 +96,12 @@ public class ShiftController{
         Worker manager = workerController.getWorkerList().get(managerSn);
         String[] workersSn;
         List<Worker> workersListOfCurrentShift = new LinkedList<>();
-        infoObject = validateManagerConstrains(manager,sType,date);
-        if(!infoObject.isSucceeded()){
+        infoObject = validateManagerConstrains(manager, sType, date);
+        if (!infoObject.isSucceeded()) {
             return infoObject;
         }
         workersListOfCurrentShift.add(manager);
-        if(!listOfWorkersSn.toUpperCase().equals("NONE")) {
+        if (!listOfWorkersSn.toUpperCase().equals("NONE")) {
             try {
                 workersSn = listOfWorkersSn.split(",");
             } catch (Exception e) {
@@ -142,7 +141,7 @@ public class ShiftController{
                         infoObject.setMessage(workerToAdd.getWorkerName() + " Can't work on this shift because of his constrains");
                         return infoObject;
                     }
-                    if(workersListOfCurrentShift.contains(workerToAdd)){
+                    if (workersListOfCurrentShift.contains(workerToAdd)) {
                         infoObject.setIsSucceeded(false);
                         infoObject.setMessage(workerToAdd.getWorkerName() + " Already in this shift. Cant add the same worker twice");
                         return infoObject;
@@ -150,11 +149,11 @@ public class ShiftController{
                     workersListOfCurrentShift.add(workerToAdd);
                 }
             }
-        }else{
+        } else {
             workersListOfCurrentShift = new LinkedList<>();
         }
         Shift shiftToAdd = new Shift(date, sType, manager, workersListOfCurrentShift, getSnFactory());
-        this.shiftHistory.put(shiftToAdd.getShiftSn(),shiftToAdd);
+        this.shiftHistory.put(shiftToAdd.getShiftSn(), shiftToAdd);
         infoObject.setMessage("Shift created successfully");
         return infoObject;
     }
@@ -192,19 +191,18 @@ public class ShiftController{
         return this.workerController;
     }
 
-    private Date parseDate(String dateToParse){
+    private Date parseDate(String _date) {
         Date date;
         try {
-            date = new SimpleDateFormat("d-MM-yyyy").parse(dateToParse);
-        }
-        catch (Exception e){
+            date = new SimpleDateFormat("d-MM-yyyy").parse(_date);
+        } catch (Exception e) {
             return null;
         }
         return date;
     }
 
-    private InfoObject validateManagerConstrains(Worker manager,enums shiftType,Date shiftDate){
-        InfoObject infoObject = new InfoObject("",true);
+    private InfoObject validateManagerConstrains(Worker manager, enums shiftType, Date shiftDate) {
+        InfoObject infoObject = new InfoObject("", true);
         Date workersDate = manager.getWorkerStartingDate();
         if (shiftDate.compareTo(workersDate) < 0) {
             infoObject.setIsSucceeded(false);
@@ -223,24 +221,24 @@ public class ShiftController{
     }
 
     public InfoObject removeLaterShiftForFiredManagerByManagerSn(int workerSn) {
-        InfoObject infoObject = new InfoObject("",true);
+        InfoObject infoObject = new InfoObject("", true);
 
         Date today = new Date();
         List<Shift> listOfShiftsRemoved = new LinkedList<>();
-        for(Shift shift : shiftHistory.values()){
+        for (Shift shift : shiftHistory.values()) {
             Date shiftDate = shift.getDate();
             // shift date occurs after today
-            if(shiftDate.compareTo(today)>0){
-                if(shift.getManager().getWorkerSn() == workerSn) {
+            if (shiftDate.compareTo(today) > 0) {
+                if (shift.getManager().getWorkerSn() == workerSn) {
                     listOfShiftsRemoved.add(shift);
                 }
             }
         }
-        for(Shift shiftToRemove: listOfShiftsRemoved){
+        for (Shift shiftToRemove : listOfShiftsRemoved) {
             this.shiftHistory.remove(shiftToRemove.getShiftSn());
         }
         System.out.println("This shifts has been removed : \n");
-        for(Shift deletedShift : listOfShiftsRemoved){
+        for (Shift deletedShift : listOfShiftsRemoved) {
             deletedShift.printShift();
             System.out.println();
         }
