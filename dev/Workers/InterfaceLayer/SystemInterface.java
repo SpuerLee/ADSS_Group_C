@@ -3,7 +3,6 @@ package Workers.InterfaceLayer;
 import Workers.BusinessLayer.ShiftController;
 import Workers.BusinessLayer.Utils.InfoObject;
 import Workers.BusinessLayer.WorkerController;
-import Workers.BusinessLayer.Modules.Worker;
 
 public class SystemInterface {
 

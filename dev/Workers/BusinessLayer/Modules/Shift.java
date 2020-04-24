@@ -1,6 +1,6 @@
 package Workers.BusinessLayer.Modules;
 
-import Workers.BusinessLayer.Modules.Worker;
+import Workers.BusinessLayer.Modules.Worker.Worker;
 import Workers.BusinessLayer.Utils.enums;
 
 import java.text.SimpleDateFormat;
