@@ -1,8 +1,5 @@
-package Presentation_Layer;
+package Transportation.Presentation_Layer;
 
-import com.google.gson.Gson;
-
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.Scanner;
 

@@ -1,6 +1,6 @@
-package Business_Layer.Services;
+package Transportation.Business_Layer.Services;
 
-import Business_Layer.*;
+import Transportation.Business_Layer.*;
 
 import com.google.gson.*;
 
@@ -29,7 +29,7 @@ public class Service {
     private ConcurrentHashMap<Integer, Supplier> HashSuppliers= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Store> HashStore= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Truck> HashTrucks= new ConcurrentHashMap<>();
-    private List<Business_Layer.ItemsFile> ItemsFile= new LinkedList<>();
+    private List<Transportation.Business_Layer.ItemsFile> ItemsFile= new LinkedList<>();
     private ConcurrentHashMap<Integer,Transportation> HashTransportation= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,MissingItems> MissingItems= new ConcurrentHashMap<>();
     public List<License> license_list = new LinkedList<License>();
@@ -40,7 +40,7 @@ public class Service {
     public void uploadData()
     {
         JsonParser parser = new JsonParser();
-        try (InputStream is = this.getClass().getResourceAsStream("/DataLayer/Data.json");
+        try (InputStream is = this.getClass().getResourceAsStream("/Transportation/DataLayer/Data.json");
              Reader rd = new InputStreamReader(is, "UTF-8"); ) {
             Object obj = parser.parse(rd);
             Gson gson = new Gson();
