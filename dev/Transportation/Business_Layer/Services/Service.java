@@ -29,7 +29,7 @@ public class Service {
     private ConcurrentHashMap<Integer, Supplier> HashSuppliers= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Store> HashStore= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Truck> HashTrucks= new ConcurrentHashMap<>();
-    private List<Transportation.Business_Layer.ItemsFile> ItemsFile= new LinkedList<>();
+    private List<ItemsFile> ItemsFile= new LinkedList<>();
     private ConcurrentHashMap<Integer,Transportation> HashTransportation= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,MissingItems> MissingItems= new ConcurrentHashMap<>();
     public List<License> license_list = new LinkedList<License>();
