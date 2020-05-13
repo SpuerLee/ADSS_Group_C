@@ -1,8 +1,10 @@
-package Business_Layer.Workers.Services;
+package Business_Layer.Workers.Controllers;
 
+import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Workers.Utils.InfoObject;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.enums;
+import com.sun.org.apache.bcel.internal.generic.DREM;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,6 +21,15 @@ public class WorkerController {
 
     public HashMap<Integer, Worker> getWorkerList() {
         return workerList;
+    }
+
+    public boolean isStorekeeperAvailable(Date date,String shiftType,int storeSN){
+        return false;
+    }
+
+    public List<Driver> getAllDrivers(Date date,String shiftType){
+        List<Driver> listToReturn = null;
+        return listToReturn;
     }
 
     private List<Worker> getAllAvailableWorkers(Date date, enums shiftType) {

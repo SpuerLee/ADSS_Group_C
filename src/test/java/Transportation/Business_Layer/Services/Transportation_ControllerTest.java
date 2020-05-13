@@ -1,6 +1,8 @@
-package Business_Layer.Transportations.Services;
+//package de Business_Layer.Transportations.Controllers;
 
 import Business_Layer.Modules.*;
+import Business_Layer.Service;
+import Business_Layer.Transportations.Controllers.Transportation_Controller;
 import Business_Layer.Transportations.Modules.*;
 import Business_Layer.Workers.Modules.Worker.Driver;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +18,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class Transportation_ServiceTest {
+class Transportation_ControllerTest {
 
     Service service;
-    Transportation_Service transportation_service;
+    Transportation_Controller transportation_controller;
     String pattern = "MM-dd-yyyy";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     Driver driver1;
@@ -30,7 +32,7 @@ class Transportation_ServiceTest {
 
     @BeforeEach
     void setUp() {
-        transportation_service= Transportation_Service.getInstance();
+        transportation_controller= Transportation_Controller.getInstance();
         service=Service.getInstance();
         service=Service.getInstance();
         List<License> licenses= new LinkedList<>();
@@ -65,7 +67,7 @@ class Transportation_ServiceTest {
         catch (ParseException e){
             e.printStackTrace();
         }
-        transportation_service.createTransportation(date, LocalTime.parse("12:00:00"),driver1.getId(),12345678,suppliers,stores);
+        transportation_controller.createTransportation(date, LocalTime.parse("12:00:00"),driver1.getId(),12345678,suppliers,stores);
         assertEquals(size+1,service.getHashTransportation().size());
     }
 
@@ -77,7 +79,7 @@ class Transportation_ServiceTest {
         suppliers.add(site.getId());
         List<Integer> stores=new LinkedList<>();
         stores.add(site2.getId());
-        transportation_service.createRegularTransportation(date,LocalTime.parse("16:05:00"),driver1.getId(),12345678,suppliers,stores);
+        transportation_controller.createRegularTransportation(date,LocalTime.parse("16:05:00"),driver1.getId(),12345678,suppliers,stores);
         assertEquals(size+1,service.getHashTransportation().size());
 
     }

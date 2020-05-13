@@ -1,5 +1,6 @@
-package Business_Layer.Transportations.Services;
+package Business_Layer.Transportations.Controllers;
 
+import Business_Layer.Service;
 import Business_Layer.Transportations.Buisness_Exception;
 import Business_Layer.Modules.License;
 import Business_Layer.Transportations.Modules.Truck;
@@ -8,15 +9,15 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Trucks_Service {
+public class Trucks_Controller {
 
     private static class Singelton_Trucks {
-        private static Trucks_Service instance = new Trucks_Service();
+        private static Trucks_Controller instance = new Trucks_Controller();
     }
-    private Trucks_Service() {
+    private Trucks_Controller() {
         // initialization code..
     }
-    public static Trucks_Service getInstance() {
+    public static Trucks_Controller getInstance() {
         return Singelton_Trucks.instance;
     }
 

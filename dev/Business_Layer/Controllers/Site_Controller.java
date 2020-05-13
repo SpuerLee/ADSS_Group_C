@@ -1,25 +1,26 @@
-package Business_Layer.Transportations.Services;
+package Business_Layer.Controllers;
 
 import Business_Layer.Modules.*;
+import Business_Layer.Service;
 import Business_Layer.Transportations.Buisness_Exception;
 import Business_Layer.Transportations.Modules.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Site_Service {
+public class Site_Controller {
 
     private static class SingletonService {
-        private static Site_Service instance = new Site_Service();
+        private static Site_Controller instance = new Site_Controller();
     }
 
-    private Site_Service() {
+    private Site_Controller() {
         // initialization code..
     }
 
     Service service = Service.getInstance();
 
-    public static Site_Service getInstance() {
+    public static Site_Controller getInstance() {
         return SingletonService.instance;
     }
 

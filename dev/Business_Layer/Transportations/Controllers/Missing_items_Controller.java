@@ -1,5 +1,6 @@
-package Business_Layer.Transportations.Services;
+package Business_Layer.Transportations.Controllers;
 
+import Business_Layer.Service;
 import Business_Layer.Transportations.Buisness_Exception;
 import Business_Layer.Transportations.Modules.ItemsFile;
 import Business_Layer.Transportations.Modules.MissingItems;
@@ -8,15 +9,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Missing_items_Service {
+public class Missing_items_Controller {
 
     private static class Singelton_Missing {
-        private static Missing_items_Service instance = new Missing_items_Service();
+        private static Missing_items_Controller instance = new Missing_items_Controller();
     }
-    private Missing_items_Service() {
+    private Missing_items_Controller() {
         // initialization code..
     }
-    public static Missing_items_Service getInstance() {
+    public static Missing_items_Controller getInstance() {
         return Singelton_Missing.instance;
     }
 

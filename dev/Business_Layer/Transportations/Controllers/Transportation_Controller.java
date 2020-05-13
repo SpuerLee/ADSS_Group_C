@@ -1,24 +1,25 @@
-package Business_Layer.Transportations.Services;
+package Business_Layer.Transportations.Controllers;
 
 import Business_Layer.Modules.Store;
 import Business_Layer.Modules.Supplier;
+import Business_Layer.Service;
 import Business_Layer.Transportations.Buisness_Exception;
 import Business_Layer.Transportations.Modules.*;
 
 import java.time.LocalTime;
 import java.util.*;
 
-public class Transportation_Service {
+public class Transportation_Controller {
 
     private static class Singelton_Transport {
-        private static Transportation_Service instance = new Transportation_Service();
+        private static Transportation_Controller instance = new Transportation_Controller();
     }
 
-    private Transportation_Service() {
+    private Transportation_Controller() {
         // initialization code..
     }
 
-    public static Transportation_Service getInstance() {
+    public static Transportation_Controller getInstance() {
         return Singelton_Transport.instance;
     }
 

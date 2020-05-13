@@ -1,5 +1,6 @@
-package Business_Layer.Transportations.Services;
+package Business_Layer.Transportations.Controllers;
 
+import Business_Layer.Service;
 import Business_Layer.Transportations.Buisness_Exception;
 import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Modules.License;
@@ -8,17 +9,17 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Drivers_Service {
+public class Drivers_Controller {
 
     private static class Singelton_Driver {
-        private static Drivers_Service instance = new Drivers_Service();
+        private static Drivers_Controller instance = new Drivers_Controller();
     }
 
-    private Drivers_Service() {
+    private Drivers_Controller() {
         // initialization code..
     }
 
-    public static Drivers_Service getInstance() {
+    public static Drivers_Controller getInstance() {
         return Singelton_Driver.instance;
     }
 

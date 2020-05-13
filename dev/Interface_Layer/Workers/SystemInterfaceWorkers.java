@@ -1,25 +1,25 @@
 package Interface_Layer.Workers;
 
-import Business_Layer.Workers.Services.ShiftController;
+import Business_Layer.Workers.Controllers.ShiftController;
 import Business_Layer.Workers.Utils.InfoObject;
-import Business_Layer.Workers.Services.WorkerController;
+import Business_Layer.Workers.Controllers.WorkerController;
 
-public class SystemInterface {
+public class SystemInterfaceWorkers {
 
-    private static SystemInterface systemInterface = null;
+    private static SystemInterfaceWorkers systemInterfaceWorkers = null;
     private WorkerController workerController;
     private ShiftController shiftController;
 
-    private SystemInterface() {
+    private SystemInterfaceWorkers() {
         workerController = new WorkerController();
         shiftController = new ShiftController(workerController);
     }
 
-    public static SystemInterface getInstance(){
-        if(systemInterface == null){
-            systemInterface = new SystemInterface();
+    public static SystemInterfaceWorkers getInstance(){
+        if(systemInterfaceWorkers == null){
+            systemInterfaceWorkers = new SystemInterfaceWorkers();
         }
-        return systemInterface;
+        return systemInterfaceWorkers;
     }
 
     public InfoObject printAllManagersAvailableInDates(String date, String shiftType) {

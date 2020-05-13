@@ -1,15 +1,15 @@
 package Presentation_Layer.Transportations;
 
-import Interface_Layer.Transportations.Controler;
+import Interface_Layer.Transportations.SystemInterfaceTransportations;
 
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class TransportationMenu {
     public static void Menu() {
-        Controler controler = Controler.getInstance();
+        SystemInterfaceTransportations systemInterfaceTransportations = SystemInterfaceTransportations.getInstance();
 //        if (args.length > 0 && args[0].equals("upload"))
-        controler.uploadData();
+        systemInterfaceTransportations.uploadData();
         String choice = "0";
         do {
             System.out.println("Please choose your option:");
@@ -37,17 +37,17 @@ public class TransportationMenu {
                     }
                     option2 = scan.nextLine();
                     if (option2.equals("1"))
-                        controler.Complete_stock_missing();
+                        systemInterfaceTransportations.Complete_stock_missing();
                     else if (option2.equals("2"))
-                        controler.Regular_stock_transport();
+                        systemInterfaceTransportations.Regular_stock_transport();
                 }else if (option.equals("2")) {
-                    controler.Show_transports();
+                    systemInterfaceTransportations.Show_transports();
                 }
                 else if (option.equals("3")) {
-                    controler.Remove_transport();
+                    systemInterfaceTransportations.Remove_transport();
                 }
                 else if (option.equals("4")) {
-                    HashMap<Boolean,Integer> check=controler.Truck_weight_in_supplier();
+                    HashMap<Boolean,Integer> check= systemInterfaceTransportations.Truck_weight_in_supplier();
                     if(check.containsKey(false))
                     {
                         System.out.println("Choose how to fix the transport");
@@ -59,9 +59,9 @@ public class TransportationMenu {
                         }
                         option2 = scan.nextLine();
                         if (option2.equals("1"))
-                            controler.Change_truck_and_driver(check.get(false));
+                            systemInterfaceTransportations.Change_truck_and_driver(check.get(false));
                         else if (option2.equals("2"))
-                            controler.Change_remove_store_or_supplier(check.get(false));
+                            systemInterfaceTransportations.Change_remove_store_or_supplier(check.get(false));
                     }
                 }
             } else if (choice.equals("2")) {
@@ -72,11 +72,11 @@ public class TransportationMenu {
                 }
                 driver_option = scan.nextLine();
                 if (driver_option.equals("1")) {
-                    controler.Add_driver();
+                    systemInterfaceTransportations.Add_driver();
                 } else if (driver_option.equals("2"))
-                    controler.Show_drivers_List();
+                    systemInterfaceTransportations.Show_drivers_List();
                 else if (driver_option.equals("3"))
-                    controler.Remove_driver();
+                    systemInterfaceTransportations.Remove_driver();
             } else if (choice.equals("3")) {
                 String[] sites = new String[]{"Add new site", "Show sites List","Cancel"};
                 String option = null;
@@ -85,9 +85,9 @@ public class TransportationMenu {
                 }
                 option = scan.nextLine();
                 if (option.equals("1"))
-                    controler.Add_site();
+                    systemInterfaceTransportations.Add_site();
                 else if (option.equals("2"))
-                    controler.Show_sites();
+                    systemInterfaceTransportations.Show_sites();
             } else if (choice.equals("4")) {
                 String[] suppliers = new String[]{"Add new Truck", "Show trucks List", "Remove truck","Cancel"};
                 String option = null;
@@ -96,11 +96,11 @@ public class TransportationMenu {
                 }
                 option = scan.nextLine();
                 if (option.equals("1"))
-                    controler.Add_truck();
+                    systemInterfaceTransportations.Add_truck();
                 else if (option.equals("2"))
-                    controler.Show_trucks();
+                    systemInterfaceTransportations.Show_trucks();
                 else if (option.equals("3"))
-                    controler.Remove_truck();
+                    systemInterfaceTransportations.Remove_truck();
             }
         }
         while (!choice.equals("5"));

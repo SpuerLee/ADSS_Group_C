@@ -1,8 +1,10 @@
-package Business_Layer.Transportations.Services;
+package Business_Layer;
 
 import Business_Layer.Modules.*;
 import Business_Layer.Transportations.Modules.*;
+import Business_Layer.Workers.Modules.Shift;
 import Business_Layer.Workers.Modules.Worker.Driver;
+import Business_Layer.Workers.Modules.Worker.Worker;
 import com.google.gson.*;
 
 
@@ -33,6 +35,8 @@ public class Service {
     private List<Business_Layer.Transportations.Modules.ItemsFile> ItemsFile= new LinkedList<>();
     private ConcurrentHashMap<Integer,Transportation> HashTransportation= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,MissingItems> MissingItems= new ConcurrentHashMap<>();
+    private HashMap<Integer, Shift> shiftHistory = new HashMap<>();
+    private HashMap<Integer, Worker> workerList= new HashMap<>();
     public List<License> license_list = new LinkedList<License>();
     private List<Area> area_list = new LinkedList<Area>();
 
