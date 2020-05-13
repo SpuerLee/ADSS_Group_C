@@ -1,4 +1,7 @@
-package Business_Layer.Transportations;
+package Business_Layer.Transportations.Modules;
+
+import Business_Layer.Modules.Store;
+import Business_Layer.Modules.Supplier;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,8 +1,8 @@
 package Business_Layer.Transportations.Services;
 
 import Business_Layer.Transportations.Buisness_Exception;
-import Business_Layer.Transportations.License;
-import Business_Layer.Transportations.Truck;
+import Business_Layer.Modules.License;
+import Business_Layer.Transportations.Modules.Truck;
 
 import java.util.Date;
 import java.util.LinkedList;

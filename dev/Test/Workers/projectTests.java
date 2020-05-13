@@ -1,8 +1,8 @@
 package Test.Workers;
 
-import Business_Layer.Workers.ShiftController;
+import Business_Layer.Workers.Services.ShiftController;
 import Business_Layer.Workers.Utils.enums;
-import Business_Layer.Workers.WorkerController;
+import Business_Layer.Workers.Services.WorkerController;
 import javafx.util.Pair;
 import org.junit.jupiter.api.*;
 

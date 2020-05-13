@@ -1,8 +1,8 @@
 package Interface_Layer.Workers;
 
-import Business_Layer.Workers.ShiftController;
+import Business_Layer.Workers.Services.ShiftController;
 import Business_Layer.Workers.Utils.InfoObject;
-import Business_Layer.Workers.WorkerController;
+import Business_Layer.Workers.Services.WorkerController;
 
 public class SystemInterface {
 

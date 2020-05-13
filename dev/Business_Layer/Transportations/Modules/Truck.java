@@ -1,4 +1,6 @@
-package Business_Layer.Transportations;
+package Business_Layer.Transportations.Modules;
+
+import Business_Layer.Modules.License;
 
 import java.util.Date;
 import java.util.LinkedList;
