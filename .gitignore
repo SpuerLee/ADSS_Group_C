@@ -15,6 +15,9 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .idea/artifacts/
+.idea/compiler.xml
+.idea/jarRepositories.xml
+
 
 # Generated files
 .idea/**/contentModel.xml
@@ -138,3 +141,5 @@ gradle-app.setting
 **/build/
 
 # End of https://www.gitignore.io/api/java,gradle,intellij
+target/classes/META-INF/MANIFEST.MF
+adss.iml
