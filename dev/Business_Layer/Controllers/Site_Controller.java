@@ -47,6 +47,7 @@ public class Site_Controller {
     }
 
     public String showsite() throws Buisness_Exception {
+        System.out.println("");
         if (service.getHashStoresMap().size() + service.getSuppliersMap().size() == 0)
             throw new Buisness_Exception("There are no sites in the system" + "\n");
         else {
