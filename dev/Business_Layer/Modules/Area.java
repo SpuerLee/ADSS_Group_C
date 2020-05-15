@@ -5,7 +5,7 @@ public class Area {
     private String areaName;
     private int areaSN;
 
-    public Area(String areaName, int areaSN) {
+    public Area( int areaSN, String areaName) {
         this.areaName = areaName;
         this.areaSN = areaSN;
     }

@@ -42,6 +42,15 @@ public class Service {
     }
     private Service() {
         // initialization code..
+        license_list.put(1, new License(1,"C"));
+        license_list.put(2,new License(2,"C1"));
+        area_list.put(1,new Area(1,"A"));
+        area_list.put(2,new Area(2,"B"));
+        area_list.put(3,new Area(3,"C"));
+        area_list.put(4,new Area(4,"D"));
+        shiftTypeList.put(1, new ShiftType(1,"Morning"));
+        shiftTypeList.put(2, new ShiftType(2,"Night"));
+
     }
     public static Service getInstance() {
         return SingletonService.instance;
@@ -64,9 +73,9 @@ public class Service {
     private ConcurrentHashMap<Integer,MissingItems> MissingItems= new ConcurrentHashMap<>();
     private HashMap<Integer, Shift> shiftHistory = new HashMap<>();
     private HashMap<Integer, Worker> workerList= new HashMap<>();
-    public List<License> license_list = new LinkedList<License>();
-    private List<Area> area_list = new LinkedList<Area>();
-    private List<ShiftType> shiftTypeList = new LinkedList<>();
+    public HashMap<Integer, License> license_list = new HashMap<>();
+    private HashMap<Integer, Area> area_list = new HashMap<>();
+    private HashMap<Integer, ShiftType> shiftTypeList = new HashMap<>();
 
 
     public HashMap<Integer, Worker> getWorkerList() {
