@@ -3,6 +3,7 @@ import Business_Layer.Workers.Modules.Worker.Driver;
 
 import Business_Layer.Modules.Store;
 import Business_Layer.Modules.Supplier;
+import javafx.util.Pair;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -54,8 +55,9 @@ public class Transportation {
         output += "\n\titemsFiles: ";
         for (ItemsFile itemsFile: itemsFiles) {
             output = output +"\n\t"+ itemsFile.getSupplier().getName()+"->"+itemsFile.getStore().getName()+":";
-            for (Map.Entry me : itemsFile.getItems_list().entrySet()) {
-                output = output +"\n\t-"+ me.getKey()+"-"+me.getValue();
+            for(Pair<String,Integer> pair : itemsFile.getItems_list())
+            {
+                output = output +"\n\t-"+ pair.getKey()+"-"+pair.getValue();
             }
         }
         if(weight_truck!=-1)
@@ -74,7 +76,7 @@ public class Transportation {
         this.truck=truck;
     }
 
-    public void setWeight_truck(int weight_truck)
+    public void setWeight_truck(double weight_truck)
     {
         this.weight_truck=weight_truck;
     }
@@ -112,7 +114,7 @@ public class Transportation {
         return itemsFiles;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
