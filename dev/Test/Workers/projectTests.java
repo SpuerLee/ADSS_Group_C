@@ -26,9 +26,9 @@ public class projectTests {
         service = Service.getInstance();
         service.getWorkerList().clear();
         service.getWorkerController().resetSnFactory();
-        service.getShiftController().resetSnFactory();
+        //service.getShiftController().resetSnFactory();
         service.getShiftHistory().clear();
-        service.getShiftController().setCurrentStoreSN(1);
+        //service.getShiftController().setCurrentStoreSN(1);
         service.getWorkerController().setCurrentStoreSN(1);
         System.out.println(testInfo.getTestMethod().get().getName() + " - " + testInfo.getDisplayName());
     }

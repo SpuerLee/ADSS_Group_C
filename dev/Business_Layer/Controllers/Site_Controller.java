@@ -143,5 +143,23 @@ public class Site_Controller {
         return output;
     }
 
+    public boolean printAllSites() {
+        if(Service.getInstance().getHashStoresMap().isEmpty()){
+            return false;
+        }
+        for(Store storeToPrint : Service.getInstance().getHashStoresMap().values()){
+            System.out.println(storeToPrint);
+        }
+        return true;
+    }
+
+    public boolean isStoreExcites(int currentStore) {
+        for(int storeSN : Service.getInstance().getHashStoresMap().keySet()){
+            if(currentStore == storeSN){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

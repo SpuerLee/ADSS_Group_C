@@ -7,9 +7,13 @@ import Business_Layer.Transportations.Controllers.Missing_items_Controller;
 import Business_Layer.Transportations.Controllers.Transportation_Controller;
 import Business_Layer.Transportations.Controllers.Trucks_Controller;
 import Business_Layer.Transportations.Modules.*;
+import Business_Layer.Workers.Controllers.ShiftController;
+import Business_Layer.Workers.Controllers.WorkerController;
 import Business_Layer.Workers.Modules.Shift;
 import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Workers.Modules.Worker.Worker;
+import Business_Layer.Workers.Utils.ShiftType;
+import Interface_Layer.Workers.SystemInterfaceWorkers;
 import com.google.gson.*;
 import javafx.util.Pair;
 
@@ -24,7 +28,16 @@ public class Service {
         return HashTrucks;
     }
 
+    public WorkerController getWorkerController() {
+        return this.workerController;
+    }
+
+    public ShiftController getShiftController() {
+        return this.shiftController;
+    }
+
     private static class SingletonService {
+
         private static Service instance = new Service();
     }
     private Service() {
@@ -39,7 +52,8 @@ public class Service {
     public Transportation_Controller transportation_controller = Transportation_Controller.getInstance();
     public Missing_items_Controller missing_items_controller = Missing_items_Controller.getInstance();
     public Drivers_Controller drivers_controller = Drivers_Controller.getInstance();
-
+    private ShiftController shiftController = new ShiftController();
+    private WorkerController workerController = new WorkerController();
 
     private ConcurrentHashMap<Integer, Driver> Drivers= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Supplier> HashSuppliers= new ConcurrentHashMap<>();
@@ -52,8 +66,36 @@ public class Service {
     private HashMap<Integer, Worker> workerList= new HashMap<>();
     public List<License> license_list = new LinkedList<License>();
     private List<Area> area_list = new LinkedList<Area>();
+    private List<ShiftType> shiftTypeList = new LinkedList<>();
 
 
+    public HashMap<Integer, Worker> getWorkerList() {
+        return workerList;
+    }
+
+    public HashMap<Integer, Shift> getShiftHistory() {
+        return shiftHistory;
+    }
+
+    public HashMap<Integer, Shift> getShiftHistory(int currentStoreSN) {
+        HashMap<Integer,Shift> CurrentStoreShifts = new HashMap<>();
+        for(Shift shift : this.shiftHistory.values()){
+            if(shift.getStoreSN() == currentStoreSN){
+                CurrentStoreShifts.put(shift.getShiftSn(),shift);
+            }
+        }
+        return CurrentStoreShifts;
+    }
+
+    public HashMap<Integer, Worker> getWorkerList(int currentStoreSN) {
+        HashMap<Integer,Worker> CurrentStoreWorkers = new HashMap<>();
+        for(Worker worker : this.workerList.values()){
+            if(worker.getStoreSN() == currentStoreSN){
+                CurrentStoreWorkers.put(worker.getWorkerSn(),worker);
+            }
+        }
+        return CurrentStoreWorkers;
+    }
 
     public void uploadData()
     {
@@ -72,11 +114,14 @@ public class Service {
                 final JsonArray license = driver.getAsJsonArray("licenses");
                 List<License> licenses=new LinkedList<License>();
                 for(int j=0;j<license.size();j++){
-                    License type = new License(license.get(j).getAsString());
+                    License type = new License(license.get(j).getAsString(), licenseSN, licenseType);
                     licenses.add(type);
                 }
-                Driver add=new Driver(driver.get("name").getAsString(),licenses);
-                Drivers.put(add.getId(),add);
+                //Driver add=new Driver(driver.get("name").getAsString(),licenses);
+                Date date = new Date();
+                //
+                Driver add = new Driver(123,driver.get("name").getAsString(),"321312",132,465,date,"Driver",100,1,driver.get("licenses").getAsString());
+                Drivers.put(add.getWorkerSn(),add);
 
             }
             final JsonArray sites = jsonObject.get("Sites").getAsJsonArray();
@@ -111,7 +156,7 @@ public class Service {
                 final JsonArray license = truck.getAsJsonArray("licenses");
                 List<License> licenses=new LinkedList<License>();
                 for(int j=0;j<license.size();j++){
-                    License type = new License(license.get(j).getAsString());
+                    License type = new License(license.get(j).getAsString(), licenseSN, licenseType);
                     licenses.add(type);
                 }
                 Truck truck1 = new Truck(truck.get("license_number").getAsInt(),licenses,truck.get("model").getAsString(),truck.get("weight").getAsDouble(),truck.get("max weight").getAsDouble());
@@ -139,35 +184,6 @@ public class Service {
 
         }
     }
-
-    /*
-    //missing items
-
-    //create Regular Transportation
-    public boolean createRegularTransportation(Date date, LocalTime leaving_time, int driver_id,
-                                        int truck_license_number, int supplierid, List<Integer> stores)
-    {
-        List <Integer> suppliers=new LinkedList<>();
-        suppliers.add(supplierid);
-        Transportation transportation =
-                new Transportation(date,leaving_time,driver_id,truck_license_number,suppliers,stores);
-        HashTransportation.put(transportation.getID(),transportation);
-        HashDrivers.get(driver_id).addDate(date);
-        HashTrucks.get(truck_license_number).addDate(date);
-        return true;
-    }
-
-    //add each store to the itemFile
-    public void add_to_items_file(Date date, LocalTime leaving_time, int driver_id,
-                                     int truck_license_number, int supplierid, int store, HashMap<String,Integer> items){
-        for(Transportation transportation: HashTransportation.values()){
-            if(transportation.getDriveId().equals(driver_id)& transportation.getLeaving_time().equals(leaving_time)& (transportation.getTrucklicense()==truck_license_number)){
-                int transportId=transportation.getID();
-                HashItemsFile.put(transportId, new ItemsFile(transportId,store,supplierid,items));
-            }
-        }
-    }
-  */
 
     public String getMissingItems()
     {

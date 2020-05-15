@@ -19,8 +19,8 @@ public class WorkerController {
         this.currentStoreSN = -1;
     }
 
-    public List<Driver> getAllDrivers(Date date,String shiftType){
-        List<Driver> listToReturn = null;
+    public List<String> getAllDrivers(Date date,String shiftType,List<String> licenses){
+        List<String> listToReturn = null;
 
         enums sType;
         try{
@@ -36,12 +36,19 @@ public class WorkerController {
         for (Worker worker : Service.getInstance().getWorkerList().values()) {
             if(worker.available(date,sType)){
                 if(worker.getWorkerJobTitle().toUpperCase().equals("DRIVER")) {
-                    listToReturn.add((Driver) worker);
+                    // check if driver license in the licenses list
+
+                    String driverToString = worker.getWorkerSn() + ". " + worker.getWorkerName();
+                    listToReturn.add(driverToString);
                 }
             }
         }
 
         return listToReturn;
+    }
+
+    public boolean isStooreKeeperAvaialble(Date date,String shiftType, int storeSN){
+        return false;
     }
 
     private List<Worker> getAllAvailableWorkers(Date date, enums shiftType) {

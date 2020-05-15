@@ -9,11 +9,9 @@ import Business_Layer.Workers.Controllers.WorkerController;
 public class SystemInterfaceWorkers {
 
     private static SystemInterfaceWorkers systemInterfaceWorkers = null;
-    private Service service;
 
 
     private SystemInterfaceWorkers() {
-        service = Service.getInstance();
     }
 
     public static SystemInterfaceWorkers getInstance(){
@@ -24,63 +22,63 @@ public class SystemInterfaceWorkers {
     }
 
     public InfoObject printAllManagersAvailableInDates(String date, String shiftType) {
-        return service.getWorkerController().printAllManagersAvailableInThisDate(date,shiftType);
+        return Service.getInstance().getWorkerController().printAllManagersAvailableInThisDate(date,shiftType);
     }
 
     public InfoObject printAllWorkers(){
-        return service.getWorkerController().printAllWorker();
+        return Service.getInstance().getWorkerController().printAllWorker();
     }
 
     public InfoObject printAllWorkersAvailableInDates(String date, String shiftType) {
-        return service.getWorkerController().printAllWorkersAvailableInThisDate(date, shiftType);
+        return Service.getInstance().getWorkerController().printAllWorkersAvailableInThisDate(date, shiftType);
     }
 
     public InfoObject createShift(String shiftType, int selectedManagerSn,String chosenWorkersSn,String date) {
-        return service.getShiftController().createShift(shiftType, selectedManagerSn, chosenWorkersSn, date);
+        return Service.getInstance().getShiftController().createShift(shiftType, selectedManagerSn, chosenWorkersSn, date);
     }
 
     public InfoObject printShift(int shiftSn){
-        return service.getShiftController().printShift(shiftSn);
+        return Service.getInstance().getShiftController().printShift(shiftSn);
     }
 
     public InfoObject addWorker(int workerId,String workerName,String workerPhoneNumber,int workerBankAccount,int workerSalary,String dateOfStart,String workerJobTitle,String constrains) {
-        return service.getWorkerController().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle,constrains);
+        return Service.getInstance().getWorkerController().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle,constrains);
     }
 
     public InfoObject addDriver(int workerId,String workerName,String workerPhoneNumber,int workerBankAccount,int workerSalary,String dateOfStart,String workerJobTitle,String constrains,String licenses) {
-        return service.getWorkerController().addDriver(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle,constrains,licenses);
+        return Service.getInstance().getWorkerController().addDriver(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle,constrains,licenses);
     }
 
     public InfoObject printWorkerBySn(int workerSn){
-        return service.getWorkerController().printWorkerBySn(workerSn);
+        return Service.getInstance().getWorkerController().printWorkerBySn(workerSn);
     }
 
     public InfoObject printWorkerConstrainsBySn(int workerSn){
-        return service.getWorkerController().printWorkersConstrainsBySn(workerSn);
+        return Service.getInstance().getWorkerController().printWorkersConstrainsBySn(workerSn);
     }
 
     public InfoObject setNewSalaryBySn(int workerSn,int newSalary){
-        return service.getWorkerController().setNewSalaryBySn(workerSn, newSalary);
+        return Service.getInstance().getWorkerController().setNewSalaryBySn(workerSn, newSalary);
     }
 
     public InfoObject removeWorkerBySn(int workerSn){
-        return service.getWorkerController().removeWorkerBySn(workerSn);
+        return Service.getInstance().getWorkerController().removeWorkerBySn(workerSn);
     }
 
     public InfoObject resetWorkerConstrainsBySn(int workerSn){
-        return service.getWorkerController().resetWorkerConstrainsBySn(workerSn);
+        return Service.getInstance().getWorkerController().resetWorkerConstrainsBySn(workerSn);
     }
 
     public InfoObject printAllShifts(){
-        return service.getShiftController().printAllShits();
+        return Service.getInstance().getShiftController().printAllShifts();
     }
 
     public InfoObject editWorkerConstrainsBySn(int workerSn, String newConstrains){
-        return service.getWorkerController().editWorkerConstrainsBySn(workerSn,newConstrains);
+        return Service.getInstance().getWorkerController().editWorkerConstrainsBySn(workerSn,newConstrains);
     }
 
     public InfoObject removeLaterShiftForFiredManagerByManagerSn(int workerSn) {
-        return service.getShiftController().removeLaterShiftForFiredManagerByManagerSn(workerSn);
+        return Service.getInstance().getShiftController().removeLaterShiftForFiredManagerByManagerSn(workerSn);
     }
 
     public boolean printAllStores() {
@@ -98,8 +96,8 @@ public class SystemInterfaceWorkers {
 
     public boolean setCurrentStore(int currentStore) {
         if(Site_Controller.getInstance().isStoreExcites(currentStore)) {
-            service.getWorkerController().setCurrentStoreSN(currentStore);
-            service.getShiftController().setCurrentStoreSN(currentStore);
+            Service.getInstance().getWorkerController().setCurrentStoreSN(currentStore);
+            Service.getInstance().getShiftController().setCurrentStore(currentStore);
         }else{
             System.out.println("There is no store with this SN");
             return false;

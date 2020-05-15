@@ -14,7 +14,7 @@ public class worker_DAO {
                 "(\"SN\", \"ID\", \"Name\", \"PhoneNumber\", \"BankAccount\", \"Salary\", \"Date\", \"Worker_Type\", \"StoreSN\")\n" +
                 String.format("VALUES ('%d', '%d', '%s', '%s', '%d', '%d', '%date', '%d', '%d');",
                         workerToInsert.getWorkerSn(),workerToInsert.getWorkerId(),workerToInsert.getWorkerName(),
-                        workerToInsert.getWorkerPhone(),workerToInsert.getWorkerBankAccount,workerToInsert.getWorkerSalary(),
+                        workerToInsert.getWorkerPhone(),workerToInsert.getWorkerBankAccount(),workerToInsert.getWorkerSalary(),
                         workerToInsert.getWorkerStartingDate(),workerToInsert.getWorkerJobTitle(),workerToInsert.getStoreSN());
 
         for(Map.Entry<Pair<enums,enums>,Boolean> constrains : workerToInsert.getWorkerConstrains().entrySet()){
@@ -30,7 +30,7 @@ public class worker_DAO {
         String sql = "DELETE FROM Workers WHERE SN = " + workerSN;
     }
 
-    public void update(){
+    public void update(Shift shiftToInsert,Worker worker){
         String shiftWorkersQuery = "INSERT INTO \"main\".\"Shift_Worker\"\n" +
                 "(\"SNShift\", \"SNWorker\")\n" +
                 String.format("VALUES ('%d', '%d');", shiftToInsert.getShiftSn(),worker.getWorkerSn());

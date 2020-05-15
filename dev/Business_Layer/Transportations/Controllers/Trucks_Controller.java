@@ -35,7 +35,7 @@ public class Trucks_Controller {
 //            line += trucks.getLicenses().toString()+".";
             for(License license :trucks.getLicenses())
             {
-                line += license.getType()+", ";
+                line += license.getLicenseType()+", ";
             }
             line+=".";
             result.add(line);
@@ -55,7 +55,7 @@ public class Trucks_Controller {
         }
         else {
             for (String license : licenses_types) {
-                licenses.add(new License(license));
+                licenses.add(new License(license, licenseSN, licenseType));
             }
             Truck trucks = new Truck(license_number, licenses, model, weight,max_weight);
             service.getHashTrucks().put(trucks.getId(), trucks);
@@ -75,22 +75,6 @@ public class Trucks_Controller {
            result=true;
        }
        return result;
-    }
-
-    public String getTrucksToDriver(String id, Date date)
-    {
-        Service service=Service.getInstance();
-        int driverId = Integer.parseInt(id);
-        List<License> license_list = service.getDrivers().get(driverId).getLicenses();
-        String output = "";
-        for (Truck truck : service.getHashTrucks().values())
-        {
-            if(truck.checkIfFree(date) && truck.checkLicense(license_list))
-            {
-                output = output + truck.getlicense_number()+". "+truck.getModel()+"\n";
-            }
-        }
-        return output;
     }
 
     public List<String> getFreeTrucks(Date date) throws Buisness_Exception{

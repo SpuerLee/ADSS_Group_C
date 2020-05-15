@@ -119,4 +119,12 @@ public class Worker {
     public int getStoreSN() {
         return storeSN;
     }
+
+    public String getWorkerPhone() {
+        return this.phoneNumber;
+    }
+
+    public int getWorkerBankAccount() {
+        return this.bankAccount;
+    }
 }

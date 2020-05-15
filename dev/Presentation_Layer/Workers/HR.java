@@ -1,6 +1,7 @@
 package Presentation_Layer.Workers;
 
 
+import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Workers.Utils.InfoObject;
 import Interface_Layer.Workers.SystemInterfaceWorkers;
 import Test.Workers.projectTests;
@@ -20,12 +21,18 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
 public class HR {
+
     public static void Menu() {
         System.out.println("Welcome! Enter you choice");
-        run();
+        try {
+            run();
+        }
+        catch (Exception e){
+
+        }
     }
 
-    public static void run() {
+    public static void run() throws Buisness_Exception {
         System.out.println("1. Run tests");
         System.out.println("2. Start system");
         System.out.println("Enter 0 to exit program");
@@ -43,7 +50,7 @@ public class HR {
             start(sc);
         }
         if (selectedOption == 0) {
-            System.exit(0);
+            throw new Buisness_Exception("Going back");
         }
         if (selectedOption < 0 || selectedOption > 2) {
             System.out.println("Invalid input, please try again");

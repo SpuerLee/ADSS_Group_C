@@ -2,7 +2,6 @@ package Business_Layer.Transportations.Controllers;
 import Business_Layer.Workers.Modules.Worker.Driver;
 
 import Business_Layer.Service;
-import Business_Layer.Transportations.Buisness_Exception;
 import Business_Layer.Modules.License;
 
 import java.util.Date;
@@ -25,16 +24,16 @@ public class Drivers_Controller {
 
     private Service service = Service.getInstance();
 
-    public String getDriverToTrucks(String id, Date date)
+    public List<String> getDriverToTrucks(int truckId, Date date)
     {
-        int truckId = Integer.parseInt(id);
         List<License> license_list = Service.getInstance().getHashTrucks().get(truckId).getLicenses();
-        String output = "";
+        List<String> output = new LinkedList<>();
         for (Driver driver : service.getDrivers().values())
         {
             if(driver.checkLicense(license_list))
             {
-                output = output + driver.toString();
+                String driverToString = driver.getWorkerSn() + ". " + driver.getWorkerName();
+                output.add(driverToString);
             }
         }
         return output;
