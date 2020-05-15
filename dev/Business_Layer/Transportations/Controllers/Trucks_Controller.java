@@ -1,7 +1,7 @@
 package Business_Layer.Transportations.Controllers;
 
 import Business_Layer.Service;
-import Business_Layer.Transportations.Buisness_Exception;
+import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Modules.License;
 import Business_Layer.Transportations.Modules.Truck;
 
@@ -21,31 +21,35 @@ public class Trucks_Controller {
         return Singelton_Trucks.instance;
     }
 
-    private Service service=Service.getInstance();
 
-    public String showtrucks() throws Buisness_Exception{
+
+    public List<String> showtrucks() throws Buisness_Exception{
+        Service service=Service.getInstance();
         if(service.getHashTrucks().size()==0){
             throw new Buisness_Exception("There are no trucks in the system"+ "\n");
         }
-        String result="";
+        List<String> result = new LinkedList<>();
         for(Truck trucks: service.getHashTrucks().values()){
-            result=result+"Id: " + trucks.getId()+", License Number: "+
-                    trucks.getlicense_number()+", Model: "+trucks.getModel()+ ", Licenses: ";
+            String line = trucks.getId()+". License Number: "+
+                    trucks.getlicense_number()+", Model: "+trucks.getModel()+ ".\n Licenses: ";
+//            line += trucks.getLicenses().toString()+".";
             for(License license :trucks.getLicenses())
             {
-                result += license.getType()+", ";
+                line += license.getType()+", ";
             }
-            result+="\n";
+            line+=".";
+            result.add(line);
         }
         return result;
     }
 
 
-    public boolean addTruck(String license_number, List<String> licenses_types, String model, String weight, String max_weight) throws Buisness_Exception {
+    public boolean addTruck(int license_number, List<String> licenses_types,
+                            String model, double weight, double max_weight) throws Buisness_Exception {
+        Service service=Service.getInstance();
         List<License> licenses=new LinkedList<>();
-        Integer number=Integer.parseInt(license_number);
         boolean result=true;
-        if(service.getHashTrucks().containsKey(number)){
+        if(service.getHashTrucks().containsKey(license_number)){
             result=false;
             throw new Buisness_Exception("The truck driving license is already exist"+ "\n");
         }
@@ -53,7 +57,7 @@ public class Trucks_Controller {
             for (String license : licenses_types) {
                 licenses.add(new License(license));
             }
-            Truck trucks = new Truck(Integer.parseInt(license_number), licenses, model, Double.parseDouble(weight), Double.parseDouble(max_weight));
+            Truck trucks = new Truck(license_number, licenses, model, weight,max_weight);
             service.getHashTrucks().put(trucks.getId(), trucks);
             return result;
         }
@@ -62,6 +66,7 @@ public class Trucks_Controller {
 
 
     public boolean removeTruck(int id) throws Buisness_Exception{
+        Service service=Service.getInstance();
         boolean result=false;
        if(!service.getHashTrucks().containsKey(id))
            throw new Buisness_Exception("The truck's license number does'nt exist "+"\n");
@@ -74,6 +79,7 @@ public class Trucks_Controller {
 
     public String getTrucksToDriver(String id, Date date)
     {
+        Service service=Service.getInstance();
         int driverId = Integer.parseInt(id);
         List<License> license_list = service.getDrivers().get(driverId).getLicenses();
         String output = "";
@@ -87,13 +93,18 @@ public class Trucks_Controller {
         return output;
     }
 
-    public String getFreeTrucks(Date date) {
-        String output = "";
+    public List<String> getFreeTrucks(Date date) throws Buisness_Exception{
+        Service service=Service.getInstance();
+        List<String> output = new LinkedList<String>();
         for (Truck truck : service.getHashTrucks().values()) {
             if (truck.checkIfFree(date)) {
-                output = output + truck.getId()+". "+"license number: "+truck.getlicense_number()+
-                        ", Model: "+truck.getModel()+"\n";
+                String line = truck.getId()+". "+"license number: "+truck.getlicense_number()+
+                        ", Model: "+truck.getModel()+".";
+                output.add(line);
             }
+            if(output.isEmpty())
+                throw new Buisness_Exception("there are on free tracks\n");
+
         }
         return output;
     }

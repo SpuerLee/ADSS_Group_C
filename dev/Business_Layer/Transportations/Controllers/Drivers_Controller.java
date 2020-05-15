@@ -2,7 +2,7 @@ package Business_Layer.Transportations.Controllers;
 import Business_Layer.Workers.Modules.Worker.Driver;
 
 import Business_Layer.Service;
-import Business_Layer.Transportations.Buisness_Exception;
+import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Modules.License;
 
 import java.util.Date;
@@ -23,9 +23,10 @@ public class Drivers_Controller {
         return Singelton_Driver.instance;
     }
 
-    private Service service = Service.getInstance();
+
 
     public void addDriver(String name, List<String> license_list) {
+        Service service = Service.getInstance();
         List<License> licenses = new LinkedList<License>();
         for (String license : license_list) {
             licenses.add(new License(license));
@@ -35,6 +36,7 @@ public class Drivers_Controller {
     }
 
     public void removeDriver(int id) throws Buisness_Exception{
+        Service service = Service.getInstance();
         if(!service.getDrivers().containsKey(id))
             throw new Buisness_Exception("The drives's id doesn't exist "+"\n");
         else {
@@ -43,6 +45,7 @@ public class Drivers_Controller {
     }
 
     public String showDrivers() throws Buisness_Exception {
+        Service service = Service.getInstance();
         if(service.getDrivers().size()==0)
             throw new Buisness_Exception("There are no drivers in the system"+ "\n");
         String result = "";
@@ -58,6 +61,7 @@ public class Drivers_Controller {
     }
 
     public String getFreeDrivers(Date date) {
+        Service service = Service.getInstance();
         String output = "";
         for (Driver driver : service.getDrivers().values()) {
             if (driver.checkIfFree(date)) {
@@ -67,16 +71,17 @@ public class Drivers_Controller {
         return output;
     }
 
-    public String getDriverToTrucks(String id, Date date)
+    public List<String> getDriverToTrucks(int truckId, Date date)
     {
-        int truckId = Integer.parseInt(id);
+        Service service = Service.getInstance();
         List<License> license_list = service.getHashTrucks().get(truckId).getLicenses();
-        String output = "";
+        List<String> output = new LinkedList<String>();
         for (Driver driver : service.getDrivers().values())
         {
             if(driver.checkIfFree(date) && driver.checkLicense(license_list))
             {
-                output = output + driver.getId()+". "+driver.getName()+"\n";
+                String line = driver.getId()+". "+driver.getName()+".";
+                output.add(line);
             }
         }
         return output;

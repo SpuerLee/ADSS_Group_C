@@ -21,7 +21,7 @@ public class Main {
         {
             Scanner scan = new Scanner(System.in);
             String option = "";
-            String[] main_menu = new String[]{"HR", "TransportationMenu", "Exit"};
+            String[] main_menu = new String[]{"HR", "Transportation Menu", "Exit"};
             for (int i = 0; i < main_menu.length; i++) {
                 System.out.println(i + 1 + ". " + main_menu[i]);
             }

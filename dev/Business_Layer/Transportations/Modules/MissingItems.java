@@ -1,6 +1,9 @@
 package Business_Layer.Transportations.Modules;
 
+import javafx.util.Pair;
+
 import java.util.HashMap;
+import java.util.List;
 
 public class MissingItems {
 
@@ -9,10 +12,10 @@ public class MissingItems {
     private int id;
     private int supplier_id;
     private int store_id;
-    private HashMap<String,Integer> items_list;
+    private List<Pair<String,Integer>> items_list;
 
 
-    public MissingItems(int store_id,int supplier_id, HashMap<String,Integer> items_list)
+    public MissingItems(int store_id,int supplier_id, List<Pair<String,Integer>> items_list)
     {
         this.id=idcounter++;
         this.store_id=store_id;
@@ -29,7 +32,7 @@ public class MissingItems {
     {
         return this.supplier_id;
     }
-    public HashMap<String,Integer> getItems_list()
+    public List<Pair<String,Integer>> getItems_list()
     {
         return this.items_list;
     }

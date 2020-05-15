@@ -1,11 +1,17 @@
 package Business_Layer;
 
+import Business_Layer.Controllers.Site_Controller;
 import Business_Layer.Modules.*;
+import Business_Layer.Transportations.Controllers.Drivers_Controller;
+import Business_Layer.Transportations.Controllers.Missing_items_Controller;
+import Business_Layer.Transportations.Controllers.Transportation_Controller;
+import Business_Layer.Transportations.Controllers.Trucks_Controller;
 import Business_Layer.Transportations.Modules.*;
 import Business_Layer.Workers.Modules.Shift;
 import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import com.google.gson.*;
+import javafx.util.Pair;
 
 
 import java.io.*;
@@ -28,6 +34,13 @@ public class Service {
         return SingletonService.instance;
     }
 
+    public Trucks_Controller trucks_controller = Trucks_Controller.getInstance();
+    public Site_Controller site_controller = Site_Controller.getInstance();
+    public Transportation_Controller transportation_controller = Transportation_Controller.getInstance();
+    public Missing_items_Controller missing_items_controller = Missing_items_Controller.getInstance();
+    public Drivers_Controller drivers_controller = Drivers_Controller.getInstance();
+
+
     private ConcurrentHashMap<Integer, Driver> Drivers= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Supplier> HashSuppliers= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Store> HashStore= new ConcurrentHashMap<>();
@@ -44,9 +57,10 @@ public class Service {
 
     public void uploadData()
     {
+
         JsonParser parser = new JsonParser();
-        try (InputStream is = this.getClass().getResourceAsStream("/release/Jar_Files/Data.json");
-             Reader rd = new InputStreamReader(is, "UTF-8"); ) {
+        try (InputStream is = this.getClass().getResourceAsStream("Data.json");
+            Reader rd = new InputStreamReader(is, "UTF-8"); ) {
             Object obj = parser.parse(rd);
             Gson gson = new Gson();
 
@@ -107,18 +121,21 @@ public class Service {
             for (int i = 0; i < missing_items.size(); i++) {
                 final JsonObject missing = missing_items.get(i).getAsJsonObject();
                 final JsonArray items = missing.getAsJsonArray("items_list");
-                HashMap<String,Integer> map=new HashMap<String,Integer>();
+                List<Pair<String,Integer>> items_list = new LinkedList<Pair<String,Integer>>();
+//                HashMap<String,Integer> map=new HashMap<String,Integer>();
                 for(int j=0;j<items.size();j++){
                     String [] items_to_add=items.get(j).getAsString().split(":");
-                    map.put(items_to_add[1],Integer.parseInt(items_to_add[0]));
+                    Pair<String,Integer> pair = new Pair<>(items_to_add[1],Integer.parseInt(items_to_add[0]));
+//                    map.put(items_to_add[1],Integer.parseInt(items_to_add[0]));
                 }
-                MissingItems items1=new MissingItems(missing.get("store_id").getAsInt(),missing.get("supplier_id").getAsInt(),map);
+                MissingItems items1=new MissingItems(missing.get("store_id").getAsInt(),missing.get("supplier_id").getAsInt(),items_list);
                 MissingItems.put(items1.getID(),items1);
             }
 
         }
         catch (Exception e)
         {
+            System.out.println(e);
 
         }
     }
