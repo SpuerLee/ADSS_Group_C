@@ -37,9 +37,20 @@ public class WorkerController {
             if(worker.available(date,sType)){
                 if(worker.getWorkerJobTitle().toUpperCase().equals("DRIVER")) {
                     // check if driver license in the licenses list
-
-                    String driverToString = worker.getWorkerSn() + ". " + worker.getWorkerName();
-                    listToReturn.add(driverToString);
+                    List<String> driversLicenses = ((Driver) worker).getLicenses();
+                    boolean licenseFound = false;
+                    for(String driverLicense : driversLicenses){
+                        for(String inputLicenses : licenses){
+                            if (driverLicense.equals(inputLicenses)) {
+                                licenseFound = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(licenseFound) {
+                        String driverToString = worker.getWorkerSn() + ". " + worker.getWorkerName();
+                        listToReturn.add(driverToString);
+                    }
                 }
             }
         }
@@ -47,7 +58,20 @@ public class WorkerController {
         return listToReturn;
     }
 
-    public boolean isStooreKeeperAvaialble(Date date,String shiftType, int storeSN){
+    public boolean isStoreKeeperAvailable(Date date,String shiftType, int storeSN){
+        enums sType=null;
+        try{
+            sType = enums.valueOf(shiftType);
+        }
+        catch (Exception e){
+            System.out.println("No such shift type");
+        }
+        List<Worker> availableWorkers = getAllAvailableWorkers(date,sType);
+        for(Worker worker : availableWorkers){
+            if(worker.getStoreSN() == storeSN && worker.getWorkerJobTitle().toLowerCase().equals("storekeeper")){
+                return true;
+            }
+        }
         return false;
     }
 

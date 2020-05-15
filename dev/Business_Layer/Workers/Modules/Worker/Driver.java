@@ -22,6 +22,7 @@ import java.util.List;
         transportations = new LinkedList<>();
     }
 
+
     public List<String> getLicenses()
     {
         return this.licenses;
@@ -43,7 +44,7 @@ import java.util.List;
             boolean output = false;
             for (String license : this.licenses) {
                 for(License license1:license_list){
-                    if(license1.getType() == new License(license, licenseSN, licenseType).getType()) {
+                    if(license.equals(license1.getLicenseType())){
                         output = true;
                         break;
                     }
