@@ -38,7 +38,7 @@ public class Missing_items_Controller {
                 if (!id_stores_list.contains(storeId)) {
                     id_stores_list.add(storeId);
                     String store = service.getHashStoresMap().get(storeId).getName();
-                    String area = service.getHashStoresMap().get(storeId).getArea().toString();
+                    String area = service.getHashStoresMap().get(storeId).getArea().getAreaName();
                     String line = storeId + ". " + store + ", area: " + area + ".";
                     output.add(line);
                 }

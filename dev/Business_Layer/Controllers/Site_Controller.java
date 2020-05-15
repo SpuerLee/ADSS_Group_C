@@ -24,10 +24,11 @@ public class Site_Controller {
     }
 
     public boolean addsupplier(String name, String city, String street, String number,
-                               String name_of_contact, String phone, String supplier_area) {
+                               String name_of_contact, String phone, String supplier_area)
+            throws Buisness_Exception{
         Service service = Service.getInstance();
             Supplier supplier = new Supplier(name, phone, name_of_contact,
-                    new Address(city, street, Integer.parseInt(number)), new Area(supplier_area));
+                    new Address(city, street, Integer.parseInt(number)), service.getAreaByName(supplier_area));
             service.getSuppliersMap().put(supplier.getId(), supplier);
             return true;
     }
@@ -35,17 +36,18 @@ public class Site_Controller {
 
     public boolean addsite(String site_type, String name, String city,
                            String street, String number, String name_of_contact,
-                           String phone, String site_area) {
+                           String phone, String site_area)
+            throws Buisness_Exception{
         Service service = Service.getInstance();
         if (site_type.equals("store")) {
             Store store = new Store(name, phone, name_of_contact, new Address(city,
-                    street, Integer.parseInt(number)), new Area(site_area));
+                    street, Integer.parseInt(number)), service.getAreaByName(site_area));
             service.getHashStoresMap().put(store.getId(), store);
             return true;
 
         } else if (site_type.equals("supplier")) {
             Supplier supplier = new Supplier(name, phone, name_of_contact,
-                    new Address(city, street, Integer.parseInt(number)), new Area(site_area));
+                    new Address(city, street, Integer.parseInt(number)), service.getAreaByName(site_area));
             service.getSuppliersMap().put(supplier.getId(), supplier);
             return true;
         } else {
@@ -73,7 +75,7 @@ public class Site_Controller {
         List<Site> sites = new LinkedList<Site>();
         List<String> output = new LinkedList<String>();
         for (Site site : service.getSuppliersMap().values()) {
-            if ((!sites.contains(site) & (site.getArea().toString().equals(area)))) {
+            if ((!sites.contains(site) & (site.getArea().getAreaName().equals(area)))) {
                 String line = site.getId() + "." + "Name: " + site.getName() + ".";
                 output.add(line);
                 sites.add(site);
@@ -88,7 +90,7 @@ public class Site_Controller {
         Service service = Service.getInstance();
         List<String> output = new LinkedList<String>();
         for (Store sites : service.getHashStoresMap().values()) {
-            if (sites.getArea().toString().equals(area)) {
+            if (sites.getArea().getAreaName().equals(area)) {
                 String line = sites.getId() + ". " + sites.getName() + ", ";
                 output.add(line);
             }
@@ -103,7 +105,7 @@ public class Site_Controller {
         for (MissingItems missingItems : service.getMissing().values()) {
             int supplierId = missingItems.getSupplierId();
             Area supplierArea = service.getSuppliersMap().get(supplierId).getArea();
-            if (storeId == missingItems.getStoreId() && area.equals(supplierArea.toString())) {
+            if (storeId == missingItems.getStoreId() && area.equals(supplierArea.getAreaName())) {
                 String line = supplierId + ". " + service.getSuppliersMap().get(supplierId).getName() + ".";
                 output.add(line);
             }
@@ -123,7 +125,7 @@ public class Site_Controller {
                 Area area = service.getSuppliersMap().get(supplierId).getArea();
                 if (!area_list.contains(area)) {
                     area_list.add(area);
-                    output.add(area.toString());
+                    output.add(area.getAreaName());
                 }
             }
         }

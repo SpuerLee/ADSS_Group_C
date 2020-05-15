@@ -82,19 +82,4 @@ public class Truck {
         return transportations;
     }
 
-
-
-
-    public boolean checkLicense(List<License> license_list) {
-        boolean output = false;
-        for (License license : this.licenses_types) {
-            for(License license1:license_list){
-                if(license1.getType()==(license.getType())) {
-                    output = true;
-                    break;
-                }
-            }
-        }
-        return output;
-    }
 }

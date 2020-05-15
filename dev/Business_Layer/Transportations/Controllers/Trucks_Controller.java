@@ -55,7 +55,7 @@ public class Trucks_Controller {
         }
         else {
             for (String license : licenses_types) {
-                licenses.add(new License(license, licenseSN, licenseType));
+                licenses.add(service.getLicenseByName(license));
             }
             Truck trucks = new Truck(license_number, licenses, model, weight,max_weight);
             service.getHashTrucks().put(trucks.getId(), trucks);

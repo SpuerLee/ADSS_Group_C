@@ -18,7 +18,7 @@ public class TransportationMenu {
     public static void Menu() {
 
 //        if (args.length > 0 && args[0].equals("upload"))
-        systemInterfaceTransportations.uploadData();
+//        systemInterfaceTransportations.uploadData();
         String choice = "0";
         do {
             System.out.println("Please choose your option:");
