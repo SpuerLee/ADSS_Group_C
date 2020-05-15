@@ -40,7 +40,7 @@ public class Transportation {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         String output = "";
         output += "id: " + this.id + "\n\tdate: " + dateFormat.format(this.date) + "\n\tleaving_time: " + this.leaving_time.toString()
-                + "\n\tdriver: " + this.driver.getName() + "\n\ttruck- license_number:" + this.truck.getlicense_number()
+                + "\n\tdriver: " + this.driver.getWorkerName() + "\n\ttruck- license_number:" + this.truck.getlicense_number()
                 + ", Model:" + this.truck.getModel() + "\n";
         output += "\tstores: ";
         for (Store sites : stores) {
@@ -121,7 +121,7 @@ public class Transportation {
     }
 
     public int getDriveId() {
-        return driver.getId();
+        return driver.getWorkerSn();
     }
 
     public int getTrucklicense() {

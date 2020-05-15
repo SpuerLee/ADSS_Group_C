@@ -328,41 +328,41 @@ public class SystemInterfaceTransportations {
 
     //Drivers
 
-    public void Add_driver() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter driver name");
-        String name = scan.nextLine();
-        List<String> list = new LinkedList<>();
-        System.out.println("Please enter driver's license (C/C1) " + "\n" + "If there many than enter license and than separate them by space.");
-        String[] licenses = scan.nextLine().split(" ");
-        for (String license : licenses)
-            list.add(license);
-        drivers_controller.addDriver(name, list);
-        System.out.println("The driver was added successfully" + "\n");
-
-    }
-
-    public void Show_drivers_List() {
-        try {
-            String result = drivers_controller.showDrivers();
-            System.out.println(result);
-        } catch (Buisness_Exception e) {
-            System.out.println(Print_error(e));
-        }
-    }
-
-    public void Remove_driver() {
-        try {
-            System.out.println(drivers_controller.showDrivers());
-            Scanner scan = new Scanner(System.in);
-            System.out.println("Please enter the driver's id that you would like to delete");
-            String number = scan.nextLine();
-            drivers_controller.removeDriver(new Integer(number));
-            System.out.println("The driver has removed successfully+\n");
-        } catch (Buisness_Exception e) {
-            System.out.println(Print_error(e));
-        }
-    }
+//    public void Add_driver() {
+//        Scanner scan = new Scanner(System.in);
+//        System.out.println("Please enter driver name");
+//        String name = scan.nextLine();
+//        List<String> list = new LinkedList<>();
+//        System.out.println("Please enter driver's license (C/C1) " + "\n" + "If there many than enter license and than separate them by space.");
+//        String[] licenses = scan.nextLine().split(" ");
+//        for (String license : licenses)
+//            list.add(license);
+//        drivers_controller.addDriver(name, list);
+//        System.out.println("The driver was added successfully" + "\n");
+//
+//    }
+//
+//    public void Show_drivers_List() {
+//        try {
+//            String result = drivers_controller.showDrivers();
+//            System.out.println(result);
+//        } catch (Buisness_Exception e) {
+//            System.out.println(Print_error(e));
+//        }
+//    }
+//
+//    public void Remove_driver() {
+//        try {
+//            System.out.println(drivers_controller.showDrivers());
+//            Scanner scan = new Scanner(System.in);
+//            System.out.println("Please enter the driver's id that you would like to delete");
+//            String number = scan.nextLine();
+//            drivers_controller.removeDriver(new Integer(number));
+//            System.out.println("The driver has removed successfully+\n");
+//        } catch (Buisness_Exception e) {
+//            System.out.println(Print_error(e));
+//        }
+//    }
     // Transportations
 
     public void Show_transports() {

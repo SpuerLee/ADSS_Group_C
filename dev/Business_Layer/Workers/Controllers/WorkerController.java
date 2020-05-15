@@ -1,41 +1,53 @@
 package Business_Layer.Workers.Controllers;
 
+import Business_Layer.Service;
 import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Workers.Utils.InfoObject;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.enums;
-import com.sun.org.apache.bcel.internal.generic.DREM;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class WorkerController {
 
-    private HashMap<Integer, Worker> workerList;
     private int snFactory;
+    private int currentStoreSN;
 
     public WorkerController() {
-        this.workerList = new HashMap<>();
         this.snFactory = 0;
-    }
-
-    public HashMap<Integer, Worker> getWorkerList() {
-        return workerList;
-    }
-
-    public boolean isStorekeeperAvailable(Date date,String shiftType,int storeSN){
-        return false;
+        this.currentStoreSN = -1;
     }
 
     public List<Driver> getAllDrivers(Date date,String shiftType){
         List<Driver> listToReturn = null;
+
+        enums sType;
+        try{
+            sType = enums.valueOf(shiftType);
+        }
+        catch (Exception e){
+            System.out.println("No such shift type");
+            return listToReturn;
+        }
+
+        listToReturn= new LinkedList<>();
+
+        for (Worker worker : Service.getInstance().getWorkerList().values()) {
+            if(worker.available(date,sType)){
+                if(worker.getWorkerJobTitle().toUpperCase().equals("DRIVER")) {
+                    listToReturn.add((Driver) worker);
+                }
+            }
+        }
+
         return listToReturn;
     }
 
     private List<Worker> getAllAvailableWorkers(Date date, enums shiftType) {
         List<Worker> workersToPrint = new LinkedList<>();
 
-        for (Worker worker : workerList.values()) {
+        for (Worker worker : Service.getInstance().getWorkerList(getCurrentStoreSN()).values()) {
             if(worker.available(date,shiftType)){
                 workersToPrint.add(worker);
             }
@@ -109,8 +121,8 @@ public class WorkerController {
 
     public InfoObject removeWorkerBySn(int workerSn){
         InfoObject infoObject = new InfoObject("Worker removed successfully",true);
-        if(this.getWorkerList().containsValue(getWorkerBySn(workerSn))){
-            this.workerList.remove(workerSn);
+        if(Service.getInstance().getWorkerList(getCurrentStoreSN()).containsValue(getWorkerBySn(workerSn))){
+            Service.getInstance().getWorkerList().remove(workerSn);
         } else {
             infoObject.setMessage("There is no worker with this SN");
             infoObject.setIsSucceeded(false);
@@ -120,12 +132,12 @@ public class WorkerController {
 
     public InfoObject setNewSalaryBySn(int workerSn, int newSalary){
         InfoObject infoObject = new InfoObject("Workers salary edited successfully",true);
-        if(this.getWorkerList().containsValue(getWorkerBySn(workerSn))){
+        if(Service.getInstance().getWorkerList(getCurrentStoreSN()).containsValue(getWorkerBySn(workerSn))){
             if(newSalary<0){
                 infoObject.setMessage("Invalid new salary");
                 infoObject.setIsSucceeded(false);
             } else {
-                workerList.get(workerSn).setWorkerSalary(newSalary);
+                Service.getInstance().getWorkerList(getCurrentStoreSN()).get(workerSn).setWorkerSalary(newSalary);
             }
         } else {
             infoObject.setMessage("There is no worker with this SN");
@@ -136,13 +148,13 @@ public class WorkerController {
 
     public InfoObject printAllWorker(){
         InfoObject infoObject = new InfoObject("",true);
-        if(workerList.isEmpty()){
+        if(Service.getInstance().getWorkerList(getCurrentStoreSN()).isEmpty()){
             infoObject.setMessage("The company has no workers yet");
             infoObject.setIsSucceeded(false);
             return infoObject;
         }
         System.out.println("Choose worker by SN");
-        for(Worker worker : workerList.values()){
+        for(Worker worker : Service.getInstance().getWorkerList(getCurrentStoreSN()).values()){
             System.out.println(worker.getWorkerSn() + ". ID: " + worker.getWorkerId() + " Name: " + worker.getWorkerName() + " Job title: " + worker.getWorkerJobTitle());
         }
         return infoObject;
@@ -153,12 +165,12 @@ public class WorkerController {
     }
 
     private Worker getWorkerBySn(int snOfWorker){
-        return workerList.get(snOfWorker);
+        return Service.getInstance().getWorkerList(getCurrentStoreSN()).get(snOfWorker);
     }
 
     public InfoObject printWorkersConstrainsBySn(int workerSn){
         InfoObject infoObject = new InfoObject("",true);
-        if(!(this.getWorkerList().containsValue(getWorkerBySn(workerSn)))){
+        if(!(Service.getInstance().getWorkerList(getCurrentStoreSN()).containsValue(getWorkerBySn(workerSn)))){
             infoObject.setMessage("There is no worker with this SN");
             infoObject.setIsSucceeded(false);
             return infoObject;
@@ -187,7 +199,7 @@ public class WorkerController {
             infoObject.setIsSucceeded(false);
             return infoObject;
         }
-        if(!(this.getWorkerList().containsValue(getWorkerBySn(workerSn)))){
+        if(!(Service.getInstance().getWorkerList(getCurrentStoreSN()).containsValue(getWorkerBySn(workerSn)))){
             infoObject.setMessage("There is no worker with this SN");
             infoObject.setIsSucceeded(false);
             return infoObject;
@@ -197,7 +209,7 @@ public class WorkerController {
         return infoObject;
     }
 
-    public InfoObject addWorker(int id, String name, String phoneNumber, int bankAccount, int salary, String dateToParse, String jobTitle,String constrains) {
+    public InfoObject addDriver(int id, String name, String phoneNumber, int bankAccount, int salary, String dateToParse, String jobTitle, String constrains, String licenses){
         InfoObject infoObject = new InfoObject("",true);
         Date date = parseDate(dateToParse);
         String[] workerConstrains=null;
@@ -215,8 +227,53 @@ public class WorkerController {
         if(!infoObject.isSucceeded()){
             return infoObject;
         }
-        Worker workerToAdD = new Worker(id,name,phoneNumber,bankAccount,salary,date,jobTitle,getSnFactory());
-        workerList.put(workerToAdD.getWorkerSn(),workerToAdD);
+        Driver driverToAdd = new Driver(id,name,phoneNumber,bankAccount,salary,date,jobTitle,getSnFactory(),getCurrentStoreSN(),licenses);
+        Service.getInstance().getWorkerList().put(driverToAdd.getWorkerSn(),driverToAdd);
+        if(!constrains.toUpperCase().equals("NONE")) {
+            if (!workerConstrains[0].equals("")) {
+                for (String workerConstrain : workerConstrains) {
+                    String day = "";
+                    String shiftType = "";
+                    try {
+                        day = workerConstrain.split("-")[0].toUpperCase();
+                        shiftType = workerConstrain.split("-")[1].toUpperCase();
+                    }catch (Exception e){
+                        infoObject.setIsSucceeded(false);
+                        infoObject.setMessage("Invalid constrains format");
+                        return infoObject;
+                    }
+                    infoObject = addConstrainsToWorkerByWorkerSn(driverToAdd.getWorkerSn(), day, shiftType);
+                    if (!(infoObject.isSucceeded())) {
+                        Service.getInstance().getWorkerList().remove(driverToAdd.getWorkerSn());
+                        return infoObject;
+                    }
+                }
+            }
+        }
+        infoObject.setMessage("Worker added successful");
+        return infoObject;
+    }
+
+    public InfoObject addWorker(int id, String name, String phoneNumber, int bankAccount, int salary, String dateToParse, String jobTitle, String constrains) {
+        InfoObject infoObject = new InfoObject("",true);
+        Date date = parseDate(dateToParse);
+        String[] workerConstrains=null;
+        if(!constrains.toUpperCase().equals("NONE")){
+            try{
+                workerConstrains = constrains.split(",");
+            }
+            catch (Exception e){
+                infoObject.setMessage("Invalid constrains format");
+                infoObject.setIsSucceeded(false);
+                return infoObject;
+            }
+        }
+        infoObject = validateWorkerCredentials(id, name, phoneNumber, bankAccount, salary, jobTitle, infoObject, date);
+        if(!infoObject.isSucceeded()){
+            return infoObject;
+        }
+        Worker workerToAdD = new Worker(id,name,phoneNumber,bankAccount,salary,date,jobTitle,getSnFactory(),getCurrentStoreSN());
+        Service.getInstance().getWorkerList().put(workerToAdD.getWorkerSn(),workerToAdD);
         if(!constrains.toUpperCase().equals("NONE")) {
             if (!workerConstrains[0].equals("")) {
                 for (String workerConstrain : workerConstrains) {
@@ -232,7 +289,7 @@ public class WorkerController {
                     }
                     infoObject = addConstrainsToWorkerByWorkerSn(workerToAdD.getWorkerSn(), day, shiftType);
                     if (!(infoObject.isSucceeded())) {
-                        workerList.remove(workerToAdD.getWorkerSn());
+                        Service.getInstance().getWorkerList().remove(workerToAdD.getWorkerSn());
                         return infoObject;
                     }
                 }
@@ -253,7 +310,7 @@ public class WorkerController {
             infoObject.setIsSucceeded(false);
             return infoObject;
         }
-        for(Worker worker: workerList.values()){
+        for(Worker worker: Service.getInstance().getWorkerList(getCurrentStoreSN()).values()){
             if(worker.getWorkerId() == id){
                 infoObject.setMessage("There is already Worker with this ID");
                 infoObject.setIsSucceeded(false);
@@ -301,7 +358,7 @@ public class WorkerController {
 
     public InfoObject printWorkerBySn(int workerSn) {
         InfoObject infoObject = new InfoObject("",true);
-        if(!(this.getWorkerList().containsValue(getWorkerBySn(workerSn)))){
+        if(!(Service.getInstance().getWorkerList(getCurrentStoreSN()).containsValue(getWorkerBySn(workerSn)))){
             infoObject.setMessage("There is no worker with this SN");
             infoObject.setIsSucceeded(false);
             return infoObject;
@@ -312,7 +369,7 @@ public class WorkerController {
 
     public InfoObject resetWorkerConstrainsBySn(int workerSn) {
         InfoObject infoObject = new InfoObject("All constrains has been removed",true);
-        if(!(this.getWorkerList().containsValue(getWorkerBySn(workerSn)))){
+        if(!(Service.getInstance().getWorkerList(getCurrentStoreSN()).containsValue(getWorkerBySn(workerSn)))){
             infoObject.setMessage("There is no worker with this SN");
             infoObject.setIsSucceeded(false);
             return infoObject;
@@ -321,7 +378,7 @@ public class WorkerController {
         return infoObject;
     }
 
-    public InfoObject editWorkerConstrainsBySn(int workerSn,String newConstrains) {
+    public InfoObject editWorkerConstrainsBySn(int workerSn, String newConstrains) {
         InfoObject infoObject = new InfoObject("Edit workers constrains successfully",true);
         if(!newConstrains.toUpperCase().equals("NONE")) {
             String[] workersConstrains = newConstrains.split(",");
@@ -350,5 +407,17 @@ public class WorkerController {
             resetWorkerConstrainsBySn(workerSn);
         }
         return infoObject;
+    }
+
+    public int getCurrentStoreSN() {
+        return currentStoreSN;
+    }
+
+    public void setCurrentStoreSN(int currentStoreSN) {
+        this.currentStoreSN = currentStoreSN;
+    }
+
+    public void resetSnFactory(){
+        this.snFactory = 0;
     }
 }

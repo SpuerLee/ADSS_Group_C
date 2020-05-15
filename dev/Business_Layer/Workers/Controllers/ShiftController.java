@@ -1,5 +1,6 @@
 package Business_Layer.Workers.Controllers;
 
+import Business_Layer.Service;
 import Business_Layer.Workers.Utils.InfoObject;
 import Business_Layer.Workers.Modules.Shift;
 import Business_Layer.Workers.Modules.Worker.Worker;
@@ -11,25 +12,23 @@ import java.util.*;
 
 public class ShiftController {
 
-    private HashMap<Integer, Shift> shiftHistory;
-    private WorkerController workerController;
     private int snFactory;
+    private int currentStoreSN;
 
-    public ShiftController(WorkerController workerController) {
-        this.shiftHistory = new HashMap<>();
-        this.workerController = workerController;
+    public ShiftController() {
         this.snFactory = 0;
+        this.currentStoreSN = -1;
     }
 
     public InfoObject printAllShits() {
         InfoObject infoObject = new InfoObject("", true);
-        if (shiftHistory.isEmpty()) {
+        if (Service.getInstance().getShiftHistory(getCurrentStoreSN()).isEmpty()) {
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("There are no shifts to display");
             return infoObject;
         }
         System.out.println("Select shift by SN");
-        List<Shift> shiftToDisplay = new LinkedList<>(shiftHistory.values());
+        List<Shift> shiftToDisplay = new LinkedList<>(Service.getInstance().getShiftHistory(getCurrentStoreSN()).values());
         Collections.sort(shiftToDisplay);
         for (Shift shift : shiftToDisplay) {
             SimpleDateFormat day = new SimpleDateFormat("dd-MM-yyyy");
@@ -43,9 +42,13 @@ public class ShiftController {
         return ++this.snFactory;
     }
 
+    public void resetSnFactory(){
+        this.snFactory = 0;
+    }
+
     public InfoObject validateNewShiftDate(Date date, enums shiftType) {
         InfoObject infoObject = new InfoObject("", true);
-        for (Shift shifty : this.shiftHistory.values()) {
+        for (Shift shifty : Service.getInstance().getShiftHistory(getCurrentStoreSN()).values()) {
             if ((shifty.getDate().compareTo(date) == 0) && shifty.getShiftType().equals(shiftType)) {
                 infoObject.setIsSucceeded(false);
                 infoObject.setMessage("There is already a shift on this date");
@@ -83,17 +86,17 @@ public class ShiftController {
             return infoObject;
         }
 
-        if (!(workerController.getWorkerList().containsKey(managerSn))) {
+        if (!(Service.getInstance().getWorkerList(getCurrentStoreSN()).containsKey(managerSn))) {
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("Invalid manager SN");
             return infoObject;
         }
-        if (!(workerController.getWorkerList().get(managerSn).getWorkerJobTitle().toUpperCase().equals("MANAGER"))) {
+        if (!(Service.getInstance().getWorkerList(getCurrentStoreSN()).get(managerSn).getWorkerJobTitle().toUpperCase().equals("MANAGER"))) {
             infoObject.setIsSucceeded(false);
             infoObject.setMessage("Invalid manager SN");
             return infoObject;
         }
-        Worker manager = workerController.getWorkerList().get(managerSn);
+        Worker manager = Service.getInstance().getWorkerList(getCurrentStoreSN()).get(managerSn);
         String[] workersSn;
         List<Worker> workersListOfCurrentShift = new LinkedList<>();
         infoObject = validateManagerConstrains(manager, sType, date);
@@ -115,7 +118,7 @@ public class ShiftController {
             if (!workersSn[0].equals("")) {
                 // validate workers SN
                 for (String workerSn : workersSn) {
-                    if (!(workerController.getWorkerList().containsKey(Integer.parseInt(workerSn)))) {
+                    if (!(Service.getInstance().getWorkerList(getCurrentStoreSN()).containsKey(Integer.parseInt(workerSn)))) {
                         infoObject.setIsSucceeded(false);
                         infoObject.setMessage("There is no worker with serial number " + Integer.parseInt(workerSn));
                         return infoObject;
@@ -124,18 +127,18 @@ public class ShiftController {
 
                 // validate workers starting date and shift date
                 for (String workerSn : workersSn) {
-                    Date workersDate = workerController.getWorkerList().get(Integer.parseInt(workerSn)).getWorkerStartingDate();
+                    Date workersDate = Service.getInstance().getWorkerList(getCurrentStoreSN()).get(Integer.parseInt(workerSn)).getWorkerStartingDate();
                     if (date.compareTo(workersDate) < 0) {
                         infoObject.setIsSucceeded(false);
-                        infoObject.setMessage("This worker : " + workerController.getWorkerList().get(Integer.parseInt(workerSn)).getWorkerName() + " Start working only from " +
-                                workerController.getWorkerList().get(Integer.parseInt(workerSn)).getWorkerStartingDate());
+                        infoObject.setMessage("This worker : " + Service.getInstance().getWorkerList(getCurrentStoreSN()).get(Integer.parseInt(workerSn)).getWorkerName() + " Start working only from " +
+                                Service.getInstance().getWorkerList(getCurrentStoreSN()).get(Integer.parseInt(workerSn)).getWorkerStartingDate());
                         return infoObject;
                     }
                 }
 
                 // validate workers constrains  with shift date
                 for (String workerSn : workersSn) {
-                    Worker workerToAdd = workerController.getWorkerList().get(Integer.parseInt(workerSn));
+                    Worker workerToAdd = Service.getInstance().getWorkerList(getCurrentStoreSN()).get(Integer.parseInt(workerSn));
                     if (!(workerToAdd.available(date, sType))) {
                         infoObject.setIsSucceeded(false);
                         infoObject.setMessage(workerToAdd.getWorkerName() + " Can't work on this shift because of his constrains");
@@ -152,27 +155,27 @@ public class ShiftController {
         } else {
             workersListOfCurrentShift = new LinkedList<>();
         }
-        Shift shiftToAdd = new Shift(date, sType, manager, workersListOfCurrentShift, getSnFactory());
-        this.shiftHistory.put(shiftToAdd.getShiftSn(), shiftToAdd);
+        Shift shiftToAdd = new Shift(date, sType, manager, workersListOfCurrentShift, getSnFactory(),getCurrentStoreSN());
+        Service.getInstance().getShiftHistory().put(shiftToAdd.getShiftSn(), shiftToAdd);
         infoObject.setMessage("Shift created successfully");
         return infoObject;
     }
 
     public InfoObject printShift(int shiftIndex) {
         InfoObject infoObject = new InfoObject("", true);
-        if (!(shiftHistory.containsKey(shiftIndex))) {
+        if (!(Service.getInstance().getShiftHistory(getCurrentStoreSN()).containsKey(shiftIndex))) {
             infoObject.setMessage("There is no shift with this SN");
             infoObject.setIsSucceeded(false);
             return infoObject;
         }
-        Shift shift = this.shiftHistory.get(shiftIndex);
+        Shift shift = Service.getInstance().getShiftHistory(getCurrentStoreSN()).get(shiftIndex);
         shift.printShift();
         if (shift.getShiftWorkers().size() == 1) {
             System.out.println("\n" + "Workers: No workers for this shift");
         } else {
             System.out.println("\n" + "Workers: ");
             for (Worker worker : shift.getShiftWorkers()) {
-                if ((shift.getDate().compareTo(new Date()) < 0) | this.workerController.getWorkerList().containsValue(worker)) {
+                if ((shift.getDate().compareTo(new Date()) < 0) | Service.getInstance().getWorkerList(getCurrentStoreSN()).containsValue(worker)) {
                     if (!worker.getWorkerJobTitle().toUpperCase().equals("MANAGER")) {
                         worker.printWorker();
                     }
@@ -181,14 +184,6 @@ public class ShiftController {
         }
         System.out.println("\n");
         return infoObject;
-    }
-
-    public HashMap<Integer, Shift> getShiftHistory() {
-        return this.shiftHistory;
-    }
-
-    public WorkerController getWorkerController() {
-        return this.workerController;
     }
 
     private Date parseDate(String _date) {
@@ -225,7 +220,7 @@ public class ShiftController {
 
         Date today = new Date();
         List<Shift> listOfShiftsRemoved = new LinkedList<>();
-        for (Shift shift : shiftHistory.values()) {
+        for (Shift shift : Service.getInstance().getShiftHistory(getCurrentStoreSN()).values()) {
             Date shiftDate = shift.getDate();
             // shift date occurs after today
             if (shiftDate.compareTo(today) > 0) {
@@ -235,7 +230,7 @@ public class ShiftController {
             }
         }
         for (Shift shiftToRemove : listOfShiftsRemoved) {
-            this.shiftHistory.remove(shiftToRemove.getShiftSn());
+            Service.getInstance().getShiftHistory().remove(shiftToRemove.getShiftSn());
         }
         System.out.println("This shifts has been removed : \n");
         for (Shift deletedShift : listOfShiftsRemoved) {
@@ -244,6 +239,46 @@ public class ShiftController {
         }
 
         return infoObject;
+    }
+
+    public int getCurrentStoreSN() {
+        return currentStoreSN;
+    }
+
+    public void setCurrentStoreSN(int currentStoreSN) {
+        this.currentStoreSN = currentStoreSN;
+    }
+
+    public boolean isStorekeeperAvailable(Date date,String shiftType){
+        enums selectedDay;
+        enums sType;
+        String dayOfWeek = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(date);
+        try {
+            selectedDay = enums.valueOf(dayOfWeek);
+        }
+        catch (Exception e){
+            System.out.println("No such day");
+            return false;
+        }
+        try{
+            sType = enums.valueOf(shiftType);
+        }
+        catch (Exception e){
+            System.out.println("No such shift type");
+            return false;
+        }
+
+        for(Shift shift : Service.getInstance().getShiftHistory(getCurrentStoreSN()).values()){
+            if(shift.getDate().compareTo(date) == 0 && shift.getShiftType().compareTo(sType) == 0 ){
+                for(Worker worker : shift.getShiftWorkers()){
+                    if(worker.getWorkerJobTitle().toUpperCase().equals("storekeeper")){
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
 

@@ -19,6 +19,7 @@ public class Worker {
     private int salary;
     private Date date;
     private String jobTitle;
+    private int storeSN;
     private HashMap<Pair<enums,enums>,Boolean> constrains;
 
     @Override
@@ -36,7 +37,7 @@ public class Worker {
                 "constrains: " + printConstrains()  + "\n" ;
     }
 
-    public Worker(int id, String name, String phoneNumber, int bankAccount, int salary, Date date, String jobTitle, int Sn) {
+    public Worker(int id, String name, String phoneNumber, int bankAccount, int salary, Date date, String jobTitle, int Sn,int storeSN) {
         this.sn = Sn;
         this.id = id;
         this.name = name;
@@ -46,6 +47,7 @@ public class Worker {
         this.date = date;
         this.jobTitle = jobTitle;
         this.constrains = new HashMap<>();
+        this.storeSN = storeSN;
     }
 
     public String printConstrains(){
@@ -114,4 +116,7 @@ public class Worker {
         return this.date;
     }
 
+    public int getStoreSN() {
+        return storeSN;
+    }
 }

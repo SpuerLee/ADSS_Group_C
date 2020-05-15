@@ -13,13 +13,15 @@ public class Shift implements Comparable<Shift>{
     private List<Worker> shiftWorkers;
     private Date date;
     private int sn;
+    private int storeSN;
 
-    public Shift(Date date, enums shiftType, Worker manager, List<Worker> shiftWorkers, int sn) {
+    public Shift(Date date, enums shiftType, Worker manager, List<Worker> shiftWorkers, int sn,int storeSN) {
         this.date = date;
         this.shiftType = shiftType;
         this.manager = manager;
         this.shiftWorkers = shiftWorkers;
         this.sn = sn;
+        this.storeSN = storeSN;
     }
 
     public void printShift() {
@@ -55,5 +57,9 @@ public class Shift implements Comparable<Shift>{
             return 0;
         }
         return this.getDate().compareTo(shiftToCompare.date);
+    }
+
+    public int getStoreSN() {
+        return storeSN;
     }
 }

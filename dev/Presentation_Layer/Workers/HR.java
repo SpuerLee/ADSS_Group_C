@@ -25,27 +25,27 @@ public class HR {
         run();
     }
 
-    public static void run(){
+    public static void run() {
         System.out.println("1. Run tests");
         System.out.println("2. Start system");
         System.out.println("Enter 0 to exit program");
-        Scanner sc=new Scanner(System.in);
-        while(!sc.hasNextInt()){
+        Scanner sc = new Scanner(System.in);
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int selectedOption = sc.nextInt();
-        if(selectedOption == 1){
+        if (selectedOption == 1) {
             runTest();
             System.out.println();
         }
-        if(selectedOption == 2){
+        if (selectedOption == 2) {
             start(sc);
         }
-        if(selectedOption == 0){
+        if (selectedOption == 0) {
             System.exit(0);
         }
-        if(selectedOption<0 || selectedOption > 2){
+        if (selectedOption < 0 || selectedOption > 2) {
             System.out.println("Invalid input, please try again");
             run();
         }
@@ -53,7 +53,7 @@ public class HR {
 
     }
 
-    public static void runTest(){
+    public static void runTest() {
         System.out.println("Starting Tests\n");
         final LauncherDiscoveryRequest request =
                 LauncherDiscoveryRequestBuilder.request()
@@ -73,18 +73,17 @@ public class HR {
         System.out.println("");
 
 
-
         final long succeededTests = summary.getTestsSucceededCount();
         System.out.println("Total tests Succeeded  " + succeededTests + "/" + testsFoundCount);
 
         final long testsSkippedCount = summary.getTestsSkippedCount();
-        System.out.println("tests Skipped Count  " + testsSkippedCount+ "/" + testsFoundCount);
+        System.out.println("tests Skipped Count  " + testsSkippedCount + "/" + testsFoundCount);
 
         final long testsFailed = summary.getTestsFailedCount();
-        System.out.println("tests Failed Count  " + testsFailed+ "/" + testsFoundCount);
+        System.out.println("tests Failed Count  " + testsFailed + "/" + testsFoundCount);
 
         final long testAborted = summary.getTestsAbortedCount();
-        System.out.println("tests Aborted Count  " + testAborted+ "/" + testsFoundCount);
+        System.out.println("tests Aborted Count  " + testAborted + "/" + testsFoundCount);
         System.out.println();
 
     }
@@ -93,37 +92,89 @@ public class HR {
         systemStart(sc);
     }
 
-    private static void systemStart(Scanner sc){
+    private static void systemStart(Scanner sc) {
         System.out.println("Welcome to SuperLee");
         System.out.println("1. Choose start with data");
         System.out.println("2. Start new system");
         System.out.println("Enter 0 to exit program");
-        while(!sc.hasNextInt()){
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int selectedOption = sc.nextInt();
-        if(selectedOption == 1){
+        if (selectedOption == 1) {
             initSuperLeeWithWorkers();
         }
-        if(selectedOption== 0){
+        if (selectedOption == 0) {
             System.exit(0);
         }
-        if(selectedOption<0 || selectedOption > 2){
+        if (selectedOption < 0 || selectedOption > 2) {
             System.out.println("Invalid input, please try again");
             systemStart(sc);
         }
-        workingLoop(sc);
+        chooseStore(sc);
     }
 
-    private static void workingLoop(Scanner sc){
-        printMenu();
-        while(!sc.hasNextInt()){
+    private static void chooseStore(Scanner sc) {
+        System.out.println("1. Choose store");
+        System.out.println("2. Add store");
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int userChoose = sc.nextInt();
-        while(userChoose != 0) {
+        if (userChoose == 1) {
+            if (!(SystemInterfaceWorkers.getInstance().printAllStores())) {
+                // Empty
+                chooseStore(sc);
+                while (!sc.hasNextInt()) {
+                    System.out.println("Invalid input, please try again");
+                    sc.next();
+                }
+                userChoose = sc.nextInt();
+                if (!(SystemInterfaceWorkers.getInstance().setCurrentStore(userChoose))) {
+                    chooseStore(sc);
+                }
+            }
+        } else if (userChoose == 2) {
+
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Please choose the name of the store"); //chose area
+            String name = scan.nextLine();
+            System.out.println("Please choose city of the store");
+            String city = scan.nextLine();
+            System.out.println("Please choose street of the store");
+            String street = scan.nextLine();
+            System.out.println("Please choose street's number of the store");
+            String number = scan.nextLine();
+            System.out.println("Please enter name of contact for the store");
+            String name_of_contact = scan.nextLine();
+            System.out.println("Please enter contact's person phone");
+            String phone = scan.nextLine();
+            System.out.println("Please choose store's area (A/B/C/D)");
+            String area = scan.nextLine();
+            boolean result = SystemInterfaceWorkers.getInstance().addNewStore(name, city, street, number, name_of_contact, phone, area);
+            if (result) {
+                System.out.println("The store was added successfully\n");
+                workingLoop(sc);
+            } else {
+                System.out.println("Input error\n");
+                chooseStore(sc);
+            }
+        } else {
+            System.out.println("Invalid input, please try again");
+            chooseStore(sc);
+        }
+    }
+
+    private static void workingLoop(Scanner sc) {
+        printMenu();
+        while (!sc.hasNextInt()) {
+            System.out.println("Invalid input, please try again");
+            sc.next();
+        }
+        int userChoose = sc.nextInt();
+        while (userChoose != 0) {
             switch (userChoose) {
                 case 1: // add shift
                     addShift(sc);
@@ -143,7 +194,7 @@ public class HR {
                     System.out.println("Invalid input, please try again");
             }
             printMenu();
-            while(!sc.hasNextInt()){
+            while (!sc.hasNextInt()) {
                 System.out.println("Invalid input, please try again");
                 sc.next();
             }
@@ -152,7 +203,7 @@ public class HR {
         System.exit(0);
     }
 
-    private static void printMenu(){
+    private static void printMenu() {
         System.out.println("Enter your next choice:");
         System.out.println("1. Add shift");
         System.out.println("2. Display shifts");
@@ -163,27 +214,27 @@ public class HR {
 
     public static void addShift(Scanner sc) {
         System.out.println("Please select a date - dd-mm-yyyy");
-        while(!sc.hasNext()){
+        while (!sc.hasNext()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         String date = sc.next();
         System.out.println("Please select shift type Morning or Night");
-        while(!sc.hasNext()){
+        while (!sc.hasNext()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         String shiftType = sc.next().toUpperCase(); // { Morning , Night }
         System.out.println("Please select manager SN for the shift");
         checkResponse(SystemInterfaceWorkers.getInstance().printAllManagersAvailableInDates(date, shiftType), sc);
-        while(!sc.hasNextInt()){
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int selectedManagerSn = sc.nextInt();
         System.out.println("Please select workers SN's for the shift");
         InfoObject infoObject = SystemInterfaceWorkers.getInstance().printAllWorkersAvailableInDates(date, shiftType);
-        if(infoObject.getMessage().equals("There are no available workers")){
+        if (infoObject.getMessage().equals("There are no available workers")) {
             System.out.println(infoObject.getMessage());
             checkResponse(SystemInterfaceWorkers.getInstance().createShift(shiftType, selectedManagerSn, "", date), sc);
         } else {
@@ -194,22 +245,22 @@ public class HR {
         }
     }
 
-    public static void displayShifts(Scanner sc){
-        checkResponse(SystemInterfaceWorkers.getInstance().printAllShifts(),sc);
-        while(!sc.hasNextInt()){
+    public static void displayShifts(Scanner sc) {
+        checkResponse(SystemInterfaceWorkers.getInstance().printAllShifts(), sc);
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int shiftSn = sc.nextInt();
-        if(shiftSn == 0){
+        if (shiftSn == 0) {
             workingLoop(sc);
         }
-        checkResponse(SystemInterfaceWorkers.getInstance().printShift(shiftSn),sc);
+        checkResponse(SystemInterfaceWorkers.getInstance().printShift(shiftSn), sc);
     }
 
-    public static void addWorker(Scanner sc)  {
+    public static void addWorker(Scanner sc) {
         System.out.println("Enter worker Id:");
-        while(!sc.hasNextInt()){
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
@@ -218,54 +269,63 @@ public class HR {
         String workerName = sc.nextLine();
         workerName = sc.nextLine();
         System.out.println("Enter phone:");
-        while(!sc.hasNext()){
+        while (!sc.hasNext()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         String workerPhoneNumber = sc.nextLine();
         System.out.println("Enter bank account:");
-        while(!sc.hasNextInt()){
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int workerBankAccount = sc.nextInt();
         System.out.println("Enter salary:");
-        while(!sc.hasNextInt()){
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int workerSalary = sc.nextInt();
         System.out.println("Enter starting date - dd-mm-yyyy");
-        while(!sc.hasNext()){
+        while (!sc.hasNext()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         String dateOfStart = sc.next();
         System.out.println("Enter job title:");
-        while(!sc.hasNext()){
+        while (!sc.hasNext()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         String workerJobTitle = sc.next();
+        String licenses = "";
+        if (workerJobTitle.toUpperCase().equals("DRIVER")) {
+            System.out.println("Enter driver's license (C/C1)");
+            licenses = sc.nextLine();
+        }
         System.out.println("Enter constrains: - Day-ShiftType , Day-ShiftType, etc...");
-        while(!sc.hasNext()){
+        while (!sc.hasNext()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         String constrains = sc.nextLine();
         constrains = sc.nextLine();
-        constrains = constrains.replaceAll(" ","");
-        checkResponse(SystemInterfaceWorkers.getInstance().addWorker(workerId,workerName,workerPhoneNumber,workerBankAccount,workerSalary,dateOfStart,workerJobTitle,constrains),sc);
+        constrains = constrains.replaceAll(" ", "");
+        if (workerJobTitle.toUpperCase().equals("DRIVER")) {
+            checkResponse(SystemInterfaceWorkers.getInstance().addDriver(workerId, workerName, workerPhoneNumber, workerBankAccount, workerSalary, dateOfStart, workerJobTitle, constrains, licenses), sc);
+        } else {
+            checkResponse(SystemInterfaceWorkers.getInstance().addWorker(workerId, workerName, workerPhoneNumber, workerBankAccount, workerSalary, dateOfStart, workerJobTitle, constrains), sc);
+        }
     }
 
     public static void displayWorkers(Scanner sc) {
         checkResponse(SystemInterfaceWorkers.getInstance().printAllWorkers(), sc);
-        while(!sc.hasNextInt()){
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int workerSn = sc.nextInt();
-        if(workerSn == 0){
+        if (workerSn == 0) {
             workingLoop(sc);
         }
         checkResponse(SystemInterfaceWorkers.getInstance().printWorkerBySn(workerSn), sc);
@@ -274,7 +334,7 @@ public class HR {
         System.out.println("2. Edit worker salary");
         System.out.println("3. Fire worker");
         System.out.println("Enter 0 to go back to main menu");
-        while(!sc.hasNextInt()){
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
@@ -289,7 +349,7 @@ public class HR {
                 break;
             case 3: // Fire worker
                 checkResponse(SystemInterfaceWorkers.getInstance().removeWorkerBySn(workerSn), sc);
-                checkResponse(SystemInterfaceWorkers.getInstance().removeLaterShiftForFiredManagerByManagerSn(workerSn),sc);
+                checkResponse(SystemInterfaceWorkers.getInstance().removeLaterShiftForFiredManagerByManagerSn(workerSn), sc);
                 break;
             case 0: // quit
                 workingLoop(sc);
@@ -302,12 +362,12 @@ public class HR {
 
     private static void EditWorkerSalary(Scanner sc, int workerSn) {
         System.out.println("Enter new salary");
-        while(!sc.hasNextInt()){
+        while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int newSalary = sc.nextInt();
-        checkResponse(SystemInterfaceWorkers.getInstance().setNewSalaryBySn(workerSn, newSalary),sc);
+        checkResponse(SystemInterfaceWorkers.getInstance().setNewSalaryBySn(workerSn, newSalary), sc);
     }
 
     private static void EditWorkerConstrains(Scanner sc, int workerSn) {
@@ -315,35 +375,35 @@ public class HR {
         System.out.println("Enter constrains: - Day-ShiftType , Day-ShiftType, etc...");
         String constrains = sc.nextLine();
         constrains = sc.nextLine();
-        constrains = constrains.replaceAll("\\s+","");
-        checkResponse(SystemInterfaceWorkers.getInstance().editWorkerConstrainsBySn(workerSn,constrains),sc);
+        constrains = constrains.replaceAll("\\s+", "");
+        checkResponse(SystemInterfaceWorkers.getInstance().editWorkerConstrainsBySn(workerSn, constrains), sc);
         checkResponse(SystemInterfaceWorkers.getInstance().printWorkerConstrainsBySn(workerSn), sc);
     }
 
     public static void initSuperLeeWithWorkers() {
-        SystemInterfaceWorkers.getInstance().addWorker(100,"Andrey Palman","100",123,100,"15-04-2020","Cashier","");
-        SystemInterfaceWorkers.getInstance().addWorker(101,"Hadar Kor","101",124,2500,"15-04-2020","Manager","");
-        SystemInterfaceWorkers.getInstance().addWorker(102,"Tomer Hacham","102",125,10000,"15-04-2020","Storekeeper","");
-        SystemInterfaceWorkers.getInstance().addWorker(103,"Amit Rubin","102",125,10000,"15-04-2020","Storekeeper","");
-        SystemInterfaceWorkers.getInstance().addWorker(104,"Reut Levy","102",125,10000,"15-04-2020","Storekeeper","");
-        SystemInterfaceWorkers.getInstance().addWorker(105,"Hadas Zaira","102",125,10000,"15-04-2020","Storekeeper","");
-        SystemInterfaceWorkers.getInstance().addWorker(106,"Roi Benhus","102",125,10000,"15-04-2020","Storekeeper","");
-        SystemInterfaceWorkers.getInstance().createShift("MORNING",2,"1,3","19-12-2020");
-        SystemInterfaceWorkers.getInstance().createShift("NIGHT",2,"1,3,4","19-12-2020");
-        SystemInterfaceWorkers.getInstance().createShift("MORNING",2,"1,3,5","20-12-2020");
-        SystemInterfaceWorkers.getInstance().createShift("NIGHT",2,"1,3,6,7","20-12-2020");
-        SystemInterfaceWorkers.getInstance().createShift("MORNING",2,"1,3,4,5,6,7","21-12-2020");
-        SystemInterfaceWorkers.getInstance().createShift("NIGHT",2,"1,3,5","21-12-2020");
-        SystemInterfaceWorkers.getInstance().createShift("MORNING",2,"1,6,7","22-12-2020");
-        SystemInterfaceWorkers.getInstance().createShift("NIGHT",2,"1,4,5","22-12-2020");
+        SystemInterfaceWorkers.getInstance().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier", "");
+        SystemInterfaceWorkers.getInstance().addWorker(101, "Hadar Kor", "101", 124, 2500, "15-04-2020", "Manager", "");
+        SystemInterfaceWorkers.getInstance().addWorker(102, "Tomer Hacham", "102", 125, 10000, "15-04-2020", "Storekeeper", "");
+        SystemInterfaceWorkers.getInstance().addWorker(103, "Amit Rubin", "102", 125, 10000, "15-04-2020", "Storekeeper", "");
+        SystemInterfaceWorkers.getInstance().addWorker(104, "Reut Levy", "102", 125, 10000, "15-04-2020", "Storekeeper", "");
+        SystemInterfaceWorkers.getInstance().addWorker(105, "Hadas Zaira", "102", 125, 10000, "15-04-2020", "Storekeeper", "");
+        SystemInterfaceWorkers.getInstance().addWorker(106, "Roi Benhus", "102", 125, 10000, "15-04-2020", "Storekeeper", "");
+        SystemInterfaceWorkers.getInstance().createShift("MORNING", 2, "1,3", "19-12-2020");
+        SystemInterfaceWorkers.getInstance().createShift("NIGHT", 2, "1,3,4", "19-12-2020");
+        SystemInterfaceWorkers.getInstance().createShift("MORNING", 2, "1,3,5", "20-12-2020");
+        SystemInterfaceWorkers.getInstance().createShift("NIGHT", 2, "1,3,6,7", "20-12-2020");
+        SystemInterfaceWorkers.getInstance().createShift("MORNING", 2, "1,3,4,5,6,7", "21-12-2020");
+        SystemInterfaceWorkers.getInstance().createShift("NIGHT", 2, "1,3,5", "21-12-2020");
+        SystemInterfaceWorkers.getInstance().createShift("MORNING", 2, "1,6,7", "22-12-2020");
+        SystemInterfaceWorkers.getInstance().createShift("NIGHT", 2, "1,4,5", "22-12-2020");
     }
 
-    private static void checkResponse(InfoObject infoObject,Scanner sc){
-        if(!infoObject.isSucceeded()){
+    private static void checkResponse(InfoObject infoObject, Scanner sc) {
+        if (!infoObject.isSucceeded()) {
             System.out.println(infoObject.getMessage());
             workingLoop(sc);
         } else {
-            if(!infoObject.getMessage().equals("")){
+            if (!infoObject.getMessage().equals("")) {
                 System.out.println(infoObject.getMessage());
             }
         }

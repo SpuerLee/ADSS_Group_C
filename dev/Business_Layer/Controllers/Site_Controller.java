@@ -10,6 +10,25 @@ import java.util.List;
 
 public class Site_Controller {
 
+    public boolean printAllSites() {
+        if(service.getHashStoresMap().isEmpty()){
+            return false;
+        }
+        for(Store storeToPrint : service.getHashStoresMap().values()){
+            System.out.println(storeToPrint);
+        }
+        return true;
+    }
+
+    public boolean isStoreExcites(int currentStore) {
+        for(int storeSN : service.getHashStoresMap().keySet()){
+            if(currentStore == storeSN){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static class SingletonService {
         private static Site_Controller instance = new Site_Controller();
     }
@@ -29,21 +48,24 @@ public class Site_Controller {
                            String street, String number, String name_of_contact,
                            String phone, String site_area) {
         if (site_type.equals("store")) {
-            Store store = new Store(name, phone, name_of_contact, new Address(city,
-                    street, Integer.parseInt(number)), new Area(site_area));
-            service.getHashStoresMap().put(store.getId(), store);
+            addStore(name,city,street,number,name_of_contact,phone,site_area);
             return true;
-
         } else if (site_type.equals("supplier")) {
-            Supplier supplier = new Supplier(name, phone, name_of_contact,
-                    new Address(city, street, Integer.parseInt(number)), new Area(site_area));
-            service.getSuppliersMap().put(supplier.getId(), supplier);
+            addSupplier(name,city,street,number,name_of_contact,phone,site_area);
             return true;
         } else {
             return false;
         }
+    }
 
+    public void addStore(String name, String city, String street, String number, String name_of_contact, String phone, String site_area){
+        Store store = new Store(name, phone, name_of_contact, new Address(city, street, Integer.parseInt(number)), new Area(site_area));
+        service.getHashStoresMap().put(store.getId(), store);
+    }
 
+    public void addSupplier(String name, String city, String street, String number, String name_of_contact, String phone, String site_area){
+        Supplier supplier = new Supplier(name, phone, name_of_contact, new Address(city, street, Integer.parseInt(number)), new Area(site_area));
+        service.getSuppliersMap().put(supplier.getId(), supplier);
     }
 
     public String showsite() throws Buisness_Exception {

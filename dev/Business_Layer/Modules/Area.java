@@ -2,6 +2,10 @@ package Business_Layer.Modules;
 
 public class Area {
 
+    private String areaName;
+    private int areaSN;
+
+
     private enum area{
         A,
         B,
