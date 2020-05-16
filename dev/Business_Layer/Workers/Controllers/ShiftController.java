@@ -5,6 +5,7 @@ import Business_Layer.Workers.Utils.InfoObject;
 import Business_Layer.Workers.Modules.Shift;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.enums;
+import Data_Layer.Mapper;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -99,6 +100,7 @@ public class ShiftController {
         Worker manager = Service.getInstance().getWorkerList(getCurrentStoreSN()).get(managerSn);
         String[] workersSn;
         List<Worker> workersListOfCurrentShift = new LinkedList<>();
+        List<Integer> workersDB =new LinkedList<>();
         infoObject = validateManagerConstrains(manager, sType, date);
         if (!infoObject.isSucceeded()) {
             return infoObject;
@@ -149,16 +151,33 @@ public class ShiftController {
                         infoObject.setMessage(workerToAdd.getWorkerName() + " Already in this shift. Cant add the same worker twice");
                         return infoObject;
                     }
+                    workersDB.add(workerToAdd.getWorkerSn());
                     workersListOfCurrentShift.add(workerToAdd);
                 }
             }
         } else {
             workersListOfCurrentShift = new LinkedList<>();
         }
+        int type = shiftTypeToInteger(shiftType);
         Shift shiftToAdd = new Shift(date, sType, manager, workersListOfCurrentShift, getSnFactory(),getCurrentStoreSN());
+        Mapper.getInstance().insertShift(date,type,managerSn,workersDB,shiftToAdd.getShiftSn(),getCurrentStoreSN());
         Service.getInstance().getShiftHistory().put(shiftToAdd.getShiftSn(), shiftToAdd);
         infoObject.setMessage("Shift created successfully");
         return infoObject;
+    }
+
+    private Integer shiftTypeToInteger(String shiftType) {
+        Integer DBshiftType=0;
+        switch (shiftType) {
+            case "MORNING":
+                DBshiftType = 1;
+                break;
+
+            case "NIGHT":
+                DBshiftType = 2;
+                break;
+        }
+        return DBshiftType;
     }
 
     public InfoObject printShift(int shiftIndex) {

@@ -15,7 +15,6 @@ import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.ShiftType;
 import Interface_Layer.Workers.SystemInterfaceWorkers;
-import com.google.gson.*;
 import javafx.util.Pair;
 
 
@@ -54,6 +53,7 @@ public class Service {
         shiftTypeList.put(2, new ShiftType(2,"Night"));
 
     }
+
 
     public Area getAreaByName(String str) throws Buisness_Exception
     {
@@ -244,7 +244,6 @@ public class Service {
     public ConcurrentHashMap<Integer, Driver> getDrivers(){
         return Drivers;
     }
-
 
 }
 

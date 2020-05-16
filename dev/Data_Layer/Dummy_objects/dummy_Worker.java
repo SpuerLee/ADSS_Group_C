@@ -12,7 +12,7 @@ public class dummy_Worker {
     private int SN;
     private int Id;
     private String name;
-    private int phone;
+    private String phone;
     private int BankAccount;
     private int salary;
     private int storeSN;
@@ -20,7 +20,7 @@ public class dummy_Worker {
     private String Job_title;
     private HashMap <Pair< Integer ,Integer>, Boolean> constraints;
 
-    private dummy_Worker(int sn,int Id, String name, int phone, int BankAccount, int salary, int storeSN,Date start_Date, String job_title, HashMap<Pair< Integer ,Integer>, Boolean> constraints){
+    public dummy_Worker(int sn,int Id, String name, String phone, int BankAccount, int salary, int storeSN,Date start_Date, String job_title, HashMap<Pair< Integer ,Integer>, Boolean> constraints){
         this.SN=sn;
         this.Id=Id;
         this.name=name;
@@ -54,11 +54,11 @@ public class dummy_Worker {
         this.name = name;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
