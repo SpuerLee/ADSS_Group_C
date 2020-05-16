@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,9 +46,16 @@ public class worker_DAO {
     }*/
 
     public void insert(dummy_Worker worker) {
-        String query = "INSERT INTO \"main\".\"Workers\"\n" +
-                "(\"SN\",\"ID\",\"Name\",\"PhoneNumber\",\"BankAccount\", \"Salary\", \"StoreSN\", \"date\", \"jobTitle\")\n" +
-                String.format("VALUES ('%d','%d','%s','%d','%d','%d','%d', '%date', '%s');", worker.getId(), worker.getName(), worker.getPhone(), worker.getBankAccount(), worker.getSalary(), worker.getStoreSN(), worker.getStart_Date(), worker.getJob_title());
+        String query = MessageFormat.format("INSERT INTO \"main\".\"Workers\"\n(\"SN\",\"ID\",\"Name\",\"PhoneNumber\",\"BankAccount\", \"Salary\", \"StoreSN\", \"date\", \"Worker_Type\")\n{0}", String.format("VALUES ('%d','%d','%s','%s','%d','%d','%d', '%s', '%d');", worker.getSN()+10,worker.getId(), worker.getName(), worker.getPhone(), worker.getBankAccount(), worker.getSalary(), worker.getStoreSN(), "date", 1));
+
+        try {
+            java.sql.Date sqlDate = new java.sql.Date(worker.getStart_Date().getTime());
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            //statement.setDate(7,sqlDate);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         for(Pair x : worker.getConstrains().keySet()){
             boolean canWork =  worker.getConstrains().get(x);
