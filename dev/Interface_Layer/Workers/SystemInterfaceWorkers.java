@@ -99,6 +99,7 @@ public class SystemInterfaceWorkers {
         if(Site_Controller.getInstance().isStoreExcites(currentStore)) {
             Service.getInstance().getWorkerController().setCurrentStoreSN(currentStore);
             Service.getInstance().getShiftController().setCurrentStoreSN(currentStore);
+            System.out.println("Welcome to " + Service.getInstance().getHashStoresMap().get(currentStore).getName());
         }else{
             System.out.println("There is no store with this SN");
             return false;

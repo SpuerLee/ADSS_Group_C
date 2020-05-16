@@ -9,7 +9,7 @@ public abstract class Site {
     public String toString() {
         return
                 id + ". " +
-                " name= " + name;
+                " Store name: " + name;
     }
 
     private String name;

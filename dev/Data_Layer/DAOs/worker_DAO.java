@@ -21,7 +21,7 @@ public class worker_DAO {
         for(Map.Entry<Pair<enums,enums>,Boolean> constrains : workerToInsert.getWorkerConstrains().entrySet()){
             Pair<enums,enums> cons = constrains.getKey();
 
-            String workersConstrainsQuery = "INSERT INTO \"Workers_Constrains\"" +
+            String workersConstrainsQuery = "INSERT INTO \"Constrains\"" +
                     "(\"WorkerSN\", \"Shift_typeSN\", \"DayOfWeek\", \"CanWork\") " +
                     String.format("VALUES ('%d', '%d', '%d', '%s')", workerToInsert.getWorkerSn(),cons.getValue(),cons.getKey(),constrains.getValue().toString());
         }

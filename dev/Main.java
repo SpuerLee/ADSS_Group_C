@@ -1,3 +1,4 @@
+import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Presentation_Layer.Transportations.TransportationMenu;
 import Presentation_Layer.Workers.HR;
 
@@ -5,7 +6,7 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args)  throws Buisness_Exception {
         while (true)
         {
             Scanner scan = new Scanner(System.in);

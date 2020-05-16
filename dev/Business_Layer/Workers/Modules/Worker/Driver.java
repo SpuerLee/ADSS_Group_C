@@ -3,6 +3,7 @@ package Business_Layer.Workers.Modules.Worker;
 import Business_Layer.Modules.License;
 import Business_Layer.Transportations.Modules.Transportation;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -23,7 +24,23 @@ import java.util.List;
     }
 
 
-    public List<String> getLicenses()
+        @Override
+        public String toString() {
+            SimpleDateFormat daty = new SimpleDateFormat("dd/MM/yyyy");
+            String dat = daty.format(super.getWorkerStartingDate());
+            return "sn. " + getWorkerSn() + "\n" +
+                    "id: " + getWorkerId() + "\n" +
+                    "name: '" + getWorkerName() + '\'' + "\n" +
+                    "phoneNumber: " + getWorkerPhone() + "\n" +
+                    "bankAccount: " + getWorkerBankAccount() + "\n" +
+                    "salary: " + getWorkerSalary() + "\n" +
+                    "date: " + dat + "\n" +
+                    "jobTitle: '" + getWorkerJobTitle() + '\'' + "\n" +
+                    "license: " + this.licenses.toString() + "\n" +
+                    "constrains: " + printConstrains()  + "\n" ;
+        }
+
+        public List<String> getLicenses()
     {
         return this.licenses;
     }
