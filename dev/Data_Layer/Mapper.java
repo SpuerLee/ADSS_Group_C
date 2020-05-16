@@ -90,12 +90,15 @@ public class Mapper {
        // address_Mapper.insert(toAdd);
     }
 
-    public void insertTransportation(Date date, LocalTime leaving_time, double truck_weight, int trucksn, List<Integer> itemsFile, List<Integer> suppliers, List<Integer> stores, int Driver){
-        dummy_Transportation toAdd = new dummy_Transportation( date, leaving_time, truck_weight,trucksn,itemsFile,suppliers, stores,Driver);
+    public void insertTransportation(Date date, String leaving_time, double truck_weight, int trucksn, List<Integer> itemsFile, List<Integer> suppliers, List<Integer> stores, int Driver){
+        enums leaving=enums.NIGHT;
+        if(leaving_time.toUpperCase().equals("MORNING"))
+            leaving=enums.MORNING;
+        dummy_Transportation toAdd = new dummy_Transportation( date, leaving, truck_weight,trucksn,itemsFile,suppliers, stores,Driver);
         transportation_Mapper.insert(toAdd);
     }
 
-    public void insertTruck(int Id,int license_number, String model, double weight, double max_weight, int license_type){
+    public void insertTruck(int Id,int license_number, String model, double weight, double max_weight, String license_type){
         dummy_Truck toAdd = new dummy_Truck(Id,license_number, model, weight, max_weight, license_type);
         truck_Mapper.insert(toAdd);
     }

@@ -409,12 +409,12 @@ public class HR {
 
     public static void initSuperLeeWithWorkers() throws Buisness_Exception {
 
-        try {
-            Service.getInstance().site_controller.addsite("store","Nesspresso","Holon","Krauze","12","Hadar","04","A");
-            Service.getInstance().site_controller.addsite("store","Nesspresso_2","Holon","Krauze","12","Hadar","04","A");
-        } catch (Buisness_Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Service.getInstance().site_controller.addsite("store","Nesspresso","Holon","Krauze","12","Hadar","04","A");
+//            Service.getInstance().site_controller.addsite("store","Nesspresso_2","Holon","Krauze","12","Hadar","04","A");
+//        } catch (Buisness_Exception e) {
+//            e.printStackTrace();
+//        }
 
         Service.getInstance().getWorkerController().setCurrentStoreSN(1);
         Service.getInstance().getShiftController().setCurrentStoreSN(1);

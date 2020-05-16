@@ -88,7 +88,6 @@ public class worker_DAO {
 
         String selectQuery = String.format("select * from Workers where StoreSN = '%d", storeSN);
 
-<<<<<<< HEAD
         return workerToReturn;
     }
     public void insertLicense(int sn, int license){
@@ -97,7 +96,7 @@ public class worker_DAO {
                 String.format("VALUES ('%d','%d');",sn, license);
 
     }
-=======
+
         try {
 
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
@@ -109,7 +108,7 @@ public class worker_DAO {
         }
         throw new NullPointerException();
     } */
->>>>>>> worker_transportation
+
 
     public void updateSalary(int sn,int salary){
         String query_Salary = "UPDATE \"main\".\"Workers\"\n" + "SET Salary = " + salary +" WHERE SN = "+sn;
@@ -123,6 +122,15 @@ public class worker_DAO {
                 "(\"WorkerSN\",\"Shift_type\",\"DayOfWeek\",\"CanWork\")\n" +
                 String.format("VALUES ('%d','%d','%d','%b');",workerSn,selectedDay, sType,false);
     }
+
+
+    public void insertLicense(int sn, int license){
+        String query = "INSERT INTO \"main\".\"Driver_License\"\n" +
+                "(\"DriverSN\",\"LicenseSN\")\n" +
+                String.format("VALUES ('%d','%d');",sn, license);
+
+    }
+
 /*
     public void insert(dummy_Worker worker) {
         String query = "INSERT INTO \"main\".\"Workers\"\n" +
