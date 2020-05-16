@@ -7,9 +7,9 @@ public class dummy_Truck {
     private String model;
     private double weight;
     private double max_weight;
-    private int license_type;
+    private String license_type;
 
-    public dummy_Truck(int Id,int license_number, String model, double weight, double max_weight, int license_type){
+    public dummy_Truck(int Id,int license_number, String model, double weight, double max_weight, String license_type){
         this.Id=Id;
         this.license_number=license_number;
         this.model=model;
@@ -58,11 +58,11 @@ public class dummy_Truck {
         Id = id;
     }
 
-    public int getLicense_type() {
+    public String getLicense_type() {
         return license_type;
     }
 
-    public void setLicense_type(int license_type) {
+    public void setLicense_type(String license_type) {
         this.license_type = license_type;
     }
 }

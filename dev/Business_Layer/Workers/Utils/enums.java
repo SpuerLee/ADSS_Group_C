@@ -7,7 +7,6 @@ public enum enums {
         THURSDAY, FRIDAY, SATURDAY,
 
 
-
         MORNING,
         NIGHT
 }
