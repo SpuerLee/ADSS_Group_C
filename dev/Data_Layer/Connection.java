@@ -5,6 +5,11 @@ import java.sql.SQLException;
 
 public class Connection {
 
+    public java.sql.Connection getConn() {
+        return conn;
+    }
+
+    private static java.sql.Connection conn;
     private static Connection connection = null;
 
 
@@ -17,12 +22,11 @@ public class Connection {
 
     private Connection(){
 
-        connection = null;
         try {
             // db parameters
             String url = "jdbc:sqlite:DB/workers_transportation_db.db";
             // create a connection to the database
-            connection = (Connection) DriverManager.getConnection(url);
+            conn = DriverManager.getConnection(url);
             System.out.println("Connection to SQLite has been established.");
 
         } catch (SQLException e) {
@@ -30,7 +34,7 @@ public class Connection {
         } finally {
             try {
                 if (connection != null) {
-                    ((java.sql.Connection) connection).close();
+                    conn.close();
                 }
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());

@@ -3,9 +3,16 @@ package Data_Layer.DAOs;
 import Business_Layer.Workers.Modules.Shift;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.enums;
+import Data_Layer.Connection;
+import Data_Layer.Dummy_objects.dummy_Address;
 import Data_Layer.Dummy_objects.dummy_Worker;
+import Data_Layer.Dummy_objects.dummy_supplier;
 import javafx.util.Pair;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,10 +20,20 @@ public class worker_DAO {
     public void insert(Worker workerToInsert){
         String workerInsertQuery = "INSERT INTO \"main\".\"Workers\"\n" +
                 "(\"SN\", \"ID\", \"Name\", \"PhoneNumber\", \"BankAccount\", \"Salary\", \"Date\", \"Worker_Type\", \"StoreSN\")\n" +
-                String.format("VALUES ('%d', '%d', '%s', '%s', '%d', '%d', '%date', '%d', '%d');",
+                String.format("VALUES ('%d', '%d', '%s', '%s', '%d', '%d', '?', '%s', '%d');",
                         workerToInsert.getWorkerSn(),workerToInsert.getWorkerId(),workerToInsert.getWorkerName(),
                         workerToInsert.getWorkerPhone(),workerToInsert.getWorkerBankAccount(),workerToInsert.getWorkerSalary(),
-                        workerToInsert.getWorkerStartingDate(),workerToInsert.getWorkerJobTitle(),workerToInsert.getStoreSN());
+                        workerToInsert.getWorkerJobTitle(),workerToInsert.getStoreSN());
+
+        java.sql.Date sqlDate = new java.sql.Date(workerToInsert.getWorkerStartingDate().getTime());
+
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(workerInsertQuery);
+            statement.setDate(7,sqlDate);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         for(Map.Entry<Pair<enums,enums>,Boolean> constrains : workerToInsert.getWorkerConstrains().entrySet()){
             Pair<enums,enums> cons = constrains.getKey();
@@ -50,14 +67,23 @@ public class worker_DAO {
         String constrainsQuery = String.format("select * from Workers_Constrains where WorkerSN = '%d", workerSN);
         return String.format("select * from Workers_Constrains where WorkerSN = '%d", workerSN);
     }
-
-    public Worker selectWorkersByStoreSN(int storeSN){
-        Worker workerToReturn = null;
+/*
+    public dummy_Worker selectWorkersByStoreSN(int storeSN){
+        dummy_Worker workerToReturn = null;
 
         String selectQuery = String.format("select * from Workers where StoreSN = '%d", storeSN);
 
-        return workerToReturn;
-    }
+        try {
+
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(selectQuery);
+            return new dummy_Worker(rs2.getString("SN"),rs2.getString("ID"),rs2.getString("Name"),rs2.getInt("PhoneNumber"),rs2.getInt("BankAccount"),rs2.getInt("Salary"),rs2.getInt("StoreSN"),AddressSn,rs2.getInt("AreaSN"));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    } */
 
 /*
     public void insert(dummy_Worker worker) {
