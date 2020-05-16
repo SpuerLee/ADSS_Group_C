@@ -71,7 +71,7 @@ public class SystemInterfaceWorkers {
     }
 
     public InfoObject printAllShifts(){
-        return Service.getInstance().getShiftController().printAllShifts();
+        return Service.getInstance().getShiftController().printAllShits();
     }
 
     public InfoObject editWorkerConstrainsBySn(int workerSn, String newConstrains){

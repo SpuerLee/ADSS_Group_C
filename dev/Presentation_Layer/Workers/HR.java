@@ -160,7 +160,12 @@ public class HR {
             String phone = scan.nextLine();
             System.out.println("Please choose store's area (A/B/C/D)");
             String area = scan.nextLine();
-            boolean result = SystemInterfaceWorkers.getInstance().addNewStore(name, city, street, number, name_of_contact, phone, area);
+            boolean result = false;
+            try {
+                result = SystemInterfaceWorkers.getInstance().addNewStore(name, city, street, number, name_of_contact, phone, area);
+            } catch (Buisness_Exception e) {
+                System.out.println("Can't add new Store!");
+            }
             if (result) {
                 System.out.println("The store was added successfully\n");
                 workingLoop(sc);

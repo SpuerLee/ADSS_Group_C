@@ -434,7 +434,12 @@ public class TransportationMenu {
         String name_of_contact = scan.nextLine();
         System.out.println("Please enter contact's person phone");
         String phone = scan.nextLine();
-        boolean result = systemInterfaceTransportations.addsupplier(name, city, street, number, name_of_contact, phone, area);
+        boolean result = false;
+        try {
+            result = systemInterfaceTransportations.addsupplier(name, city, street, number, name_of_contact, phone, area);
+        } catch (Buisness_Exception e) {
+            System.out.println("Cant add new Supplier");
+        }
         if (result) {
             System.out.println("The supplier was added successfully\n");
         } else {

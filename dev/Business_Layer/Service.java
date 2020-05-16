@@ -215,30 +215,6 @@ public class Service {
 //        }
 //    }
 
-<<<<<<< HEAD
-    public String getMissingItems()
-    {
-        Gson gson = new Gson();
-        String output = "";
-        for (MissingItems missingItems: MissingItems.values())
-        {
-            output = output + gson.toJson(missingItems)+"\n";
-        }
-        return output;
-    }
-
-    public String getAreas()
-    {
-        String output = "[ ";
-        for (Area area: area_list.values())
-        {
-            output = output + area.toString() +", ";
-        }
-        output = output + "]";
-        return output;
-    }
-=======
->>>>>>> worker_transportation
 
     public List<ItemsFile> getItemsFile(){
         return ItemsFile;
@@ -268,12 +244,6 @@ public class Service {
         return Drivers;
     }
 
-<<<<<<< HEAD
-//    public List<Area> getArea_list(){
-//        return area_list;
-//    }
-=======
->>>>>>> worker_transportation
 
 }
 
