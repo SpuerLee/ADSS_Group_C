@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class projectTests {
 
     private static Service service;
@@ -45,7 +45,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Add new Worker")
-    @Order(1)
+    //@Order(1)
     void test1() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","");
         assertEquals(1, service.getWorkerList(1).size());
@@ -53,7 +53,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Add new Shift with date that already passed")
-    @Order(2)
+    //@Order(2)
     void test2() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","");
         service.getWorkerController().addWorker(101, "Hadar Korny", "101", 124, 2500, "15-04-2020", "Manager","");
@@ -64,7 +64,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Create Shift without manager")
-    @Order(3)
+        //@Order(3)
     void test3() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","");
         service.getWorkerController().addWorker(102, "Tomer Hacham", "102", 125, 10000, "15-04-2020", "Storekeeper","");
@@ -74,7 +74,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Add worker to a shift that there is a conflict with his constrains")
-    @Order(4)
+        //@Order(4)
     void test4() {
         service.getWorkerController().addWorker(101, "Hadar Korny", "101", 124, 2500, "10-04-2020", "Manager","SATURDAY-MORNING");
         service.getShiftController().createShift("MORNING", 1, "", "26-12-2020");
@@ -83,7 +83,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Remove worker")
-    @Order(5)
+        //@Order(5)
     void test5() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","");
         service.getWorkerController().removeWorkerBySn(1);
@@ -92,7 +92,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Add worker Id to a shift that the worker id doesnt exists")
-    @Order(6)
+        //@Order(6)
     void test6() {
         service.getShiftController().createShift("NIGHT", 2, "", "25-12-2020");
         assertEquals(0, service.getShiftHistory().size());
@@ -100,7 +100,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Edit worker salary")
-    @Order(7)
+        //@Order(7)
     void test7() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","");
         service.getWorkerController().setNewSalaryBySn(1, 200);
@@ -109,7 +109,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Edit constrains")
-    @Order(8)
+        //@Order(8)
     void test8() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","SUNDAY-MORNING");
         service.getWorkerController().resetWorkerConstrainsBySn(1);
@@ -121,7 +121,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Create shift with invalid manager id")
-    @Order(9)
+        // @Order(9)
     void test9() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","");
         service.getWorkerController().addWorker(101, "Hadar Korny", "101", 124, 2500, "15-04-2020", "Manager","");
@@ -132,7 +132,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Create shift with date and shift type that already exists")
-    @Order(10)
+        // @Order(10)
     void test10() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","");
         service.getWorkerController().addWorker(101, "Hadar Korny", "101", 124, 2500, "15-04-2020", "Manager","");
@@ -144,7 +144,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Add worker to a shift before he starts to work")
-    @Order(11)
+        //@Order(11)
     void test11() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","");
         service.getWorkerController().addWorker(101, "Hadar Korny", "100", 124, 2500, "15-04-2020", "Manager","");
@@ -155,7 +155,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Create shift with date that already passed")
-    @Order(12)
+        //@Order(12)
     void test12() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","");
         service.getWorkerController().addWorker(101, "Hadar Korny", "100", 124, 2500, "15-04-2020", "Manager","");
@@ -166,7 +166,7 @@ public class projectTests {
 
     @Test
     @DisplayName("Add new Shift")
-    @Order(13)
+        // @Order(13)
     void test13() {
         service.getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier","");
         service.getWorkerController().addWorker(101, "Hadar Korny", "100", 124, 2500, "15-04-2020", "Manager","");
