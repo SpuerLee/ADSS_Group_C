@@ -1,22 +1,11 @@
 import Presentation_Layer.Transportations.TransportationMenu;
 import Presentation_Layer.Workers.HR;
 
+import java.sql.*;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
-//        try(Connection conn = DriverManager.getConnection("jdbc:sqlite:DB/example.db")){
-//            System.out.println("Open DB");
-//
-//            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Product WHERE barcode = 1");
-//            ResultSet res = pstmt.executeQuery();
-//
-//            System.out.println("barcode: " + res.getInt("barcode") + " name: " + res.getString("name"));
-//
-//        }catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
         while (true)
         {
             Scanner scan = new Scanner(System.in);
@@ -33,9 +22,5 @@ public class Main {
             else if (option.equals("3"))
                 break;
         }
-
-
-
-
     }
 }
