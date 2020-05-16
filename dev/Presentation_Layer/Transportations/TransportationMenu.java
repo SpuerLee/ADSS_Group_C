@@ -438,11 +438,8 @@ public class TransportationMenu {
         try {
             result = systemInterfaceTransportations.addsupplier(name, city, street, number, name_of_contact, phone, area);
         } catch (Buisness_Exception e) {
-<<<<<<< Updated upstream
             System.out.println("Cant add new Supplier");
-=======
             e.printStackTrace();
->>>>>>> Stashed changes
         }
         if (result) {
             System.out.println("The supplier was added successfully\n");

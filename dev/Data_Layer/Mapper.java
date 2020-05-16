@@ -87,7 +87,7 @@ public class Mapper {
 
     public void insertAddress(String city, String street, int number){
         dummy_Address toAdd = new dummy_Address(city, street, number);
-        address_Mapper.insert(toAdd);
+       // address_Mapper.insert(toAdd);
     }
 
     public void insertTransportation(Date date, LocalTime leaving_time, double truck_weight, int trucksn, List<Integer> itemsFile, List<Integer> suppliers, List<Integer> stores, int Driver){
@@ -107,7 +107,7 @@ public class Mapper {
 
     public void insertSupplier(String phone, String contact_name, String name, int id, String city, String street, int number, int Adrress_Sn, int AreaSn){
         dummy_supplier toAdd = new dummy_supplier(phone,contact_name,name, id,city, street, number, Adrress_Sn, AreaSn);
-        supplier_Mapper.insert(toAdd);
+       // supplier_Mapper.insert(toAdd);
     }
 
 }
