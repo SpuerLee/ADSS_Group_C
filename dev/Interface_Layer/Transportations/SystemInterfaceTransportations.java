@@ -37,9 +37,9 @@ public class SystemInterfaceTransportations {
         return SystemInterfaceTransportations.SingletonControler.instance;
     }
 
-    public void uploadData() {
-        service.uploadData();
-    }
+//    public void uploadData() {
+//        service.uploadData();
+//    }
 
     static String Print_error(Exception e) {
         Throwable current = e;
@@ -142,7 +142,7 @@ public class SystemInterfaceTransportations {
     }
 
     public boolean addsupplier(String name, String city, String street, String number,
-                               String name_of_contact, String phone, String supplier_area) {
+                               String name_of_contact, String phone, String supplier_area) throws Buisness_Exception{
         return service.site_controller.addsupplier(name, city, street, number, name_of_contact, phone, supplier_area);
     }
 

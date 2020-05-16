@@ -2,6 +2,7 @@ package Interface_Layer.Workers;
 
 import Business_Layer.Controllers.Site_Controller;
 import Business_Layer.Service;
+import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Workers.Controllers.ShiftController;
 import Business_Layer.Workers.Utils.InfoObject;
 import Business_Layer.Workers.Controllers.WorkerController;
@@ -90,14 +91,14 @@ public class SystemInterfaceWorkers {
         return true;
     }
 
-    public boolean addNewStore( String name, String city, String street, String number, String name_of_contact, String phone, String site_area) {
+    public boolean addNewStore( String name, String city, String street, String number, String name_of_contact, String phone, String site_area)  throws Buisness_Exception {
         return Site_Controller.getInstance().addsite("store",name,city,street,number,name_of_contact,phone,site_area);
     }
 
     public boolean setCurrentStore(int currentStore) {
         if(Site_Controller.getInstance().isStoreExcites(currentStore)) {
             Service.getInstance().getWorkerController().setCurrentStoreSN(currentStore);
-            Service.getInstance().getShiftController().setCurrentStore(currentStore);
+            Service.getInstance().getShiftController().setCurrentStoreSN(currentStore);
         }else{
             System.out.println("There is no store with this SN");
             return false;

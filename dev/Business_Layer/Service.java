@@ -7,6 +7,7 @@ import Business_Layer.Transportations.Controllers.Missing_items_Controller;
 import Business_Layer.Transportations.Controllers.Transportation_Controller;
 import Business_Layer.Transportations.Controllers.Trucks_Controller;
 import Business_Layer.Transportations.Modules.*;
+import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Workers.Controllers.ShiftController;
 import Business_Layer.Workers.Controllers.WorkerController;
 import Business_Layer.Workers.Modules.Shift;
@@ -52,6 +53,26 @@ public class Service {
         shiftTypeList.put(2, new ShiftType(2,"Night"));
 
     }
+
+    public Area getAreaByName(String str) throws Buisness_Exception
+    {
+        for (Map.Entry<Integer, Area> area : area_list.entrySet()) {
+            if(str.equals(area.getValue().getAreaName()))
+                 return area.getValue();
+        }
+        throw new Buisness_Exception("-Area dont exist-");
+    }
+
+    public License getLicenseByName(String str) throws Buisness_Exception
+    {
+        for (Map.Entry<Integer, License> license : license_list.entrySet()) {
+            if(str.equals(license.getValue().getLicenseType()))
+                 return license.getValue();
+        }
+        throw new Buisness_Exception("-License dont exist-");
+    }
+
+
     public static Service getInstance() {
         return SingletonService.instance;
     }
@@ -194,6 +215,7 @@ public class Service {
 //        }
 //    }
 
+<<<<<<< HEAD
     public String getMissingItems()
     {
         Gson gson = new Gson();
@@ -215,6 +237,8 @@ public class Service {
         output = output + "]";
         return output;
     }
+=======
+>>>>>>> worker_transportation
 
     public List<ItemsFile> getItemsFile(){
         return ItemsFile;
@@ -244,9 +268,12 @@ public class Service {
         return Drivers;
     }
 
+<<<<<<< HEAD
 //    public List<Area> getArea_list(){
 //        return area_list;
 //    }
+=======
+>>>>>>> worker_transportation
 
 }
 
