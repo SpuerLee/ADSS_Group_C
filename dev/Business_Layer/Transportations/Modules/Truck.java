@@ -54,10 +54,10 @@ public class Truck {
     }
 
 
-    public boolean checkIfFree(Date date)
+    public boolean checkIfFree(Date date,int departureTime)
     {
         for(Transportation transportation:transportations){
-            if (date.equals(transportation.getDate()))
+            if (date.equals(transportation.getDate())& departureTime == transportation.getDepartureTime())
                 return false;
         }
         return true;

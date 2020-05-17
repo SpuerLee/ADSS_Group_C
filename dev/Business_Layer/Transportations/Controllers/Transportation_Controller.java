@@ -1,10 +1,12 @@
 package Business_Layer.Transportations.Controllers;
 
+import Business_Layer.Modules.License;
 import Business_Layer.Modules.Store;
 import Business_Layer.Modules.Supplier;
 import Business_Layer.Service;
 import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Transportations.Modules.*;
+import Business_Layer.Workers.Utils.ShiftType;
 import javafx.util.Pair;
 
 import java.time.LocalTime;
@@ -26,6 +28,24 @@ public class Transportation_Controller {
 
     List<ItemsFile> current = new LinkedList<ItemsFile>();
 
+
+    public List<String> Show_shiftTypeList() throws Buisness_Exception {
+        Service service = Service.getInstance();
+        List<String> output = new LinkedList<>();
+        for(ShiftType shiftType : service.getshiftTypeList().values())
+        {
+            output.add(shiftType.getShiftTypeSN()+". "+shiftType.getShiftType());
+        }
+        if (output.isEmpty())
+            throw new Buisness_Exception("There are no shiftType in the system\n");
+        return output;
+    }
+    public String getShiftNameByID(int id) throws Buisness_Exception {
+        Service service = Service.getInstance();
+        if(!service.getshiftTypeList().containsKey(id))
+            throw new Buisness_Exception("Error\n");
+        return service.getshiftTypeList().get(id).getShiftType();
+    }
 
 
     public String RemoveSites(int transportationID,Integer [] storesToRemove,Integer [] suppliersToRemove)
@@ -134,7 +154,7 @@ public class Transportation_Controller {
     }
 
 
-    public Date Free_truck_and_driver(int transportationID) {
+    public Pair<Date,Integer> Free_truck_and_driver(int transportationID) {
         Service service = Service.getInstance();
         try {
             Transportation transportation = service.getHashTransportation().get(transportationID);
@@ -142,7 +162,7 @@ public class Transportation_Controller {
             int truckID = transportation.getTruck().getId();
             service.getDrivers().get(driverID).Remove_date(transportationID);
             service.getHashTrucks().get(truckID).Remove_date(transportationID);
-            return transportation.getDate();
+            return new Pair<>(transportation.getDate(), transportation.getDepartureTime());
         }
         catch (Exception e){return null;}
     }
@@ -204,7 +224,7 @@ public class Transportation_Controller {
     }
 
 
-    public void createTransportation(Date date, LocalTime leaving_time, int driver_id,
+    public void createTransportation(Date date, int DepartureTime, int driver_id,
                                         int truck_id, List<Integer> suppliers, List<Integer> stores)  throws Buisness_Exception  {
         try {
             Service service = Service.getInstance();
@@ -222,7 +242,7 @@ public class Transportation_Controller {
 
 
             Transportation transportation =
-                    new Transportation(date, leaving_time, service.getDrivers().get(driver_id), service.getHashTrucks().get(truck_id), suppliers1, stores1);
+                    new Transportation(date, DepartureTime, service.getDrivers().get(driver_id), service.getHashTrucks().get(truck_id), suppliers1, stores1);
             service.getHashTransportation().put(transportation.getId(), transportation);
             List<Integer> id_to_delete = new LinkedList<Integer>();
             for (MissingItems missingItems : service.getMissing().values()) {
@@ -249,7 +269,7 @@ public class Transportation_Controller {
 
     }
 
-    public void createRegularTransportation(Date date, LocalTime leaving_time, int driver_id,
+    public void createRegularTransportation(Date date, int DepartureTime, int driver_id,
                                             int truck_license_number, List<Integer> suppliers, List<Integer> stores)
             throws Buisness_Exception{
         try {
@@ -267,7 +287,7 @@ public class Transportation_Controller {
             }
 
             Transportation transportation =
-                    new Transportation(date, leaving_time, service.getDrivers().get(driver_id), service.getHashTrucks().get(truck_license_number), suppliers1, stores1);
+                    new Transportation(date, DepartureTime, service.getDrivers().get(driver_id), service.getHashTrucks().get(truck_license_number), suppliers1, stores1);
             service.getHashTransportation().put(transportation.getId(), transportation);
             for (ItemsFile itemsFile : current) {
                 itemsFile.setTransportationID(transportation.getId());

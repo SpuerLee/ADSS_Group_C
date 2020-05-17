@@ -23,12 +23,12 @@ public class Site_Controller {
         return SingletonService.instance;
     }
 
-    public boolean addsupplier(String name, String city, String street, String number,
+    public boolean addsupplier(String name, String city, String street, Integer number,
                                String name_of_contact, String phone, String supplier_area)
             throws Buisness_Exception{
         Service service = Service.getInstance();
             Supplier supplier = new Supplier(name, phone, name_of_contact,
-                    new Address(city, street, Integer.parseInt(number)), service.getAreaByName(supplier_area));
+                    new Address(city, street, number), service.getAreaByName(supplier_area));
             service.getSuppliersMap().put(supplier.getId(), supplier);
             return true;
     }
@@ -53,6 +53,18 @@ public class Site_Controller {
         } else {
             return false;
         }
+    }
+
+    public List<String> Show_AreaList() throws Buisness_Exception {
+        Service service = Service.getInstance();
+        List<String> output = new LinkedList<>();
+        for(Area area : service.getArea_list().values())
+        {
+            output.add(area.getAreaName());
+        }
+        if (output.isEmpty())
+            throw new Buisness_Exception("There are no Areas in the system\n");
+        return output;
     }
 
     public List<String> Show_supplier() throws Buisness_Exception {
