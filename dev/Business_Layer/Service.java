@@ -48,8 +48,8 @@ public class Service {
         area_list.put(2,new Area(2,"B"));
         area_list.put(3,new Area(3,"C"));
         area_list.put(4,new Area(4,"D"));
-        shiftTypeList.put(1, new ShiftType(1,"Morning"));
-        shiftTypeList.put(2, new ShiftType(2,"Night"));
+        shiftTypeList.put(1, new ShiftType(1,"MORNING"));
+        shiftTypeList.put(2, new ShiftType(2,"NIGHT"));
 
     }
 
@@ -97,6 +97,17 @@ public class Service {
     private HashMap<Integer, Area> area_list = new HashMap<>();
     private HashMap<Integer, ShiftType> shiftTypeList = new HashMap<>();
 
+    public HashMap<Integer, ShiftType> getshiftTypeList() {
+        return shiftTypeList;
+    }
+
+    public HashMap<Integer, Area> getArea_list() {
+        return area_list;
+    }
+
+    public HashMap<Integer, License> getLicense_list() {
+        return license_list;
+    }
 
     public HashMap<Integer, Worker> getWorkerList() {
         return workerList;
@@ -126,93 +137,76 @@ public class Service {
         return CurrentStoreWorkers;
     }
 
-//    public void uploadData()
-//    {
-//
-//        JsonParser parser = new JsonParser();
-//        try (InputStream is = this.getClass().getResourceAsStream("Data.json");
-//            Reader rd = new InputStreamReader(is, "UTF-8"); ) {
-//            Object obj = parser.parse(rd);
-//            Gson gson = new Gson();
-//
-//            JsonObject jsonObject = (JsonObject) obj;
-//          //  JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-//            final JsonArray drivers = jsonObject.get("Drivers").getAsJsonArray();
-//            for (int i = 0; i < drivers.size(); i++) {
-//                final JsonObject driver = drivers.get(i).getAsJsonObject();
-//                final JsonArray license = driver.getAsJsonArray("licenses");
-//                List<License> licenses=new LinkedList<License>();
-//                for(int j=0;j<license.size();j++){
-//                    License type = new License(license.get(j).getAsString(), licenseSN, licenseType);
-//                    licenses.add(type);
-//                }
-//                //Driver add=new Driver(driver.get("name").getAsString(),licenses);
-//                Date date = new Date();
-//                //
-//                Driver add = new Driver(123,driver.get("name").getAsString(),"321312",132,465,date,"Driver",100,1,driver.get("licenses").getAsString());
-//                Drivers.put(add.getWorkerSn(),add);
-//
-//            }
-//            final JsonArray sites = jsonObject.get("Sites").getAsJsonArray();
-//            for (int i = 0; i < sites.size(); i++) {
-//                final JsonObject site = sites.get(i).getAsJsonObject();
-//                String type=site.get("site_type").getAsString();
-//                Area area=new Area(site.get("area").getAsString());
-//                boolean add=true;
-//                for(Area area1:area_list){
-//                    if (area1.toString().equals(area.toString())) {
-//                        add=false;
-//                        break;
-//                    }
-//                }
-//                if(add)
-//                    area_list.add(area);
-//                if(type.equals("store")){
-//                    Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
-//                    Store store=new Store(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString()));
-//                    HashStore.put(store.getId(),store);
-//                }
-//                else if(type.equals("supplier")){
-//                    Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
-//                    Supplier supplier=new Supplier(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,new Area(site.get("area").getAsString()));
-//                    HashSuppliers.put(supplier.getId(),supplier);
-//                   }
-//                }
-//
-//            final JsonArray trucks = jsonObject.get("Trucks").getAsJsonArray();
-//            for (int i = 0; i < trucks.size(); i++) {
-//                final JsonObject truck = trucks.get(i).getAsJsonObject();
-//                final JsonArray license = truck.getAsJsonArray("licenses");
-//                List<License> licenses=new LinkedList<License>();
-//                for(int j=0;j<license.size();j++){
-//                    License type = new License(license.get(j).getAsString(), licenseSN, licenseType);
-//                    licenses.add(type);
-//                }
-//                Truck truck1 = new Truck(truck.get("license_number").getAsInt(),licenses,truck.get("model").getAsString(),truck.get("weight").getAsDouble(),truck.get("max weight").getAsDouble());
-//                HashTrucks.put(truck1.getId(),truck1);
-//            }
-//            final JsonArray missing_items = jsonObject.get("Missing_Items").getAsJsonArray();
-//            for (int i = 0; i < missing_items.size(); i++) {
-//                final JsonObject missing = missing_items.get(i).getAsJsonObject();
-//                final JsonArray items = missing.getAsJsonArray("items_list");
-//                List<Pair<String,Integer>> items_list = new LinkedList<Pair<String,Integer>>();
-////                HashMap<String,Integer> map=new HashMap<String,Integer>();
-//                for(int j=0;j<items.size();j++){
-//                    String [] items_to_add=items.get(j).getAsString().split(":");
-//                    Pair<String,Integer> pair = new Pair<>(items_to_add[1],Integer.parseInt(items_to_add[0]));
-////                    map.put(items_to_add[1],Integer.parseInt(items_to_add[0]));
-//                }
-//                MissingItems items1=new MissingItems(missing.get("store_id").getAsInt(),missing.get("supplier_id").getAsInt(),items_list);
-//                MissingItems.put(items1.getID(),items1);
-//            }
-//
-//        }
-//        catch (Exception e)
-//        {
-//            System.out.println(e);
-//
-//        }
-//    }
+    public void uploadData()
+    {
+
+        JsonParser parser = new JsonParser();
+        try (InputStream is = this.getClass().getResourceAsStream("Data.json");
+            Reader rd = new InputStreamReader(is, "UTF-8"); ) {
+            Object obj = parser.parse(rd);
+            Gson gson = new Gson();
+
+            JsonObject jsonObject = (JsonObject) obj;
+          //  JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
+            final JsonArray drivers = jsonObject.get("Drivers").getAsJsonArray();
+            for (int i = 0; i < drivers.size(); i++) {
+                final JsonObject driver = drivers.get(i).getAsJsonObject();
+                Date date = new Date();                //
+                Driver add = new Driver(123,driver.get("name").getAsString(),"321312",132,465,date,"Driver",100,1,driver.get("licenses").getAsString());
+                Drivers.put(add.getWorkerSn(),add);
+
+            }
+            final JsonArray sites = jsonObject.get("Sites").getAsJsonArray();
+            for (int i = 0; i < sites.size(); i++) {
+                final JsonObject site = sites.get(i).getAsJsonObject();
+                String type=site.get("site_type").getAsString();
+                Area area= getAreaByName(site.get("area").getAsString());
+                if(type.equals("store")){
+                    Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
+                    Store store=new Store(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,area);
+                    HashStore.put(store.getId(),store);
+                }
+                else if(type.equals("supplier")){
+                    Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
+                    Supplier supplier=new Supplier(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,area);
+                    HashSuppliers.put(supplier.getId(),supplier);
+                   }
+                }
+
+            final JsonArray trucks = jsonObject.get("Trucks").getAsJsonArray();
+            for (int i = 0; i < trucks.size(); i++) {
+                final JsonObject truck = trucks.get(i).getAsJsonObject();
+                final JsonArray license = truck.getAsJsonArray("licenses");
+                List<License> licenses=new LinkedList<License>();
+                for(int j=0;j<license.size();j++){
+                    License type = getLicenseByName(license.get(j).getAsString());
+                    licenses.add(type);
+                }
+                Truck truck1 = new Truck(truck.get("license_number").getAsInt(),licenses,truck.get("model").getAsString(),truck.get("weight").getAsDouble(),truck.get("max weight").getAsDouble());
+                HashTrucks.put(truck1.getId(),truck1);
+            }
+            final JsonArray missing_items = jsonObject.get("Missing_Items").getAsJsonArray();
+            for (int i = 0; i < missing_items.size(); i++) {
+                final JsonObject missing = missing_items.get(i).getAsJsonObject();
+                final JsonArray items = missing.getAsJsonArray("items_list");
+                List<Pair<String,Integer>> items_list = new LinkedList<Pair<String,Integer>>();
+//                HashMap<String,Integer> map=new HashMap<String,Integer>();
+                for(int j=0;j<items.size();j++){
+                    String [] items_to_add=items.get(j).getAsString().split(":");
+                    Pair<String,Integer> pair = new Pair<>(items_to_add[1],Integer.parseInt(items_to_add[0]));
+//                    map.put(items_to_add[1],Integer.parseInt(items_to_add[0]));
+                }
+                MissingItems items1=new MissingItems(missing.get("store_id").getAsInt(),missing.get("supplier_id").getAsInt(),items_list);
+                MissingItems.put(items1.getID(),items1);
+            }
+
+        }
+        catch (Exception e)
+        {
+            System.out.println(e);
+
+        }
+    }
 
 
     public List<ItemsFile> getItemsFile(){

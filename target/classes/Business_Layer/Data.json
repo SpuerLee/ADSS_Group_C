@@ -2,27 +2,27 @@
   "Drivers": [
     {
       "name": "amit1",
-      "licenses": ["C1"]
+      "licenses": "C1"
     },
     {
       "name": "amit2",
-      "licenses": ["C1"]
+      "licenses": "C1"
     },
     {
       "name": "reut",
-      "licenses": ["C","C1"]
+      "licenses": "C C1"
     },
     {
       "name": "mor",
-      "licenses": ["C","C1"]
+      "licenses": "C C1"
     },
     {
       "name": "reut2",
-      "licenses": ["C"]
+      "licenses": "C"
     },
     {
       "name": "daniel",
-      "licenses": ["C","C1"]
+      "licenses": "C C1"
     }
   ],
   "Sites": [
