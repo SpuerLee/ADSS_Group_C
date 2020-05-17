@@ -504,33 +504,7 @@ public class TransportationMenu {
     }
 
     public static void Add_supplier() {
-<<<<<<< HEAD
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Please choose supplier's area (A/B/C/D)");
-        String area = scan.nextLine();
-        System.out.println("Please choose the name of the supplier"); //chose area
-        String name = scan.nextLine();
-        System.out.println("Please choose city of the supplier");
-        String city = scan.nextLine();
-        System.out.println("Please choose street of the supplier");
-        String street = scan.nextLine();
-        System.out.println("Please choose street's number of the supplier");
-        String number = scan.nextLine();
-        System.out.println("Please enter name of contact for the supplier");
-        String name_of_contact = scan.nextLine();
-        System.out.println("Please enter contact's person phone");
-        String phone = scan.nextLine();
-        boolean result = false;
-        try {
-            result = systemInterfaceTransportations.addsupplier(name, city, street, number, name_of_contact, phone, area);
-        } catch (Buisness_Exception e) {
-            e.printStackTrace();
-        }
-        if (result) {
-            System.out.println("The supplier was added successfully\n");
-        } else {
-            System.out.println("Input error\n");
-=======
+
         try {
             Scanner scan = new Scanner(System.in);
             System.out.println("Please choose supplier's area from:");
@@ -556,8 +530,6 @@ public class TransportationMenu {
             } else {
                 System.out.println("Input error\n");
             }
-
->>>>>>> amit
         }
         catch (Buisness_Exception e) {
             System.out.println(Print_error(e));
