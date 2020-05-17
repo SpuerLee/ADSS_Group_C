@@ -18,7 +18,7 @@ public class Transportation {
 
     private int id;
     private Date date;
-    private LocalTime leaving_time;
+    private int DepartureTime;
     private Truck truck;
     private List<Supplier> suppliers;
     private List<Store> stores;
@@ -26,10 +26,10 @@ public class Transportation {
     private Driver driver;
     private List<ItemsFile> itemsFiles;
 
-    public Transportation(Date date, LocalTime leaving_time, Driver drivers, Truck truck, List<Supplier> suppliers, List<Store> stores) {
+    public Transportation(Date date, int DepartureTime, Driver drivers, Truck truck, List<Supplier> suppliers, List<Store> stores) {
         this.id = idcounter++;
         this.date = date;
-        this.leaving_time = leaving_time;
+        this.DepartureTime = DepartureTime;
         this.driver = drivers;
         this.truck = truck;
         this.suppliers = suppliers;
@@ -40,7 +40,7 @@ public class Transportation {
     public String toString() {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         String output = "";
-        output += "id: " + this.id + "\n\tdate: " + dateFormat.format(this.date) + "\n\tleaving_time: " + this.leaving_time.toString()
+        output += "id: " + this.id + "\n\tdate: " + dateFormat.format(this.date) + "\n\tleaving_time: " + this.DepartureTime
                 + "\n\tdriver: " + this.driver.getWorkerName() + "\n\ttruck- license_number:" + this.truck.getlicense_number()
                 + ", Model:" + this.truck.getModel() + "\n";
         output += "\tstores: ";
@@ -89,8 +89,8 @@ public class Transportation {
         return suppliers;
     }
 
-    public LocalTime getLeaving_time() {
-        return leaving_time;
+    public int getDepartureTime() {
+        return DepartureTime;
     }
 
     public Truck getTruck() {

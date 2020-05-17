@@ -1,5 +1,6 @@
 package Business_Layer.Transportations.Controllers;
 
+import Business_Layer.Modules.Area;
 import Business_Layer.Service;
 import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Modules.License;
@@ -19,6 +20,34 @@ public class Trucks_Controller {
     }
     public static Trucks_Controller getInstance() {
         return Singelton_Trucks.instance;
+    }
+
+    public List<String> Show_LicenseList() throws Buisness_Exception {
+        Service service = Service.getInstance();
+        List<String> output = new LinkedList<>();
+        for(License license : service.getLicense_list().values())
+        {
+            output.add(license.getLicenseType());
+        }
+        if (output.isEmpty())
+            throw new Buisness_Exception("There are no license in the system\n");
+        return output;
+    }
+
+    public List<String> getTruckLicenseList(int truckID) throws Buisness_Exception {
+        Service service = Service.getInstance();
+        List<String> output = new LinkedList<>();
+        if(!service.getHashTrucks().containsKey(truckID))
+            throw new Buisness_Exception("The truck's id does'nt exist "+"\n");
+
+        List<License> licenses_types = service.getHashTrucks().get(truckID).getLicenses();
+        for(License license : licenses_types)
+        {
+            output.add(license.getLicenseType());
+        }
+        if (output.isEmpty())
+            throw new Buisness_Exception("There are no license to the truck\n");
+        return output;
     }
 
 
@@ -50,8 +79,10 @@ public class Trucks_Controller {
         List<License> licenses=new LinkedList<>();
         boolean result=true;
         if(service.getHashTrucks().containsKey(license_number)){
-            result=false;
             throw new Buisness_Exception("The truck driving license is already exist"+ "\n");
+        }
+        if(max_weight < weight){
+            throw new Buisness_Exception("-max weight could not be smaller from weight-\n");
         }
         else {
             for (String license : licenses_types) {
@@ -77,11 +108,11 @@ public class Trucks_Controller {
        return result;
     }
 
-    public List<String> getFreeTrucks(Date date) throws Buisness_Exception{
+    public List<String> getFreeTrucks(Date date, int departureTime ) throws Buisness_Exception{
         Service service=Service.getInstance();
         List<String> output = new LinkedList<String>();
         for (Truck truck : service.getHashTrucks().values()) {
-            if (truck.checkIfFree(date)) {
+            if (truck.checkIfFree(date, departureTime)) {
                 String line = truck.getId()+". "+"license number: "+truck.getlicense_number()+
                         ", Model: "+truck.getModel()+".";
                 output.add(line);
