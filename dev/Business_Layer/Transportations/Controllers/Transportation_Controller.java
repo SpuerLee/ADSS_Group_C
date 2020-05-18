@@ -311,7 +311,7 @@ public class Transportation_Controller {
         {
             Service service = Service.getInstance();
             if (service.getHashTransportation().size() == 0) {
-                throw new Buisness_Exception("There are no transportations to delete");
+                throw new Buisness_Exception("There are no transportations to deleteEmployee");
             }
 //
 //            if (!service.getHashTransportation().containsKey(transport_id)) {
@@ -330,7 +330,7 @@ public class Transportation_Controller {
         }
         catch (Exception e)
         {
-            throw new Buisness_Exception("-Error couldn't delete Transportation-\n");
+            throw new Buisness_Exception("-Error couldn't deleteEmployee Transportation-\n");
         }
 
     }
@@ -338,7 +338,7 @@ public class Transportation_Controller {
     public List<String> getTransport_id() throws Buisness_Exception {
         Service service = Service.getInstance();
         if (service.getHashTransportation().size() == 0) {
-            throw new Buisness_Exception("There are no transportations to delete" + "\n");
+            throw new Buisness_Exception("There are no transportations to deleteEmployee" + "\n");
         } else {
             List<String> result = new LinkedList<>();
             for (Transportation transportation : service.getHashTransportation().values()) {

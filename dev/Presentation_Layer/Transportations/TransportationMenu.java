@@ -385,7 +385,7 @@ public class TransportationMenu {
             List<String> transportList = systemInterfaceTransportations.getTransport_id();
             System.out.println("The transport that can be deleted (represented by their ID) are: ");
             System.out.println(transportList);
-            System.out.println("Please enter the transport id that you would like to delete");
+            System.out.println("Please enter the transport id that you would like to deleteEmployee");
             Integer id = parseToNumber(scan.nextLine());
             checkIdInList(transportList, id.toString());
             systemInterfaceTransportations.delete_Transport(id);
@@ -583,7 +583,7 @@ public class TransportationMenu {
         try {
             List<String> trucks = systemInterfaceTransportations.showtrucks();
             trucks.forEach(System.out::println);
-            System.out.println("Please enter the truck's id that you would like to delete");
+            System.out.println("Please enter the truck's id that you would like to deleteEmployee");
             Integer id = parseToNumber(scan.nextLine());
             checkIdInList(trucks, id.toString());
             systemInterfaceTransportations.removeTruck(id);

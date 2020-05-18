@@ -4,6 +4,7 @@ package Presentation_Layer.Workers;
 import Business_Layer.Service;
 import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Workers.Utils.InfoObject;
+import Data_Layer.Mapper;
 import Interface_Layer.Workers.SystemInterfaceWorkers;
 import Test.Workers.projectTests;
 
@@ -34,6 +35,12 @@ public class HR {
     }
 
     public static void run() throws Buisness_Exception {
+        try {
+            Mapper.getInstance().init();
+        }
+        catch (Exception e){
+
+        }
         System.out.println("1. Run tests");
         System.out.println("2. Start system");
         System.out.println("Enter 0 to go back");
@@ -129,12 +136,14 @@ public class HR {
     }
 
     private static void chooseStore(Scanner sc) throws Buisness_Exception{
+
         System.out.println("1. Choose store");
         System.out.println("2. Add store");
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
+        SystemInterfaceWorkers.getInstance().getStores();
         int userChoose = sc.nextInt();
         if (userChoose == 1) {
             if (!(SystemInterfaceWorkers.getInstance().printAllStores())) {
@@ -269,6 +278,7 @@ public class HR {
     }
 
     public static void displayShifts(Scanner sc) throws Buisness_Exception {
+        SystemInterfaceWorkers.getInstance().getShifts();
         checkResponse(SystemInterfaceWorkers.getInstance().printAllShifts(), sc);
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
@@ -346,6 +356,7 @@ public class HR {
     }
 
     public static void displayWorkers(Scanner sc) throws Buisness_Exception {
+        SystemInterfaceWorkers.getInstance().getWorkers();
         checkResponse(SystemInterfaceWorkers.getInstance().printAllWorkers(), sc);
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
@@ -359,7 +370,7 @@ public class HR {
         System.out.println("Choose action: ");
         System.out.println("1. Edit worker constrains");
         System.out.println("2. Edit worker salary");
-        System.out.println("3. Fire worker");
+        //System.out.println("3. Fire worker");
         System.out.println("Enter 0 to go back to main menu");
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
@@ -374,10 +385,10 @@ public class HR {
             case 2: // Edit salary
                 EditWorkerSalary(sc, workerSn);
                 break;
-            case 3: // Fire worker
+         /*   case 3: // Fire worker
                 checkResponse(SystemInterfaceWorkers.getInstance().removeWorkerBySn(workerSn), sc);
                 checkResponse(SystemInterfaceWorkers.getInstance().removeLaterShiftForFiredManagerByManagerSn(workerSn), sc);
-                break;
+                break;*/
             case 0: // quit
                 workingLoop(sc);
                 break;
@@ -409,12 +420,12 @@ public class HR {
 
     public static void initSuperLeeWithWorkers() throws Buisness_Exception {
 
-//        try {
-//            Service.getInstance().site_controller.addsite("store","Nesspresso","Holon","Krauze","12","Hadar","04","A");
-//            Service.getInstance().site_controller.addsite("store","Nesspresso_2","Holon","Krauze","12","Hadar","04","A");
-//        } catch (Buisness_Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Service.getInstance().site_controller.addsite("store","Nesspresso","Holon","Krauze","12","Hadar","04","A");
+            Service.getInstance().site_controller.addsite("store","Nesspresso_2","Holon","Krauze","12","Hadar","04","A");
+        } catch (Buisness_Exception e) {
+            e.printStackTrace();
+        }
 
         Service.getInstance().getWorkerController().setCurrentStoreSN(1);
         Service.getInstance().getShiftController().setCurrentStoreSN(1);

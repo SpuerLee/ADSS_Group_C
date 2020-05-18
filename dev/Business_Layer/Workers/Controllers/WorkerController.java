@@ -8,6 +8,7 @@ import Business_Layer.Workers.Utils.enums;
 import Data_Layer.Mapper;
 import Data_Layer.Mapper.*;
 import javafx.util.Pair;
+import sun.applet.resources.MsgAppletViewer;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -156,7 +157,14 @@ public class WorkerController {
     public InfoObject removeWorkerBySn(int workerSn){
         InfoObject infoObject = new InfoObject("Worker removed successfully",true);
         if(Service.getInstance().getWorkerList(getCurrentStoreSN()).containsValue(getWorkerBySn(workerSn))){
+            if( getWorkerBySn(workerSn).getWorkerJobTitle().toUpperCase().equals("MANAGER")){
+                Mapper.getInstance().deleteManager(workerSn);
+            }else{
+                Mapper.getInstance().deleteWorker(workerSn);
+            }
+
             Service.getInstance().getWorkerList().remove(workerSn);
+
         } else {
             infoObject.setMessage("There is no worker with this SN");
             infoObject.setIsSucceeded(false);
@@ -268,7 +276,8 @@ public class WorkerController {
         }
         Driver driverToAdd = new Driver(id,name,phoneNumber,bankAccount,salary,date,jobTitle,getSnFactory(),getCurrentStoreSN(),licenses);
         Service.getInstance().getWorkerList().put(driverToAdd.getWorkerSn(),driverToAdd);
-        HashMap<Pair<Integer, Integer>,Boolean> DBconstraints = new HashMap<>();
+        Mapper.getInstance().insertDriver(id,name,phoneNumber,bankAccount,salary,date,jobTitle,driverToAdd.getWorkerSn(),driverToAdd.getStoreSN());
+
         if(!constrains.toUpperCase().equals("NONE")) {
             if (!workerConstrains[0].equals("")) {
                 for (String workerConstrain : workerConstrains) {
@@ -285,27 +294,24 @@ public class WorkerController {
                     infoObject = addConstrainsToWorkerByWorkerSn(driverToAdd.getWorkerSn(), day, shiftType);
                     if (!(infoObject.isSucceeded())) {
                         Service.getInstance().getWorkerList().remove(driverToAdd.getWorkerSn());
+                        Mapper.getInstance().deleteWorker(driverToAdd.getWorkerSn());
                         return infoObject;
                     }
-                    Integer DBday = dayToInteger(day);
-                    Integer DBshift = shiftTypeToInteger(shiftType);
-                    DBconstraints.put(new Pair<>(DBday,DBshift),false);
                 }
             }
         }
-        List<Integer> lice = licenseToInteger(driverToAdd.getLicenses());
-        Mapper.getInstance().insertDriver(id,name,phoneNumber,bankAccount,salary,date,jobTitle,driverToAdd.getWorkerSn(),driverToAdd.getStoreSN(),DBconstraints,lice);
+        Savelicenses(driverToAdd.getWorkerSn(),driverToAdd.getLicenses());
         infoObject.setMessage("Worker added successful");
         return infoObject;
     }
 
-    private List<Integer> licenseToInteger(List<String> licenses) {
-        List<Integer> lice = new LinkedList<>();
-        if(licenses.contains("C"))
-            lice.add(1);
-        if(licenses.contains("C1"))
-            lice.add(2);
-        return lice;
+    private void Savelicenses(int driverSN, List<String> licenses) {
+        for(String license: licenses){
+            if(license.equals("C"))
+                Mapper.getInstance().insertLicense(driverSN,1);
+            else
+                Mapper.getInstance().insertLicense(driverSN,2);
+        }
     }
 
     public InfoObject addWorker(int id, String name, String phoneNumber, int bankAccount, int salary, String dateToParse, String jobTitle, String constrains) {
@@ -328,8 +334,8 @@ public class WorkerController {
         }
         Worker workerToAdD = new Worker(id,name,phoneNumber,bankAccount,salary,date,jobTitle,getSnFactory(),getCurrentStoreSN());
         Service.getInstance().getWorkerList().put(workerToAdD.getWorkerSn(),workerToAdD);
-        Service.getInstance().getWorkerList().put(workerToAdD.getWorkerSn(),workerToAdD);
-        HashMap<Pair<Integer, Integer>,Boolean> DBconstraints = new HashMap<>();
+        Mapper.getInstance().insertWorker(id,name,phoneNumber,bankAccount,salary,date,jobTitle,workerToAdD.getWorkerSn(),workerToAdD.getStoreSN());
+        // HashMap<Pair<Integer, Integer>,Boolean> DBconstraints = new HashMap<>();
         if(!constrains.toUpperCase().equals("NONE")) {
             if (!workerConstrains[0].equals("")) {
                 for (String workerConstrain : workerConstrains) {
@@ -346,16 +352,16 @@ public class WorkerController {
                     infoObject = addConstrainsToWorkerByWorkerSn(workerToAdD.getWorkerSn(), day, shiftType);
                     if (!(infoObject.isSucceeded())) {
                         Service.getInstance().getWorkerList().remove(workerToAdD.getWorkerSn());
+                        Mapper.getInstance().deleteWorker(workerToAdD.getWorkerSn());
                         return infoObject;
                     }
-                    Integer DBday = dayToInteger(day);
-                    Integer DBshift = shiftTypeToInteger(shiftType);
-                    DBconstraints.put(new Pair<>(DBday,DBshift),false);
+                   // Integer DBday = dayToInteger(day);
+                   // Integer DBshift = shiftTypeToInteger(shiftType);
+                  //  DBconstraints.put(new Pair<>(DBday,DBshift),false);
                 }
             }
         }
 
-        Mapper.getInstance().insertWorker(id,name,phoneNumber,bankAccount,salary,date,jobTitle,workerToAdD.getWorkerSn(),workerToAdD.getStoreSN(),DBconstraints);
         infoObject.setMessage("Worker added successful");
         return infoObject;
     }
@@ -531,5 +537,9 @@ public class WorkerController {
 
     public void resetSnFactory(){
         this.snFactory = 0;
+    }
+
+    public void getWorkers() {
+        Mapper.getInstance().getAllWorkersByStore(this.currentStoreSN);
     }
 }

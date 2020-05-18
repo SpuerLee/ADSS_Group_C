@@ -26,6 +26,18 @@ public class SystemInterfaceWorkers {
         return Service.getInstance().getWorkerController().printAllManagersAvailableInThisDate(date,shiftType);
     }
 
+    public void getStores(){
+        Service.getInstance().getSite_controller().getStores();
+    }
+
+    public void getShifts(){
+        Service.getInstance().getShiftController().getShifts();
+    }
+    public void getWorkers(){
+        Service.getInstance().getWorkerController().getWorkers();
+    }
+
+
     public InfoObject printAllWorkers(){
         return Service.getInstance().getWorkerController().printAllWorker();
     }

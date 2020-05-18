@@ -18,9 +18,8 @@ public class dummy_Worker {
     private int storeSN;
     private Date start_Date;
     private String Job_title;
-    private HashMap <Pair< Integer ,Integer>, Boolean> constraints;
 
-    public dummy_Worker(int sn,int Id, String name, String phone, int BankAccount, int salary, int storeSN,Date start_Date, String job_title, HashMap<Pair< Integer ,Integer>, Boolean> constraints){
+    public dummy_Worker(int sn,int Id, String name, String phone, int BankAccount, int salary, int storeSN,Date start_Date, String job_title){
         this.SN=sn;
         this.Id=Id;
         this.name=name;
@@ -30,7 +29,6 @@ public class dummy_Worker {
         this.storeSN=storeSN;
         this.start_Date=start_Date;
         this.Job_title=job_title;
-        this.constraints=constraints;
     }
 
 
@@ -92,14 +90,6 @@ public class dummy_Worker {
 
     public void setJob_title(String job_title) {
         Job_title = job_title;
-    }
-
-    public HashMap<Pair<Integer, Integer>, Boolean> getConstrains() {
-        return constraints;
-    }
-
-    public void setConstrains(HashMap<Pair<Integer, Integer>, Boolean> constrains) {
-        this.constraints = constrains;
     }
 
     public int getStoreSN() {

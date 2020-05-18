@@ -14,10 +14,17 @@ public class dummy_Address {
     private String street;
     private int number;
 
-    public dummy_Address(String city, String street, int number) {
+    public int getSN() {
+        return SN;
+    }
+
+    private int SN;
+
+    public dummy_Address(String city, String street, int number, int SN) {
         this.city = city;
         this.street = street;
         this.number = number;
+        this.SN = SN;
     }
 
     public String getCity() {

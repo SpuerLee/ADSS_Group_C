@@ -14,6 +14,7 @@ import Business_Layer.Workers.Modules.Shift;
 import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.ShiftType;
+import Data_Layer.Mapper;
 import Interface_Layer.Workers.SystemInterfaceWorkers;
 import javafx.util.Pair;
 import com.google.gson.*;
@@ -79,6 +80,11 @@ public class Service {
     }
 
     public Trucks_Controller trucks_controller = Trucks_Controller.getInstance();
+
+    public Site_Controller getSite_controller() {
+        return site_controller;
+    }
+
     public Site_Controller site_controller = Site_Controller.getInstance();
     public Transportation_Controller transportation_controller = Transportation_Controller.getInstance();
     public Missing_items_Controller missing_items_controller = Missing_items_Controller.getInstance();
@@ -141,7 +147,7 @@ public class Service {
 
     public void uploadData()
     {
-
+/*
         JsonParser parser = new JsonParser();
         try (InputStream is = this.getClass().getResourceAsStream("Data.json");
             Reader rd = new InputStreamReader(is, "UTF-8"); ) {
@@ -164,7 +170,7 @@ public class Service {
                 String type=site.get("site_type").getAsString();
                 Area area= getAreaByName(site.get("area").getAsString());
                 if(type.equals("store")){
-                    Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
+                    Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt(),);
                     Store store=new Store(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,area);
                     HashStore.put(store.getId(),store);
                 }
@@ -207,7 +213,7 @@ public class Service {
         {
             System.out.println(e);
 
-        }
+        }*/
     }
 
 

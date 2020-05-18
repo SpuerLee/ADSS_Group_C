@@ -4,6 +4,7 @@ import Business_Layer.Modules.*;
 import Business_Layer.Service;
 import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Transportations.Modules.*;
+import Data_Layer.Mapper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,9 +15,12 @@ public class Site_Controller {
     private static class SingletonService {
         private static Site_Controller instance = new Site_Controller();
     }
-
+    private int AddresssnFactory;
     private Site_Controller() {
-
+        this.AddresssnFactory = 0;
+    }
+    private int getAddressSnFactory(){
+        return ++this.AddresssnFactory;
     }
 
     public static Site_Controller getInstance() {
@@ -28,9 +32,13 @@ public class Site_Controller {
             throws Buisness_Exception{
         Service service = Service.getInstance();
             Supplier supplier = new Supplier(name, phone, name_of_contact,
-                    new Address(city, street, number), service.getAreaByName(supplier_area));
+                    new Address(city, street, number,getAddressSnFactory()), service.getAreaByName(supplier_area));
             service.getSuppliersMap().put(supplier.getId(), supplier);
             return true;
+    }
+
+    public void getStores(){
+        Mapper.getInstance().getAllStores();
     }
 
 
@@ -40,14 +48,18 @@ public class Site_Controller {
             throws Buisness_Exception{
         Service service = Service.getInstance();
         if (site_type.equals("store")) {
-            Store store = new Store(name, phone, name_of_contact, new Address(city,
-                    street, Integer.parseInt(number)), service.getAreaByName(site_area));
+            Address address = new Address(city, street, Integer.parseInt(number),getAddressSnFactory());
+            Store store = new Store(name, phone, name_of_contact, address, service.getAreaByName(site_area));
             service.getHashStoresMap().put(store.getId(), store);
+
+            Mapper.getInstance().insertAddress(city,street,address.getNumber(),address.getSn());
+
+            Mapper.getInstance().insertStore(phone,name_of_contact,name,store.getId(),city,street,Integer.parseInt(number),store.getAddress().getSn(),store.getArea().getAreaSN());
             return true;
 
         } else if (site_type.equals("supplier")) {
             Supplier supplier = new Supplier(name, phone, name_of_contact,
-                    new Address(city, street, Integer.parseInt(number)), service.getAreaByName(site_area));
+                    new Address(city, street, Integer.parseInt(number),getAddressSnFactory()), service.getAreaByName(site_area));
             service.getSuppliersMap().put(supplier.getId(), supplier);
             return true;
         } else {

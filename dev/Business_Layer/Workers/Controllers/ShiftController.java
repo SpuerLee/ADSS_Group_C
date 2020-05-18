@@ -43,6 +43,10 @@ public class ShiftController {
         return ++this.snFactory;
     }
 
+    public void getShifts(){
+        Mapper.getInstance().getAllShifts(this.currentStoreSN);
+    }
+
     public void resetSnFactory(){
         this.snFactory = 0;
     }
@@ -100,7 +104,7 @@ public class ShiftController {
         Worker manager = Service.getInstance().getWorkerList(getCurrentStoreSN()).get(managerSn);
         String[] workersSn;
         List<Worker> workersListOfCurrentShift = new LinkedList<>();
-        List<Integer> workersDB =new LinkedList<>();
+     //hadar   List<Integer> workersDB =new LinkedList<>();
         infoObject = validateManagerConstrains(manager, sType, date);
         if (!infoObject.isSucceeded()) {
             return infoObject;
@@ -151,16 +155,22 @@ public class ShiftController {
                         infoObject.setMessage(workerToAdd.getWorkerName() + " Already in this shift. Cant add the same worker twice");
                         return infoObject;
                     }
-                    workersDB.add(workerToAdd.getWorkerSn());
+                    //workersDB.add(workerToAdd.getWorkerSn());
                     workersListOfCurrentShift.add(workerToAdd);
                 }
             }
         } else {
             workersListOfCurrentShift = new LinkedList<>();
         }
-        int type = shiftTypeToInteger(shiftType);
         Shift shiftToAdd = new Shift(date, sType, manager, workersListOfCurrentShift, getSnFactory(),getCurrentStoreSN());
-        Mapper.getInstance().insertShift(date,type,managerSn,workersDB,shiftToAdd.getShiftSn(),getCurrentStoreSN());
+
+        int type = shiftTypeToInteger(shiftType);
+
+        Mapper.getInstance().insertShift(date,type,managerSn,shiftToAdd.getShiftSn(),getCurrentStoreSN());
+        for(Worker x : workersListOfCurrentShift){
+            Mapper.getInstance().insert_Shift_Workers(x.getWorkerSn(),shiftToAdd.getShiftSn());
+        }
+
         Service.getInstance().getShiftHistory().put(shiftToAdd.getShiftSn(), shiftToAdd);
         infoObject.setMessage("Shift created successfully");
         return infoObject;

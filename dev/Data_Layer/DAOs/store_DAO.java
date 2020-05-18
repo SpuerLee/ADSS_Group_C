@@ -1,5 +1,7 @@
 package Data_Layer.DAOs;
 
+import Business_Layer.Modules.Area;
+import Business_Layer.Service;
 import Data_Layer.Connection;
 import Data_Layer.Dummy_objects.dummy_Address;
 import Data_Layer.Dummy_objects.dummy_store;
@@ -16,16 +18,7 @@ public class store_DAO {
     address_DAO address_dao=new address_DAO();
 
     public void insert(dummy_store store){
-        String query="INSERT INTO \"main\".\"Stores\"\n" +
-                "(\"SN\", \"Name\", \"Phone\", \"ContactName\", \"AddressSN\", \"AreaSN\")\n" +
-                String.format("VALUES ('%d', '%s', '%s', '%s', '%d', '%d');", store.getId(), store.getName(), store.getPhone(), store.getContact_name(), store.getAddress_Sn() , store.getAreaSn());
 
-        try {
-            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         String address_query="INSERT INTO \"main\".\"Address\"\n" +
                 "(\"SN\", \"City\", \"Street\", \"Number\")\n" +
@@ -37,6 +30,20 @@ public class store_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
+        String query="INSERT INTO \"main\".\"Stores\"\n" +
+                "(\"SN\", \"Name\", \"Phone\", \"ContactName\", \"AddressSN\", \"AreaSN\")\n" +
+                String.format("VALUES ('%d', '%s', '%s', '%s', '%d', '%d');", store.getId(), store.getName(), store.getPhone(), store.getContact_name(), store.getAddress_Sn() , store.getAreaSn());
+
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public void delete(int sn) {
@@ -55,7 +62,6 @@ public class store_DAO {
         List <dummy_store> list_to_return=new LinkedList<>();
         String query="SELECT * FROM Stores";
         try {
-
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(query);
             while (rs2.next()) {
@@ -79,6 +85,16 @@ public class store_DAO {
             ResultSet rs2  = stmt2.executeQuery(selectQuery);
             int AddressSn=rs2.getInt("AddressSN");
             dummy_Address dummy_address=address_dao.select(AddressSn);
+            int AreaSN = rs2.getInt("AreaSN");
+            String areaNae = "select * from Area where SN = " + AreaSN;
+            try{
+                Statement stmt3 = Connection.getInstance().getConn().createStatement();
+                ResultSet rs3  = stmt3.executeQuery(areaNae);
+                String aName = rs3.getString("AreaName");
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
             return new dummy_store(rs2.getString("Phone"),rs2.getString("ContactName"),rs2.getString("Name"),rs2.getInt("SN"),dummy_address.getCity(),dummy_address.getStreet(),dummy_address.getNumber(),AddressSn,rs2.getInt("AreaSN"));
 
         } catch (SQLException e) {

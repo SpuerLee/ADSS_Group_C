@@ -25,7 +25,7 @@ public class address_DAO {
         try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(query);
-            return new dummy_Address(rs2.getString("City"),rs2.getString("Street"),rs2.getInt("Number"));
+            return new dummy_Address(rs2.getString("City"),rs2.getString("Street"),rs2.getInt("Number"),rs2.getInt("SN"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
