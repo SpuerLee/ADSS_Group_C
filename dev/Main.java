@@ -6,7 +6,24 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class Main {
+<<<<<<< Updated upstream
     public static void main(String[] args)  throws Buisness_Exception {
+=======
+    public static void main(String[] args){
+//        try(Connection conn = DriverManager.getConnection("jdbc:sqlite:DB/example.db")){
+//            System.out.println("Open DB");
+//
+//            PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM Product WHERE barcode = 1");
+//            ResultSet res = pstmt.executeQuery();
+//
+//            System.out.println("barcode: " + res.getInt("barcode") + " name: " + res.getString("name"));
+//
+//        }catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+// try
+
+>>>>>>> Stashed changes
         while (true)
         {
             Scanner scan = new Scanner(System.in);
