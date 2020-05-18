@@ -2,42 +2,58 @@ package Data_Layer.Dummy_objects;
 
 public class dummy_supplier {
 
-    private String phone;
-    private String contact_name;
+    private int SN;
     private String name;
-    private int id;
-    private String city;
-    private String street;
-    private int number;
-    private int Address_Sn;
-    private int areaSn;
+    private String Phone;
+    private String ContactName;
+    private int AddressSN;
+    private int AreaSN;
+    private dummy_Address dummy_address;
 
-    public dummy_supplier(String phone, String contact_name, String name, int id, String city, String street, int number, int Adrress_Sn, int AreaSn){
-        this.phone=phone;
-        this.contact_name=contact_name;
+    public dummy_supplier(int SN,String name, String Phone, String ContactName, int AddressSN, int AreaSN ,String city, String street, int number){
+        this.Phone =Phone;
+        this.ContactName = ContactName;
         this.name=name;
-        this.id=id;
-        this.city=city;
-        this.street=street;
-        this.number=number;
-        this.Address_Sn=Adrress_Sn;
-        this.areaSn=AreaSn;
+        this.SN = SN;
+        this.AddressSN=AddressSN;
+        this.AreaSN=AreaSN;
+        this.dummy_address = new dummy_Address(AddressSN,city,street,number);
+    }
+
+    public dummy_supplier(int SN, String name, String Phone, String ContactName, int AddressSN, int AreaSN){
+        this.Phone =Phone;
+        this.ContactName = ContactName;
+        this.name=name;
+        this.SN = SN;
+        this.AddressSN=AddressSN;
+        this.AreaSN=AreaSN;
+        this.dummy_address = null;
+    }
+
+    public dummy_supplier(int SN,String name, String Phone, String ContactName, int AddressSN, int AreaSN,dummy_Address dummy_address){
+        this.Phone =Phone;
+        this.ContactName = ContactName;
+        this.name=name;
+        this.SN = SN;
+        this.AddressSN=AddressSN;
+        this.AreaSN=AreaSN;
+        this.dummy_address = dummy_address;
     }
 
     public String getPhone() {
-        return phone;
+        return Phone;
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.Phone = phone;
     }
 
-    public String getContact_name() {
-        return contact_name;
+    public String getContactName() {
+        return ContactName;
     }
 
-    public void setContact_name(String contact_name) {
-        this.contact_name = contact_name;
+    public void setContactName(String contactName) {
+        this.ContactName = contactName;
     }
 
     public String getName() {
@@ -48,51 +64,35 @@ public class dummy_supplier {
         this.name = name;
     }
 
-    public int getId() {
-        return id;
+    public int getSN() {
+        return SN;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
+    public void setSN(int SN) {
+        this.SN = SN;
     }
 
     public int getAddress_Sn() {
-        return Address_Sn;
+        return AddressSN;
     }
 
-    public void setAddress_Sn(int address_Sn) {
-        Address_Sn = address_Sn;
+    public void setAddressSN(int address_Sn) {
+        AddressSN = address_Sn;
     }
 
     public int getAreaSn() {
-        return areaSn;
+        return AreaSN;
     }
 
     public void setAreaSn(int areaSn) {
-        this.areaSn = areaSn;
+        this.AreaSN = areaSn;
+    }
+
+    public dummy_Address getDummy_address() {
+        return dummy_address;
+    }
+
+    public void setDummy_address(dummy_Address dummy_address) {
+        this.dummy_address= dummy_address;
     }
 }

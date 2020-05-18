@@ -1,10 +1,7 @@
 package Business_Layer;
 
 import Business_Layer.Controllers.Site_Controller;
-import Business_Layer.Modules.Area;
-import Business_Layer.Modules.License;
-import Business_Layer.Modules.Store;
-import Business_Layer.Modules.Supplier;
+import Business_Layer.Modules.*;
 import Business_Layer.Transportations.Controllers.Drivers_Controller;
 import Business_Layer.Transportations.Controllers.Missing_items_Controller;
 import Business_Layer.Transportations.Controllers.Transportation_Controller;
@@ -21,6 +18,8 @@ import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.ShiftType;
 import Data_Layer.DAOs.truck_DAO;
+import Data_Layer.Dummy_objects.*;
+import Data_Layer.Mapper;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -30,20 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Service {
 
-    public ConcurrentHashMap<Integer, Truck> getHashTrucks() {
-        return HashTrucks;
-    }
-
-    public WorkerController getWorkerController() {
-        return this.workerController;
-    }
-
-    public ShiftController getShiftController() {
-        return this.shiftController;
-    }
-
     private static class SingletonService {
-
         private static Service instance = new Service();
     }
 
@@ -61,33 +47,6 @@ public class Service {
         shiftTypeList.put(2, new ShiftType(2,"NIGHT")); */
 
 
-    }
-
-    public void upload_license(){
-        List<String> list= truck_dao.upload_license();
-        int i=1;
-        for(String license: list){
-            license_list.put(i,new License(i,license));
-        }
-    }
-
-
-    public Area getAreaByName(String str) throws Buisness_Exception
-    {
-        for (Map.Entry<Integer, Area> area : area_list.entrySet()) {
-            if(str.equals(area.getValue().getAreaName()))
-                 return area.getValue();
-        }
-        throw new Buisness_Exception("-Area dont exist-");
-    }
-
-    public License getLicenseByName(String str) throws Buisness_Exception
-    {
-        for (Map.Entry<Integer, License> license : license_list.entrySet()) {
-            if(str.equals(license.getValue().getLicenseType()))
-                 return license.getValue();
-        }
-        throw new Buisness_Exception("-License dont exist-");
     }
 
 
@@ -115,6 +74,93 @@ public class Service {
     public HashMap<Integer, License> license_list = new HashMap<>();
     private HashMap<Integer, Area> area_list = new HashMap<>();
     private HashMap<Integer, ShiftType> shiftTypeList = new HashMap<>();
+
+    private Mapper mapper = Mapper.getInstance();
+
+    public void upload_MissingItems(){
+        if(area_list.isEmpty())
+        {
+            List<dummy_Missing_items> list = mapper.selectAllMissing_items();
+            for (dummy_Missing_items dummy_missing_item : list)
+            {
+                MissingItems missingItem = new MissingItems(dummy_missing_item.getSN(),dummy_missing_item.getStore_id(),
+                        dummy_missing_item.getSupplier_id(), dummy_missing_item.getItems());
+                if (!HashSuppliers.containsKey(dummy_missing_item.getSupplier_id()))
+                {
+                    dummy_supplier supplier = mapper.selectSupplier(missingItem.getSupplierId());
+                    if (supplier!=null)
+                    {
+                        Address address = new Address(supplier.getDummy_address().getCity(),supplier.getDummy_address().getStreet(),
+                                supplier.getDummy_address().getNumber());
+                        HashSuppliers.put(supplier.getSN(),
+                                new Supplier(supplier.getSN(),supplier.getName(),supplier.getPhone(),
+                                        supplier.getContactName(),address,area_list.get(supplier.getAreaSn())));
+                    }
+                }
+                if (!HashStore.containsKey(dummy_missing_item.getStore_id()))
+                {
+                    dummy_store dummy_store = mapper.selectStore(dummy_missing_item.getStore_id());
+                    if(dummy_store!=null)
+                    {
+                        HashStore.put(dummy_store.getId(),new Store(dummy_store.getId(),dummy_store.getName(),
+                                dummy_store.getPhone(),dummy_store.getContact_name(),
+                                new Address(dummy_store.getCity(),dummy_store.getStreet(),dummy_store.getNumber()),
+                                area_list.get(dummy_store.getAreaSn())));
+                    }
+                }
+                MissingItems.put(missingItem.getID(),missingItem);
+            }
+        }
+    }
+
+    public void upload_Area(){
+        if(area_list.isEmpty())
+        {
+            List<dummy_Area> list = mapper.selectAllArea();
+            for (dummy_Area area : list)
+            {
+                area_list.put(area.getSN(),new Area(area.getSN(),area.getAreaName()));
+            }
+        }
+    }
+
+
+    public void upload_license(){
+        List<String> list= truck_dao.upload_license();
+        int i=1;
+        for(String license: list){
+            license_list.put(i,new License(i,license));
+        }
+    }
+
+
+    public Area getAreaByName(String str) throws Buisness_Exception{
+        for (Map.Entry<Integer, Area> area : area_list.entrySet()) {
+            if(str.equals(area.getValue().getAreaName()))
+                return area.getValue();
+        }
+        throw new Buisness_Exception("-Area dont exist-");
+    }
+
+    public License getLicenseByName(String str) throws Buisness_Exception{
+        for (Map.Entry<Integer, License> license : license_list.entrySet()) {
+            if(str.equals(license.getValue().getLicenseType()))
+                return license.getValue();
+        }
+        throw new Buisness_Exception("-License dont exist-");
+    }
+
+    public ConcurrentHashMap<Integer, Truck> getHashTrucks() {
+        return HashTrucks;
+    }
+
+    public WorkerController getWorkerController() {
+        return this.workerController;
+    }
+
+    public ShiftController getShiftController() {
+        return this.shiftController;
+    }
 
     public HashMap<Integer, ShiftType> getshiftTypeList() {
         return shiftTypeList;

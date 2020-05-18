@@ -3,6 +3,7 @@ package Business_Layer.Transportations.Modules;
 import javafx.util.Pair;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MissingItems {
@@ -23,6 +24,14 @@ public class MissingItems {
         this.items_list=items_list;
     }
 
+    public MissingItems(int id, int store_id,int supplier_id,List<Pair<String,Integer>> items_list)
+    {
+        this.id=id;
+        this.store_id=store_id;
+        this.supplier_id=supplier_id;
+        this.items_list = items_list;
+    }
+
     public Integer getID()
     {
         return this.id;
@@ -35,5 +44,10 @@ public class MissingItems {
     public List<Pair<String,Integer>> getItems_list()
     {
         return this.items_list;
+    }
+
+    public void setItems_list(List<Pair<String,Integer>> items_list)
+    {
+        this.items_list = items_list;
     }
 }

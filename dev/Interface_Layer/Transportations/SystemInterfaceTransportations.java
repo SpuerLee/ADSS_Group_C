@@ -27,7 +27,7 @@ public class SystemInterfaceTransportations {
     }
 
     private SystemInterfaceTransportations() {
-        // initialization code..
+        service.upload_Area();
     }
 
     public static SystemInterfaceTransportations getInstance() {
@@ -192,14 +192,5 @@ public class SystemInterfaceTransportations {
     public List<String> getTruckLicenseList(int truckID) throws Buisness_Exception {
         return service.trucks_controller.getTruckLicenseList(truckID);
     }
-
-
-
-
-
-
-
-
-
 
 }

@@ -16,7 +16,8 @@ public class dummy_Transportation {
     private int DriverSn;
 
 
-    public dummy_Transportation(int Id,Date date, int leaving_time, double truck_weight,int trucksn, List<Integer> itemsFile, List<Integer> suppliers, List<Integer> stores, int Driver){
+    public dummy_Transportation(int Id,Date date, int leaving_time, double truck_weight,int trucksn, int Driver,
+                                List<Integer> suppliers, List<Integer> stores, List<Integer> itemsFile){
         this.Id=Id;
         this.date=date;
         this.leaving_time=leaving_time;

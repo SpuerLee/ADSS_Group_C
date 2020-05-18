@@ -156,6 +156,7 @@ public class TransportationMenu {
                 date = parseToDate(scan.nextLine());
 
                 System.out.println("Please choose shiftType by id:");
+                //TODO: Upload shiftTypeList
                 List<String> ShiftTypes = systemInterfaceTransportations.Show_shiftTypeList();
                 ShiftTypes.forEach(System.out::println);
                 shiftType = parseToNumber(scan.nextLine());

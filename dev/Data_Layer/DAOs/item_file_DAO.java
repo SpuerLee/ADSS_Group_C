@@ -13,13 +13,6 @@ import java.util.List;
 
 public class item_file_DAO {
 
-   static int ItemsSn=1;
-  /*  public void insert(){
-        String query = "INSERT INTO \"main\".\"ItemFiles\"\n" +
-                "(\"SN\", \"StoreSN\", \"SupplierSN\")\n" +
-                "VALUES ('', '', '');";
-
-    } */
     public void insert(dummy_Items_File items_file){
         String query="INSERT INTO \"main\".\"ItemFiles\"\n" +
                 "(\"SN\", \"StoreSN\", \"SupplierSN\")\n" +
@@ -37,13 +30,12 @@ public class item_file_DAO {
                     "(\"SN\", \"ItemFileSN\", \"Amount\", \"ItemName\")\n" +
                     String.format("VALUES ('%d', '%d', '%d', '%s');", i, items_file.getSn(), items_file.getItems().get(i).getValue(), items_file.getItems().get(i).getKey());
             try {
-                PreparedStatement statement = Connection.getInstance().getConn().prepareStatement(query);
+                PreparedStatement statement = Connection.getInstance().getConn().prepareStatement(query_items);
                 statement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     public void delete(){
