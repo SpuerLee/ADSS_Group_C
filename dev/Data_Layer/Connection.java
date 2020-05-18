@@ -2,7 +2,6 @@ package Data_Layer;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.*;
 
 public class Connection {
 
@@ -25,6 +24,11 @@ public class Connection {
 
         try {
             // db parameters
+            try {
+                Class.forName("org.sqlite.JDBC");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             String url = "jdbc:sqlite:DB/workers_transportation_db.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);

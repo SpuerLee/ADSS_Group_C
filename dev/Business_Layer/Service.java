@@ -1,12 +1,18 @@
 package Business_Layer;
 
 import Business_Layer.Controllers.Site_Controller;
-import Business_Layer.Modules.*;
+import Business_Layer.Modules.Area;
+import Business_Layer.Modules.License;
+import Business_Layer.Modules.Store;
+import Business_Layer.Modules.Supplier;
 import Business_Layer.Transportations.Controllers.Drivers_Controller;
 import Business_Layer.Transportations.Controllers.Missing_items_Controller;
 import Business_Layer.Transportations.Controllers.Transportation_Controller;
 import Business_Layer.Transportations.Controllers.Trucks_Controller;
-import Business_Layer.Transportations.Modules.*;
+import Business_Layer.Transportations.Modules.ItemsFile;
+import Business_Layer.Transportations.Modules.MissingItems;
+import Business_Layer.Transportations.Modules.Transportation;
+import Business_Layer.Transportations.Modules.Truck;
 import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Workers.Controllers.ShiftController;
 import Business_Layer.Workers.Controllers.WorkerController;
@@ -14,12 +20,12 @@ import Business_Layer.Workers.Modules.Shift;
 import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.ShiftType;
-import Interface_Layer.Workers.SystemInterfaceWorkers;
-import javafx.util.Pair;
-import com.google.gson.*;
+import Data_Layer.DAOs.truck_DAO;
 
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Service {
@@ -41,17 +47,28 @@ public class Service {
         private static Service instance = new Service();
     }
 
+    truck_DAO truck_dao=new truck_DAO();
+
     private Service() {
         // initialization code..
-        license_list.put(1, new License(1,"C"));
+      /*  license_list.put(1, new License(1,"C"));
         license_list.put(2,new License(2,"C1"));
         area_list.put(1,new Area(1,"A"));
         area_list.put(2,new Area(2,"B"));
         area_list.put(3,new Area(3,"C"));
         area_list.put(4,new Area(4,"D"));
         shiftTypeList.put(1, new ShiftType(1,"MORNING"));
-        shiftTypeList.put(2, new ShiftType(2,"NIGHT"));
+        shiftTypeList.put(2, new ShiftType(2,"NIGHT")); */
 
+
+    }
+
+    public void upload_license(){
+        List<String> list= truck_dao.upload_license();
+        int i=1;
+        for(String license: list){
+            license_list.put(i,new License(i,license));
+        }
     }
 
 
@@ -130,15 +147,15 @@ public class Service {
     }
 
     public HashMap<Integer, Worker> getWorkerList(int currentStoreSN) {
-        HashMap<Integer,Worker> CurrentStoreWorkers = new HashMap<>();
-        for(Worker worker : this.workerList.values()){
-            if(worker.getStoreSN() == currentStoreSN){
-                CurrentStoreWorkers.put(worker.getWorkerSn(),worker);
+        HashMap<Integer, Worker> CurrentStoreWorkers = new HashMap<>();
+        for (Worker worker : this.workerList.values()) {
+            if (worker.getStoreSN() == currentStoreSN) {
+                CurrentStoreWorkers.put(worker.getWorkerSn(), worker);
             }
         }
         return CurrentStoreWorkers;
     }
-
+    /*
     public void uploadData()
     {
 
@@ -209,7 +226,7 @@ public class Service {
 
         }
     }
-
+*/
 
     public List<ItemsFile> getItemsFile(){
         return ItemsFile;

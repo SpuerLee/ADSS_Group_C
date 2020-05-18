@@ -1,16 +1,12 @@
 package Data_Layer;
 
-import java.lang.reflect.Type;
-import java.sql.SQLException;
-import java.time.LocalTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import Business_Layer.Workers.Utils.enums;
 import Data_Layer.DAOs.*;
 import Data_Layer.Dummy_objects.*;
 import javafx.util.Pair;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class Mapper {
@@ -85,16 +81,19 @@ public class Mapper {
         itemFile_Mapper.insert(toAdd);
     }
 
-    public void insertAddress(String city, String street, int number){
-        dummy_Address toAdd = new dummy_Address(city, street, number);
+    public void insertAddress(int Sn,String city, String street, int number){
+        dummy_Address toAdd = new dummy_Address(Sn,city, street, number);
        // address_Mapper.insert(toAdd);
     }
 
-    public void insertTransportation(Date date, String leaving_time, double truck_weight, int trucksn, List<Integer> itemsFile, List<Integer> suppliers, List<Integer> stores, int Driver){
-        enums leaving=enums.NIGHT;
+    public void insertTransportation(int Sn,Date date, String leaving_time, double truck_weight, int trucksn, List<Integer> itemsFile, List<Integer> suppliers, List<Integer> stores, int Driver){
+     /*   enums leaving=enums.NIGHT;
         if(leaving_time.toUpperCase().equals("MORNING"))
-            leaving=enums.MORNING;
-        dummy_Transportation toAdd = new dummy_Transportation( date, leaving, truck_weight,trucksn,itemsFile,suppliers, stores,Driver);
+            leaving=enums.MORNING; */
+        int leaving=1;
+        if(leaving_time.toUpperCase().equals("MORNING"))
+            leaving=2;
+        dummy_Transportation toAdd = new dummy_Transportation( Sn,date, leaving, truck_weight,trucksn,itemsFile,suppliers, stores,Driver);
         transportation_Mapper.insert(toAdd);
     }
 

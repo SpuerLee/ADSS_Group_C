@@ -1,20 +1,13 @@
 package Data_Layer.Dummy_objects;
-import Data_Layer.Connection;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
 public class dummy_Address {
 
+    private int SN;
     private String city;
     private String street;
     private int number;
 
-    public dummy_Address(String city, String street, int number) {
+    public dummy_Address(int sn,String city, String street, int number) {
+        this.SN=sn;
         this.city = city;
         this.street = street;
         this.number = number;
@@ -43,5 +36,7 @@ public class dummy_Address {
     public void setNumber(int number) {
         this.number = number;
     }
+
+    public int getSN(){ return this.SN;}
 
 }

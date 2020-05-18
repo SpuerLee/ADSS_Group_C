@@ -14,7 +14,7 @@ public class truck_DAO {
     public void insert(dummy_Truck truck){
         String query="INSERT INTO \"main\".\"Trucks\"\n" +
                 "(\"SN\", \"LicenseNumber\", \"Model\", \"Weight\", \"MaxWeight\")\n" +
-                String.format("VALUES ('%d', '%d', '%s', '%.2f', '%.2f');", truck.getId(), truck.getLicense_number(), truck.getModel(), truck.getWeight(), truck.getMax_weight());
+                String.format("VALUES ('%s', '%s', '%s', '%.2f', '%.2f');", truck.getId(), truck.getLicense_number(), truck.getModel(), truck.getWeight(), truck.getMax_weight());
 
         try {
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
@@ -25,7 +25,7 @@ public class truck_DAO {
 
         String query_type="INSERT INTO \"main\".\"Truck_License\"\n" +
                 "(\"TruckSN\", \"LicenseSN\")\n" +
-                String.format("VALUES ('%d', '%d');", truck.getId(), truck.getLicense_type());
+                String.format("VALUES ('%d', '%d');",truck.getId(),getLicense_SN(truck.getLicense_type()));
 
         try {
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
@@ -34,6 +34,67 @@ public class truck_DAO {
             e.printStackTrace();
         }
     }
+
+    private int getLicense_SN(String type){
+        String selectQuery = String.format("select * from License where LicenseType = '%s'",type);
+        try {
+
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(selectQuery);
+            int SN= rs2.getInt("SN");
+            return SN;
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
+    public List<String> upload_license(){
+        String selectQuery = "select * from License";
+        List<String> list=new LinkedList<>();
+        try {
+
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(selectQuery);
+            while (rs2.next()){
+                String add=rs2.getString("LicenseType");
+                if(!list.contains(add))
+                    list.add(add);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void upload_license_types(){
+        String query_type="INSERT INTO \"main\".\"License\"\n" +
+                "(\"SN\", \"LicenseType\")\n" +
+                String.format("VALUES ('%d', '%s');", 1, "C");
+
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query_type);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String query_1="INSERT INTO \"main\".\"License\"\n" +
+                "(\"SN\", \"LicenseType\")\n" +
+                String.format("VALUES ('%d', '%s');", 2, "C1");
+
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query_1);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void delete(int id) {
         String sql = "DELETE FROM \"main\".\"Trucks\"\n WHERE SN = " + id;
@@ -63,14 +124,16 @@ public class truck_DAO {
         throw new NullPointerException();
     }
 
+
     public dummy_Truck select_by_id(int id){
+
         String selectQuery = String.format("select * from Trucks where Trucks.SN = '%d'",id);
-        List<dummy_Truck> list=new LinkedList<>();
         try {
 
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(selectQuery);
-            return new dummy_Truck(rs2.getInt("SN"),rs2.getInt("LicenseNumber"),rs2.getString("Model"),rs2.getInt("Weight"),rs2.getInt("MaxWeight"),get_type(rs2.getInt("SN")));
+             dummy_Truck result = new dummy_Truck(rs2.getInt("SN"),rs2.getInt("LicenseNumber"),rs2.getString("Model"),rs2.getInt("Weight"),rs2.getInt("MaxWeight"),get_type(rs2.getInt("SN")));
+             return result;
 
 
         } catch (SQLException e) {
@@ -80,14 +143,14 @@ public class truck_DAO {
     }
 
     private String get_type(int id){
-        String query="SELECT LicenseSN FROM Trucks_License";
+        String selectQuery = String.format("select * from Truck_License where TruckSN = '%d'",id);
 
         int sn;
         String result;
         try {
 
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
-            ResultSet rs2  = stmt2.executeQuery(query);
+            ResultSet rs2  = stmt2.executeQuery(selectQuery);
             sn=rs2.getInt("LicenseSN");
             String query1=String.format("SELECT LicenseType FROM License WHERE SN = '%d' ",sn);
             Statement stmt = Connection.getInstance().getConn().createStatement();
