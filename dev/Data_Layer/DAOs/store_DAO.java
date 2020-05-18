@@ -27,16 +27,9 @@ public class store_DAO {
             e.printStackTrace();
         }
 
-        String address_query="INSERT INTO \"main\".\"Address\"\n" +
-                "(\"SN\", \"City\", \"Street\", \"Number\")\n" +
-                String.format("VALUES ('%d', '%s', '%s', '%d');", store.getAddress_Sn(), store.getCity(), store.getStreet(), store.getNumber());
+        dummy_Address address=new dummy_Address(store.getAddress_Sn(),store.getCity(),store.getStreet(),store.getNumber());
+        address_dao.insert(address);
 
-        try {
-            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(address_query);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public void delete(int sn) {

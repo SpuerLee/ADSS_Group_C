@@ -1,9 +1,7 @@
 package Data_Layer.DAOs;
 
 import Data_Layer.Connection;
-import Data_Layer.Dummy_objects.dummy_Address;
 import Data_Layer.Dummy_objects.dummy_Items_File;
-import Data_Layer.Dummy_objects.dummy_store;
 import javafx.util.Pair;
 
 import java.sql.PreparedStatement;
@@ -15,7 +13,7 @@ import java.util.List;
 
 public class item_file_DAO {
 
-
+   static int ItemsSn=1;
   /*  public void insert(){
         String query = "INSERT INTO \"main\".\"ItemFiles\"\n" +
                 "(\"SN\", \"StoreSN\", \"SupplierSN\")\n" +
@@ -37,14 +35,13 @@ public class item_file_DAO {
         for(int i=0;i<items_file.getItems().size();i++) {
             String query_items = "INSERT INTO \"main\".\"Items\"\n" +
                     "(\"SN\", \"ItemFileSN\", \"Amount\", \"ItemName\")\n" +
-                    String.format("VALUES ('%d', '%d', '%d', '%s');",i,items_file.getSn(), items_file.getItems().get(i).getValue(), items_file.getItems().get(i).getKey());
-        }
-
-        try {
-            PreparedStatement statement=Connection.getInstance().getConn().prepareStatement(query);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+                    String.format("VALUES ('%d', '%d', '%d', '%s');", i, items_file.getSn(), items_file.getItems().get(i).getValue(), items_file.getItems().get(i).getKey());
+            try {
+                PreparedStatement statement = Connection.getInstance().getConn().prepareStatement(query);
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -53,15 +50,16 @@ public class item_file_DAO {
 
     }
 
-    public void select(){
+   /* public List<dummy_Items_File> select(){
         String query="SELECT * FROM ItemFiles";
+        List<dummy_Items_File> value=new LinkedList<>();
         try {
             PreparedStatement statement=Connection.getInstance().getConn().prepareStatement(query);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public dummy_Items_File select_by_id(int id){
         String selectQuery = String.format("select * from ItemFiles where ItemFiles.SN = '%d'",id);

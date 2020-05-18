@@ -2,8 +2,8 @@ package Data_Layer.DAOs;
 
 import Data_Layer.Connection;
 import Data_Layer.Dummy_objects.dummy_Address;
-import Data_Layer.Dummy_objects.dummy_store;
 import Data_Layer.Dummy_objects.dummy_supplier;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,7 +55,7 @@ public class supplier_DAO {
     }
 
     public List<dummy_supplier> select_by_area(int areaSn){
-        String selectQuery = String.format("select * from Stores where Supplieres.AreaSN = '%d'",areaSn);
+        String selectQuery = String.format("select * from Supplieres where AreaSN = '%d'",areaSn);
         List<dummy_supplier> list=new LinkedList<>();
         try {
 
