@@ -131,4 +131,11 @@ public class SystemInterfaceWorkers {
     public void clearDB() {
         Service.getInstance().getWorkerController().clearDB();
     }
+
+    public void getAllSN() {
+        Service.getInstance().getWorkerController().getAllSN();
+        Service.getInstance().getShiftController().getAllSN();
+        Service.getInstance().getSite_controller().getAllSN();
+
+    }
 }

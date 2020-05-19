@@ -571,4 +571,9 @@ public class WorkerController {
     public void clearDB() {
         Mapper.getInstance().clearDB();
     }
+
+    public void getAllSN() {
+        int Sn = Mapper.getInstance().getWorkerSn();
+        this.snFactory = ++Sn;
+    }
 }

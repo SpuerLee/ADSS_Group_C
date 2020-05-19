@@ -309,5 +309,11 @@ public class ShiftController {
 
         return false;
     }
+
+    public void getAllSN() {
+
+        int Sn = Mapper.getInstance().getShiftSn();
+        this.snFactory = ++Sn;
+    }
 }
 
