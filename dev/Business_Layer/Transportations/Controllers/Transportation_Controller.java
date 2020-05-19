@@ -29,6 +29,7 @@ public class Transportation_Controller {
 
     public List<String> Show_shiftTypeList() throws Buisness_Exception {
         Service service = Service.getInstance();
+        service.upload_shift_type();
         List<String> output = new LinkedList<>();
         for(ShiftType shiftType : service.getshiftTypeList().values())
         {
@@ -89,7 +90,6 @@ public class Transportation_Controller {
                 }
                 return "Ok";
             }
-
         }
         catch (Exception e)
         {
@@ -102,6 +102,8 @@ public class Transportation_Controller {
     {
         try{
             Service service = Service.getInstance();
+            service.upload_All_Supplier();
+            service.upload_Transportation(transportationID);
             List<String> output= new LinkedList<>();
             Transportation transportation = service.getHashTransportation().get(transportationID);
             output.add("Suppliers:");
@@ -124,6 +126,8 @@ public class Transportation_Controller {
     {
         try{
             Service service = Service.getInstance();
+            service.upload_Transportation(transportationID);
+            service.upload_All_Supplier();
             List<String> output= new LinkedList<>();
             Transportation transportation = service.getHashTransportation().get(transportationID);
             output.add("Stores:");
@@ -155,10 +159,13 @@ public class Transportation_Controller {
     public Pair<Date,Integer> Free_truck_and_driver(int transportationID) {
         Service service = Service.getInstance();
         try {
+            service.upload_Transportation(transportationID);
             Transportation transportation = service.getHashTransportation().get(transportationID);
             int driverID = transportation.getDriveId();
             int truckID = transportation.getTruck().getId();
+            service.remove_driver_transportatin(transportation.getId(),driverID);
             service.getDrivers().get(driverID).Remove_date(transportationID);
+            service.remove_truck_transportatin(transportation.getId(),driverID);
             service.getHashTrucks().get(truckID).Remove_date(transportationID);
             return new Pair<>(transportation.getDate(), transportation.getDepartureTime());
         }
@@ -193,7 +200,9 @@ public class Transportation_Controller {
             transportation.setTruck(service.getHashTrucks().get(truck_id));
             transportation.setDriver(service.getDrivers().get(driver_id));
             service.getDrivers().get(driver_id).addDate(transportation);
+            service.add_transport_driver(transportation.getId(), transportation.getDriveId());
             service.getHashTrucks().get(truck_id).addDate(transportation);
+            service.add_transport_Truck(transportation.getId(), transportation.getTruck().getId());
             return true;
         }
         catch (Exception e)
@@ -201,7 +210,9 @@ public class Transportation_Controller {
             transportation.setTruck(service.getHashTrucks().get(oldTruck));
             transportation.setDriver(service.getDrivers().get(oldDriver));
             service.getDrivers().get(transportation.getDriveId()).addDate(transportation);
+            service.add_transport_driver(transportation.getId(), transportation.getDriveId());
             service.getHashTrucks().get(transportation.getTruck().getId()).addDate(transportation);
+            service.add_transport_Truck(transportation.getId(), transportation.getTruck().getId());
             return false;
         }
 
@@ -212,6 +223,7 @@ public class Transportation_Controller {
             Transportation transportation = service.getHashTransportation().get(transportationID);
             service.getDrivers().get(transportation.getDriveId()).addDate(transportation);
             service.getHashTrucks().get(transportation.getTruck().getId()).addDate(transportation);
+            service.add_transport_driver(transportation.getId(), transportation.getDriveId());
             return true;
         }
         catch (Exception e)
@@ -326,6 +338,7 @@ public class Transportation_Controller {
         try
         {
             Service service = Service.getInstance();
+            service.upload_Transportation(transport_id);
             if (service.getHashTransportation().size() == 0) {
                 throw new Buisness_Exception("There are no transportations to delete");
             }
@@ -340,6 +353,7 @@ public class Transportation_Controller {
                     service.getDrivers().get(driver).Remove_date(transport_id);
                     service.getHashTrucks().get(truck).Remove_date(transport_id);
                     service.getHashTransportation().remove(transport.getKey());
+                    service.remove_transport(transport_id);
                 }
             }
 
@@ -353,6 +367,7 @@ public class Transportation_Controller {
 
     public List<String> getTransport_id() throws Buisness_Exception {
         Service service = Service.getInstance();
+        service.upload__all_Transportation();
         if (service.getHashTransportation().size() == 0) {
             throw new Buisness_Exception("There are no transportations to delete" + "\n");
         } else {
@@ -380,6 +395,7 @@ public class Transportation_Controller {
     public List<String> Show_transports() throws Buisness_Exception  {
         Service service = Service.getInstance();
         List<String> output = new LinkedList<>();
+        service.upload__all_Transportation();
         for (Transportation transportation : service.getHashTransportation().values()) {
             output.add(transportation.toString());
         }
@@ -391,12 +407,13 @@ public class Transportation_Controller {
     public List<String> get_area_for_suppliers() throws Buisness_Exception {
         Service service = Service.getInstance();
         List<String> areas = new LinkedList<String>();
+        service.upload_All_Supplier();
         if (service.getSuppliersMap().size() == 0) {
             throw new Buisness_Exception("There are no suppliers to make a transport");
         }
         for (Supplier supplier : service.getSuppliersMap().values()) {
-            if (!areas.contains(supplier.getArea().toString())) {
-                areas.add(supplier.getArea().toString());
+            if (!areas.contains(supplier.getArea().getAreaName())) {
+                areas.add(supplier.getArea().getAreaName());
             }
         }
         return areas;
@@ -405,12 +422,13 @@ public class Transportation_Controller {
     public List<String> get_area_for_stores() throws Buisness_Exception {
         Service service = Service.getInstance();
         List<String> areas = new LinkedList<>();
+        service.getAllStores();
         if (service.getHashStoresMap().size() == 0) {
             throw new Buisness_Exception("There are no stores to supply to");
         } else {
             for (Store store : service.getHashStoresMap().values()) {
-                if (!areas.contains(store.getArea().toString())) {
-                    areas.add(store.getArea().toString());
+                if (!areas.contains(store.getArea().getAreaName())) {
+                    areas.add(store.getArea().getAreaName());
                 }
             }
             return areas;

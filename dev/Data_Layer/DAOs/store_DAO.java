@@ -47,8 +47,8 @@ public class store_DAO {
     public List<dummy_store> select(){
         List <dummy_store> list_to_return=new LinkedList<>();
         String query="SELECT * FROM Stores";
-        try {
 
+        try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(query);
             while (rs2.next()) {

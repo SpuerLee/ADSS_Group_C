@@ -30,6 +30,8 @@ public class shift_DAO {
             e.printStackTrace();
         }
 
+
+
         for(Integer x : shift.getShift_workers()){
             String query_constraints = "INSERT INTO \"main\".\"Shift_Workers\"\n" +
                     "(\"ShiftSN\",\"WorkerSN\")\n" +
@@ -40,6 +42,21 @@ public class shift_DAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void insert_types() {
+        String query = "INSERT INTO \"main\".\"Shift_Type\"\n" +
+                "(\"SN\", \"DayType\")\n" +
+                String.format("VALUES ('%d','%s');",
+                        1 , "Morning");
+
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
         }
     }
 

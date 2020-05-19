@@ -26,11 +26,21 @@ public class Site_Controller {
     public boolean addsupplier(String name, String city, String street, Integer number,
                                String name_of_contact, String phone, String supplier_area)
             throws Buisness_Exception{
+
         Service service = Service.getInstance();
-            Supplier supplier = new Supplier(name, phone, name_of_contact,
+        if(Supplier.getIdCounter()==0)
+        {
+            service.set_supplier_idCouter();
+        }
+        if(Address.getIdCounter()==1)
+        {
+           service.set_address_idCounter();
+        }
+        Supplier supplier = new Supplier(name, phone, name_of_contact,
                     new Address(city, street, number), service.getAreaByName(supplier_area));
-            service.getSuppliersMap().put(supplier.getId(), supplier);
-            return true;
+
+        service.add_new_supplier(supplier);
+        return true;
     }
 
 
@@ -69,6 +79,7 @@ public class Site_Controller {
 
     public List<String> Show_supplier() throws Buisness_Exception {
         Service service = Service.getInstance();
+        service.upload_All_Supplier();
         if (service.getSuppliersMap().size() == 0)
             throw new Buisness_Exception("There are no sites in the system" + "\n");
         else {
@@ -84,6 +95,7 @@ public class Site_Controller {
 
     public List<String> getSuppliersbyarea(String area) {
         Service service = Service.getInstance();
+        service.upload_All_Supplier();
         List<Site> sites = new LinkedList<Site>();
         List<String> output = new LinkedList<String>();
         for (Site site : service.getSuppliersMap().values()) {

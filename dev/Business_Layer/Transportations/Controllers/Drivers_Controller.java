@@ -26,6 +26,7 @@ public class Drivers_Controller {
 
     public List<String> getDriverToTrucks(int truckId, Date date)
     {
+      //  service.uploadDrivers(); //TODO implement this
         List<License> license_list = Service.getInstance().getHashTrucks().get(truckId).getLicenses();
         List<String> output = new LinkedList<>();
         for (Driver driver : service.getDrivers().values())

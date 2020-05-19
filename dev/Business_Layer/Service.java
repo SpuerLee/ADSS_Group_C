@@ -17,6 +17,8 @@ import Business_Layer.Workers.Modules.Shift;
 import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.ShiftType;
+import Business_Layer.Workers.Utils.enums;
+import Data_Layer.DAOs.shift_DAO;
 import Data_Layer.DAOs.truck_DAO;
 import Data_Layer.Dummy_objects.*;
 import Data_Layer.Mapper;
@@ -117,6 +119,13 @@ public class Service {
         }
     }
 
+    public void upload_shift_type(){
+        shift_DAO shiftDAO=new shift_DAO();
+        shiftDAO.insert_types();
+        shiftTypeList.put(1, new ShiftType(1,"Morning"));
+
+    }
+
     public void add_ItemFile(ItemsFile itemsFile){
         if(!HashItemsFile.containsKey(itemsFile.getId()))
         {
@@ -184,12 +193,60 @@ public class Service {
                                 supplier.getContactName(),address,area_list.get(supplier.getAreaSn())));
             }
         }
+    }
 
+    public void add_new_supplier(Supplier supplier){
+        if(!HashSuppliers.containsKey(supplier.getId())) {
+            HashSuppliers.put(supplier.getId(), supplier);
+            mapper.insertSupplier(supplier.getId(),supplier.getName(),supplier.getPhone(),supplier.getContact_name(),supplier.getAddress().getId(),supplier.getArea().getAreaSN(),supplier.getAddress().getCity(),supplier.getAddress().getStreet(),supplier.getAddress().getNumber());
+        }
+    }
+
+    public void set_supplier_idCouter(){
+        Supplier.setIdCounter(mapper.getNextSNTransportation());
+    }
+
+    public void upload_All_Supplier(){
+        List<dummy_supplier> dummy_suppliers=mapper.selectAllSuppliers();
+        for(dummy_supplier supplier:dummy_suppliers) {
+            if (!HashSuppliers.containsKey(supplier.getSN())) {
+                    Address address = new Address(supplier.getDummy_address().getCity(), supplier.getDummy_address().getStreet(),
+                            supplier.getDummy_address().getNumber());
+                    HashSuppliers.put(supplier.getSN(),
+                            new Supplier(supplier.getSN(), supplier.getName(), supplier.getPhone(),
+                                    supplier.getContactName(), address, area_list.get(supplier.getAreaSn())));
+            }
+        }
     }
 
     public void upload_Driver(Integer SN){
         // TODO: upload Driver
 
+    }
+/*
+    public void upload_all_Drivers(){ //TODO implement this
+        List<dummy_Worker> dummy_workers=mapper.get_drivers();
+    } */
+
+    public void add_transport_driver(int Transport,int Driver){
+        if((HashTransportation.containsKey(Transport)) && (Drivers.containsKey(Driver))){
+            mapper.add_transport_driver(Transport,Driver);
+        }
+    }
+
+
+    public void add_transport_Truck(int Transport,int truck){
+        if((HashTransportation.containsKey(Transport)) && (HashTrucks.containsKey(truck))){
+            mapper.add_transport_truck(Transport,truck);
+        }
+    }
+
+    public void remove_driver_transportatin(int Transport,int driver){
+        mapper.remove_driver_transportatin(Transport, driver);
+    }
+
+    public void remove_truck_transportatin(int Transport, int driver){
+        mapper.remove_truck_transportatin(Transport, driver);
     }
 
     public void upload_Transportation(int SN) throws Buisness_Exception {
@@ -239,6 +296,44 @@ public class Service {
 
     }
 
+    public void upload__all_Transportation() throws Buisness_Exception {
+
+        List<dummy_Transportation> dummy_transportations = mapper.select_all_Transportation();
+        for (dummy_Transportation dummy_transportation:dummy_transportations) {
+            if (!HashTransportation.containsKey(dummy_transportation.getId())) {
+                Driver driver = null;
+                if (Drivers.containsKey(dummy_transportation.getDriverSn()))
+                    driver = Drivers.get(dummy_transportation.getDriverSn());
+
+                Truck truck = null;
+                if (HashTrucks.containsKey(dummy_transportation.getTrucksn()))
+                    truck = HashTrucks.get(dummy_transportation.getTrucksn());
+
+                Transportation transportation = new Transportation(dummy_transportation.getId(), dummy_transportation.getDate(),
+                        dummy_transportation.getLeaving_time(), driver, truck);
+
+                for (Integer id : dummy_transportation.getStores()) {
+                    upload_Store(id);
+                    transportation.getStores().add(HashStore.get(id));
+                }
+                for (Integer id : dummy_transportation.getSuppliers()) {
+                    upload_Supplier(id);
+                    transportation.getSuppliers().add(HashSuppliers.get(id));
+                }
+
+                for (Integer id : dummy_transportation.getItemsFile()) {
+                    upload_ItemFile(id);
+                    transportation.getItemsFiles().add(HashItemsFile.get(id));
+                }
+
+
+                // TODO: upload Stores
+                // TODO: upload Supplier
+                // TODO: upload ItemFile
+            }
+        }
+    }
+
     public void add_Transportation(Transportation transportation){
         if(!HashTransportation.containsKey(transportation.getId()))
         {
@@ -265,6 +360,10 @@ public class Service {
 
     }
 
+    public void remove_transport(int sn){
+        mapper.remove_transport(sn);
+    }
+
     public void set_Transportation_idCouter(){
         Transportation.setIdCounter(mapper.getNextSNTransportation());
     }
@@ -281,6 +380,19 @@ public class Service {
         }
     }
 
+    public void getAllStores(){
+        List<dummy_store> dummy_Stores = mapper.select_all_stores();
+        for(dummy_store store: dummy_Stores){
+            Address address = new Address(store.getCity(),store.getStreet(),
+                    store.getNumber());
+            Store toADD = new Store(store.getName(),store.getPhone(),store.getContact_name(),address, Service.getInstance().getArea_list().get(store.getAreaSn()));
+            Service.getInstance().getHashStoresMap().putIfAbsent(toADD.getId(),toADD);
+        }
+    }
+
+
+    //trucks
+
     public void upload_license(){
         if(license_list.isEmpty())
         {
@@ -290,6 +402,54 @@ public class Service {
                 license_list.put(l.getSN(),new License(l.getSN(),l.getLicenseType()));
             }
         }
+    }
+
+    public void remove_truck(int sn) throws Buisness_Exception{
+        if(!HashTrucks.containsKey(sn)){
+            throw new Buisness_Exception("Truck doesn't exist");
+        }
+        else {
+            mapper.deleteTruck(sn);
+            for(Truck truck:HashTrucks.values()){
+                if (truck.getId()==sn)
+                    HashTrucks.remove(sn);
+            }
+        }
+    }
+
+    public void add_truck(int license_number, List<String> licenses_types,
+                          String model, double weight, double max_weight){
+        List<License> licenses=new LinkedList<>();
+        for (String license : licenses_types) {
+            try {
+                licenses.add(getLicenseByName(license));
+            } catch (Buisness_Exception e) {
+                e.printStackTrace();
+            }
+        }
+        List<Integer> to_add=new LinkedList<>();
+        for (String license : licenses_types) {
+            try {
+                to_add.add(get_license_int(license));
+            } catch (Buisness_Exception e) {
+                e.printStackTrace();
+            }
+        }
+        Truck trucks = new Truck(license_number, licenses, model, weight,max_weight);
+        if(Truck.getIdCounter()==0)
+        {
+            set_truck_idCouter();
+        }
+        HashTrucks.put(trucks.getId(), trucks);
+        mapper.insertTruck(trucks.getId(),license_number,model,weight,max_weight,to_add);
+    }
+
+    public void set_truck_idCouter(){
+        Truck.setIdCounter(mapper.getNextSNTransportation());
+    }
+
+    public void set_address_idCounter(){
+        Address.setIdCounter(mapper.getNextSNAddress());
     }
 
 
@@ -305,6 +465,14 @@ public class Service {
         for (Map.Entry<Integer, License> license : license_list.entrySet()) {
             if(str.equals(license.getValue().getLicenseType()))
                 return license.getValue();
+        }
+        throw new Buisness_Exception("-License dont exist-");
+    }
+
+    public Integer get_license_int(String str) throws Buisness_Exception{
+        for (Map.Entry<Integer, License> license : license_list.entrySet()) {
+            if(str.equals(license.getValue().getLicenseType()))
+                return license.getKey();
         }
         throw new Buisness_Exception("-License dont exist-");
     }

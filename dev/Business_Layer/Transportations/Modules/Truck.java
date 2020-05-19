@@ -57,6 +57,10 @@ public class Truck {
         return this.model;
     }
 
+    public static void setIdCounter(int id){
+        idcounter = id;
+    }
+
     public void addDate(Transportation transportation)
     {
         this.transportations.add(transportation);
@@ -85,6 +89,9 @@ public class Truck {
 
         }
 
+    }
+    public static int getIdCounter(){
+        return idcounter;
     }
 
     public List<Transportation> getTransportations(){

@@ -55,6 +55,21 @@ public class Mapper {
             worker_Mapper.insertLicense(toAdd.getSN(),x);
         }
     }
+
+    public void add_transport_driver(int Transport,int driver){
+        transportation_Mapper.add_driver(Transport,driver);
+    }
+    public void add_transport_truck(int Transport, int truck){
+        transportation_Mapper.add_Truck(Transport,truck);
+    }
+
+    public void remove_driver_transportatin(int Transport, int truck){
+        transportation_Mapper.remove_Driver(Transport,truck);
+    }
+
+    public void remove_truck_transportatin(int Transport, int truck){
+        transportation_Mapper.remove_Truck(Transport,truck);
+    }
     public void deleteConstraints(int workerSN){
         worker_Mapper.deleteConstraints(workerSN);
     }
@@ -80,7 +95,7 @@ public class Mapper {
     }
 
     public void deleteAddress(int SN){
-        address_Mapper.delete(SN);
+       address_Mapper.delete(SN);
     }
 
     public Integer getNextSNAddress(){
@@ -123,6 +138,10 @@ public class Mapper {
             supplier.setDummy_address(selectAddress(supplier.getAddress_Sn()));
         return supplier;
     }
+    public Integer getNextSNSupplier(){
+        return supplier_Mapper.getNextSN();
+    }
+
 
     //Truck
     public void insertTruck(int SN,int license_number, String model, double weight, double max_weight, List<Integer> license_type){
@@ -142,7 +161,9 @@ public class Mapper {
         return truck_Mapper.selectTransportation(SN);
     }
 
-
+    public Integer getNextSNTruck(){
+        return truck_Mapper.getNextSN();
+    }
     //License
     public List<dummy_License> selectAllLicense(){
         return truck_Mapper.selectAllLicense();
@@ -165,7 +186,18 @@ public class Mapper {
         return transportation_Mapper.getNextSN();
     }
 
+    public List<dummy_Transportation> select_all_Transportation(){
+        return transportation_Mapper.selectAll();
+    }
 
+    public void remove_transport(int sn){
+        transportation_Mapper.delete(sn);
+    }
+
+  /*  //Worker
+    public List<dummy_Worker> get_drivers(){ //TODO implement this
+        return worker_Mapper.
+    } */
 
     //Itemfile
     public void insertItemfile(int Sn, int supplier_id,int store_id, List<Pair<String,Integer>> items){
@@ -207,5 +239,9 @@ public class Mapper {
     }
 
 
-
+    public List<dummy_store> select_all_stores(){
+        dummy_store store=new dummy_store("054","Reut","store11",5,"alon","alona",5,1,1);
+        store_Mapper.insert(store);
+        return store_Mapper.select();
+    }
 }

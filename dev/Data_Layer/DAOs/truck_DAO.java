@@ -131,6 +131,22 @@ public class truck_DAO {
         throw new NullPointerException();
     }
 
+    public Integer getNextSN(){
+        String query="SELECT MAX(SN) FROM Trucks";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            if(!rs2.next())
+                return 1;
+            else
+                return rs2.getInt("MAX(SN)") + 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
+
     public List<Integer> selectTransportation(int SN) {
         List<Integer> items=new LinkedList<>();
         String query = "SELECT TransportationSN FROM Transportation_Truck\n" +

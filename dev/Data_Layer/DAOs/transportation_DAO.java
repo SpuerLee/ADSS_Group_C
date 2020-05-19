@@ -123,6 +123,35 @@ public class transportation_DAO {
         throw new NullPointerException();
     }
 
+    public List<dummy_Transportation> selectAll(){
+        String query="SELECT Transportations.*, Transportation_Driver.DriverSN ,Transportation_Truck.TruckSN\n"+
+                "FROM Transportations INNER JOIN Transportation_Driver\n" +
+                "On Transportations.SN = Transportation_Driver.TransportationSN\n" +
+                "INNER JOIN Transportation_Truck\n" +
+                "On Transportations.SN = Transportation_Truck.TransportationSN\n";
+        List<dummy_Transportation> dummy_transportations=new LinkedList<>();
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            while (rs2.next()){
+                dummy_Transportation dummy_transportation = new dummy_Transportation(rs2.getInt("SN"),
+                        rs2.getDate("Date"),rs2.getInt("DepartureTime"),rs2.getDouble("TruckWeight"),
+                        rs2.getInt("TruckSN"),rs2.getInt("DriverSN"));
+
+
+                dummy_transportation.setStores(select_stores(dummy_transportation.getId()));
+                dummy_transportation.setSuppliers(select_stores(dummy_transportation.getId()));
+                dummy_transportation.setItemsFile(select_items_files(dummy_transportation.getId()));
+                dummy_transportations.add(dummy_transportation);
+            }
+            return dummy_transportations;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
     public Integer getNextSN(){
         String query="SELECT MAX(SN) FROM Transportations";
         try {
@@ -350,6 +379,51 @@ public class transportation_DAO {
             e.printStackTrace();
         }
         throw new NullPointerException();
+    }
+
+    public void add_driver(int transport, int driver){
+        String insert_driver="INSERT INTO \"main\".\"Transportation_Driver\"\n" +
+                "(\"DriverSN\", \"TransportationSN\")\n" +
+                String.format("VALUES ('%d', '%d');", driver, transport);
+
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(insert_driver);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void add_Truck(int transport, int truck){
+        String truck_query="INSERT INTO \"main\".\"Transportation_Truck\"\n" +
+                "(\"TruckSN\", \"TransportationSN\")\n" +
+                String.format("VALUES ('%d', '%d');", truck, transport);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(truck_query);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void remove_Driver(int transport,int driver){
+        String delete_driver=String.format("DELETE from Transportation_Driver where Transportation_Driver.TransportationSN = '%d'",transport);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(delete_driver);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void remove_Truck(int transport,int truck){
+        String delete_trucks=String.format("DELETE from Transportation_Truck where Transportation_Truck.TransportationSN = '%d'",transport);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(delete_trucks);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

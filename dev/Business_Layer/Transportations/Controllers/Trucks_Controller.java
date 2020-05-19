@@ -37,6 +37,7 @@ public class Trucks_Controller {
     public List<String> getTruckLicenseList(int truckID) throws Buisness_Exception {
         Service service = Service.getInstance();
         List<String> output = new LinkedList<>();
+        service.upload_Trucks();
         if(!service.getHashTrucks().containsKey(truckID))
             throw new Buisness_Exception("The truck's id does'nt exist "+"\n");
 
@@ -76,7 +77,6 @@ public class Trucks_Controller {
     public boolean addTruck(int license_number, List<String> licenses_types,
                             String model, double weight, double max_weight) throws Buisness_Exception {
         Service service=Service.getInstance();
-        List<License> licenses=new LinkedList<>();
         boolean result=true;
         if(service.getHashTrucks().containsKey(license_number)){
             throw new Buisness_Exception("The truck driving license is already exist"+ "\n");
@@ -85,27 +85,16 @@ public class Trucks_Controller {
             throw new Buisness_Exception("-max weight could not be smaller from weight-\n");
         }
         else {
-            for (String license : licenses_types) {
-                licenses.add(service.getLicenseByName(license));
-            }
-            Truck trucks = new Truck(license_number, licenses, model, weight,max_weight);
-            service.getHashTrucks().put(trucks.getId(), trucks);
-            return result;
+            service.add_truck(license_number,licenses_types,model,weight,max_weight);
         }
+        return result;
     }
 
 
 
-    public boolean removeTruck(int id) throws Buisness_Exception{
+    public void removeTruck(int id) throws Buisness_Exception{
         Service service=Service.getInstance();
-        boolean result=false;
-       if(!service.getHashTrucks().containsKey(id))
-           throw new Buisness_Exception("The truck's license number does'nt exist "+"\n");
-       else {
-           service.getHashTrucks().remove(id);
-           result=true;
-       }
-       return result;
+        service.remove_truck(id);
     }
 
     public List<String> getFreeTrucks(Date date, int departureTime ) throws Buisness_Exception{
