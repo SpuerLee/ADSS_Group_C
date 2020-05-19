@@ -127,7 +127,7 @@ public class HR {
         if (selectedOption == 1) { ///new system
             cleanSuperLeeDB();
             try {
-                Mapper.getInstance().init();
+                SystemInterfaceWorkers.getInstance().initConstants();
             }
             catch (Exception e){
 
@@ -136,8 +136,9 @@ public class HR {
         }
         if (selectedOption == 2) { ///new system with data
             cleanSuperLeeDB();
+
             try {
-                Mapper.getInstance().init();
+                SystemInterfaceWorkers.getInstance().initConstants();
             }
             catch (Exception e){
 
@@ -280,6 +281,7 @@ public class HR {
     }
 
     public static void addShift(Scanner sc) throws Buisness_Exception {
+        SystemInterfaceWorkers.getInstance().getShifts();
         System.out.println("Please select a date - dd-mm-yyyy");
         while (!sc.hasNext()) {
             System.out.println("Invalid input, please try again");
@@ -327,6 +329,7 @@ public class HR {
     }
 
     public static void addWorker(Scanner sc) throws Buisness_Exception {
+        SystemInterfaceWorkers.getInstance().getWorkers();
         System.out.println("Enter worker Id:");
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");

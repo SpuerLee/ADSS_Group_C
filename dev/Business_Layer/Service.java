@@ -41,6 +41,10 @@ public class Service {
         return this.workerController.isDriver(sn);
     }
 
+    public void initConstants() {
+        Mapper.getInstance().init();
+    }
+
     private static class SingletonService {
 
         private static Service instance = new Service();

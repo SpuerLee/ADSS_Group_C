@@ -138,4 +138,8 @@ public class SystemInterfaceWorkers {
         Service.getInstance().getSite_controller().getAllSN();
 
     }
+
+    public void initConstants() {
+        Service.getInstance().initConstants();
+    }
 }
