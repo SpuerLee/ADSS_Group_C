@@ -27,7 +27,7 @@ public class SystemInterfaceTransportations {
     }
 
     private SystemInterfaceTransportations() {
-        service.upload_Area();
+       service.upload_Area();
         service.upload_license();
     }
 
@@ -73,8 +73,14 @@ public class SystemInterfaceTransportations {
                 truck_id, suppliers, stores);
     }
 
-    public List<String> get_area_for_suppliers() throws Buisness_Exception {
-        return service.transportation_controller.get_area_for_suppliers();
+    public List<String>  get_area_for_suppliers() throws Buisness_Exception {
+      //  service.upload_All_Supplier();
+        if(service.transportation_controller.get_area_for_suppliers().size()==0){
+            throw new Buisness_Exception("There are no suppliers to show");
+        }
+        else {
+            return service.transportation_controller.get_area_for_suppliers();
+        }
     }
 
     public List<String> getSuppliersbyarea(String area) {
@@ -162,8 +168,8 @@ public class SystemInterfaceTransportations {
         return service.trucks_controller.showtrucks();
     }
 
-    public boolean removeTruck(int id) throws Buisness_Exception{
-        return service.trucks_controller.removeTruck(id);
+    public void removeTruck(int id) throws Buisness_Exception{
+         service.trucks_controller.removeTruck(id);
     }
 
     public List<String> Show_AreaList() throws Buisness_Exception {
