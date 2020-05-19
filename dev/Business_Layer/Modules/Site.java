@@ -49,5 +49,11 @@ public abstract class Site {
         return name;
     }
     public int getId(){return id;}
+    public static void setIdCounter(int id){
+        idcounter = id;
+    }
+    public static int getIdCounter(){
+        return idcounter;
+    }
 
 }
