@@ -1,5 +1,6 @@
 package Data_Layer.Dummy_objects;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class dummy_Truck {
@@ -18,6 +19,15 @@ public class dummy_Truck {
         this.weight=weight;
         this.max_weight=max_weight;
         this.license_type=license_type;
+    }
+
+    public dummy_Truck(int SN, int license_number, String model, double weight, double max_weight){
+        this.SN = SN;
+        this.license_number=license_number;
+        this.model=model;
+        this.weight=weight;
+        this.max_weight=max_weight;
+        this.license_type = new LinkedList<>();
     }
 
     public int getLicense_number() {

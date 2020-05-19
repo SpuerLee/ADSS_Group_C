@@ -134,6 +134,20 @@ public class Mapper {
         truck_Mapper.delete(SN);
     }
 
+    public List<dummy_Truck> selectAllTrucks(){
+        return truck_Mapper.selectAll();
+    }
+
+    public List<Integer> selectTransportationTrucks(int SN) {
+        return truck_Mapper.selectTransportation(SN);
+    }
+
+
+    //License
+    public List<dummy_License> selectAllLicense(){
+        return truck_Mapper.selectAllLicense();
+    }
+
     //Transportation
     public void insertTransportation(int Sn, Date date, int leaving_time, double truck_weight,
                                      int trucksn, int Driver, List<Integer> suppliers,
@@ -143,11 +157,28 @@ public class Mapper {
         transportation_Mapper.insert(toAdd);
     }
 
+    public dummy_Transportation selectTransportation(int SN){
+        return transportation_Mapper.select(SN);
+    }
+
+    public Integer getNextSNTransportation(){
+        return transportation_Mapper.getNextSN();
+    }
+
+
 
     //Itemfile
     public void insertItemfile(int Sn, int supplier_id,int store_id, List<Pair<String,Integer>> items){
         dummy_Items_File toAdd = new dummy_Items_File(Sn,supplier_id,store_id, items);
         itemFile_Mapper.insert(toAdd);
+    }
+
+    public dummy_Items_File selectItemfile(int SN){
+        return itemFile_Mapper.select(SN);
+    }
+
+    public Integer getNextSNItemfile(){
+        return itemFile_Mapper.getNextSN();
     }
 
     //MissingItem
@@ -158,6 +189,10 @@ public class Mapper {
 
     public List<dummy_Missing_items> selectAllMissing_items(){
         return missingItems_Mapper.selectAll();
+    }
+
+    public void deleteMissing_items(int SN){
+        missingItems_Mapper.delete(SN);
     }
 
     //store

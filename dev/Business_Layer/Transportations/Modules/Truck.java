@@ -26,6 +26,15 @@ public class Truck {
         this.max_weight = max_weight;
     }
 
+    public Truck(int id,int license_number, List<License> licenses_types, String model, double weight, double max_weight) {
+        this.id=id;
+        this.license_number = license_number;
+        this.licenses_types = licenses_types;
+        this.model = model;
+        this.weight = weight;
+        this.max_weight = max_weight;
+    }
+
     public double getMax_weight()
     {
         return this.weight+this.max_weight;

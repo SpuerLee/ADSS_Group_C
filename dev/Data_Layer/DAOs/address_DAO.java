@@ -39,8 +39,7 @@ public class address_DAO {
         try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(query);
-//            System.out.println(rs2.wasNull());
-            if(rs2.next()==false)
+            if(!rs2.next())
                 return 1;
             else
                 return rs2.getInt("MAX(SN)") + 1;
@@ -77,7 +76,7 @@ public class address_DAO {
         try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(query);
-            if(rs2.next()==false)
+            if(!rs2.next())
                 return null;
             else
                 return new dummy_Address(rs2.getInt("SN"),rs2.getString("City"),rs2.getString("Street"),rs2.getInt("Number"));

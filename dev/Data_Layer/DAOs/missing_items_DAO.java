@@ -76,7 +76,24 @@ public class missing_items_DAO {
 
 
 
-    public void delete(){
+    public void delete(int SN){
+        String query="DELETE FROM \"main\".\"Missing_Items_list\"\n" +
+                String.format("WHERE Missing_ItemSN = '%d';",SN);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String query2="DELETE FROM \"main\".\"Missing_Items\"\n" +
+                String.format("WHERE SN = '%d';",SN);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query2);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

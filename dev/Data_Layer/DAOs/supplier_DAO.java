@@ -61,6 +61,22 @@ public class supplier_DAO {
         throw new NullPointerException();
     }
 
+    public Integer getNextSN(){
+        String query="SELECT MAX(SN) FROM Supplieres";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+//            System.out.println(rs2.wasNull());
+            if(!rs2.next())
+                return 1;
+            else
+                return rs2.getInt("MAX(SN)") + 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
 //    public dummy_supplier select_by_SupplieresId(int id){
 //        String selectQuery = String.format("select * from Supplieres where Supplieres.SN = '%d'",id);
 //        try {

@@ -2,6 +2,7 @@ package Data_Layer.DAOs;
 
 import Business_Layer.Workers.Utils.enums;
 import Data_Layer.Connection;
+import Data_Layer.Dummy_objects.dummy_Address;
 import Data_Layer.Dummy_objects.dummy_Items_File;
 import Data_Layer.Dummy_objects.dummy_Transportation;
 
@@ -11,26 +12,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
-
 public class transportation_DAO {
-
-    public  java.sql.Date  convert(Date date){
-        java.sql.Date date_inset = new java.sql.Date(date.getTime());
-        return date;
-    }
-    public java.util.Date convertToDate(java.sql.Date date){
-        java.util.Date utilDate = new java.util.Date(date.getTime());
-        return utilDate;
-    }
 
     private String pattern = "yyyy-MM-dd";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public void insert(dummy_Transportation transportation){
-
-    //    java.sql.Date sqlDate = new java.sql.Date(transportation.getDate().getTime());
-
         String query_items="INSERT INTO \"main\".\"Transportations\"\n" +
                 "(\"SN\", \"Date\", \"DepartureTime\",\"TruckWeight\")\n" +
                 String.format("VALUES ('%d', '%s','%d', '%.2f');", transportation.getId(),simpleDateFormat.format(transportation.getDate()),
@@ -101,6 +89,102 @@ public class transportation_DAO {
             }
         }
 
+    }
+
+    public dummy_Transportation select(int SN){
+        String query="SELECT Transportations.*, Transportation_Driver.DriverSN ,Transportation_Truck.TruckSN\n"+
+                "FROM Transportations INNER JOIN Transportation_Driver\n" +
+                "On Transportations.SN = Transportation_Driver.TransportationSN\n" +
+                "INNER JOIN Transportation_Truck\n" +
+                "On Transportations.SN = Transportation_Truck.TransportationSN\n" +
+                String.format("WHERE SN = '%d';",SN);;
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            if(rs2.next()==false)
+                return null;
+            else
+            {
+                dummy_Transportation dummy_transportation = new dummy_Transportation(rs2.getInt("SN"),
+                        rs2.getDate("Date"),rs2.getInt("DepartureTime"),rs2.getDouble("TruckWeight"),
+                        rs2.getInt("TruckSN"),rs2.getInt("DriverSN"));
+
+
+                dummy_transportation.setStores(select_stores(SN));
+                dummy_transportation.setSuppliers(select_stores(SN));
+                dummy_transportation.setItemsFile(select_items_files(SN));
+
+                return dummy_transportation;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
+    public Integer getNextSN(){
+        String query="SELECT MAX(SN) FROM Transportations";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            if(rs2.next()==false)
+                return 1;
+            else
+                return rs2.getInt("MAX(SN)") + 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
+    public List<Integer> select_items_files(int SN) {
+        List<Integer> items=new LinkedList<>();
+        String query = "SELECT ItemFileSN FROM Transportation_ItemFile\n" +
+                String.format("WHERE TransportationSN = '%d';", SN);
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2 = stmt2.executeQuery(query);
+            while (rs2.next()){
+                items.add(rs2.getInt("ItemFileSN"));
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return items;
+    }
+    public List<Integer> select_suppliers(int SN) {
+        List<Integer> suppliers1=new LinkedList<>();
+        String query = "SELECT SupplierSN FROM Transportation_Supplier\n" +
+                String.format("WHERE TransportationSN = '%d';", SN);
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2 = stmt2.executeQuery(query);
+            while (rs2.next()){
+                suppliers1.add(rs2.getInt("SupplierSN"));
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return suppliers1;
+    }
+    public List<Integer> select_stores(int SN) {
+        List<Integer> suppliers1=new LinkedList<>();
+        String query = "SELECT StoreSN FROM Transportation_Store\n" +
+                String.format("WHERE TransportationSN = '%d';", SN);
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2 = stmt2.executeQuery(query);
+            while (rs2.next()){
+                suppliers1.add(rs2.getInt("StoreSN"));
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return suppliers1;
     }
 
 //    public List<dummy_Transportation> select(){

@@ -1,6 +1,5 @@
 package Business_Layer.Transportations.Controllers;
 
-import Business_Layer.Modules.License;
 import Business_Layer.Modules.Store;
 import Business_Layer.Modules.Supplier;
 import Business_Layer.Service;
@@ -9,7 +8,6 @@ import Business_Layer.Transportations.Modules.*;
 import Business_Layer.Workers.Utils.ShiftType;
 import javafx.util.Pair;
 
-import java.time.LocalTime;
 import java.util.*;
 
 public class Transportation_Controller {
@@ -228,6 +226,14 @@ public class Transportation_Controller {
                                         int truck_id, List<Integer> suppliers, List<Integer> stores)  throws Buisness_Exception  {
         try {
             Service service = Service.getInstance();
+            if(Transportation.getIdCounter()==0)
+            {
+                service.set_Transportation_idCouter();
+            }
+            if(ItemsFile.getIdCounter()==0)
+            {
+                service.set_ItemFile_idCouter();
+            }
             List<Supplier> suppliers1 = new LinkedList<Supplier>();
             List<Store> stores1 = new LinkedList<Store>();
             for (Supplier site : service.getSuppliersMap().values()) {
@@ -239,26 +245,28 @@ public class Transportation_Controller {
                 if (stores.contains(site.getId()))
                     stores1.add(site);
             }
-
-
             Transportation transportation =
-                    new Transportation(date, DepartureTime, service.getDrivers().get(driver_id), service.getHashTrucks().get(truck_id), suppliers1, stores1);
-            service.getHashTransportation().put(transportation.getId(), transportation);
+                    new Transportation(date, DepartureTime, service.getDrivers().get(driver_id),
+                            service.getHashTrucks().get(truck_id), suppliers1, stores1);
             List<Integer> id_to_delete = new LinkedList<Integer>();
             for (MissingItems missingItems : service.getMissing().values()) {
                 if (stores.contains(missingItems.getStoreId()) && suppliers.contains(missingItems.getSupplierId())) {
-                    ItemsFile itemFile = new ItemsFile(missingItems.getItems_list(), service.getHashStoresMap().get(missingItems.getStoreId()), service.getSuppliersMap().get(missingItems.getSupplierId()));
+                    ItemsFile itemFile = new ItemsFile(missingItems.getItems_list(),
+                            service.getHashStoresMap().get(missingItems.getStoreId()),
+                            service.getSuppliersMap().get(missingItems.getSupplierId()));
                     itemFile.setTransportationID(transportation.getId());
                     itemFile.setFrom_missing_items();
-                    service.getItemsFile().add(itemFile);
+
+                    service.add_ItemFile(itemFile);
                     id_to_delete.add(missingItems.getID());
                     transportation.addItemFile(itemFile);
                 }
             }
-            service.getDrivers().get(driver_id).addDate(transportation);
             service.getHashTrucks().get(truck_id).addDate(transportation);
+            service.getDrivers().get(driver_id).addDate(transportation);
+            service.add_Transportation( transportation);
             for (Integer id : id_to_delete) {
-                service.getMissing().remove(id);
+                service.remove_MissingItem(id);
             }
         }
         catch (Exception e)
@@ -274,6 +282,14 @@ public class Transportation_Controller {
             throws Buisness_Exception{
         try {
             Service service = Service.getInstance();
+            if(Transportation.getIdCounter()==0)
+            {
+                service.set_Transportation_idCouter();
+            }
+            if(ItemsFile.getIdCounter()==0)
+            {
+                service.set_ItemFile_idCouter();
+            }
             List<Supplier> suppliers1 = new LinkedList<Supplier>();
             List<Store> stores1 = new LinkedList<Store>();
             for (Supplier site : service.getSuppliersMap().values()) {
@@ -292,7 +308,7 @@ public class Transportation_Controller {
             for (ItemsFile itemsFile : current) {
                 itemsFile.setTransportationID(transportation.getId());
                 transportation.addItemFile(itemsFile);
-                service.getItemsFile().add(itemsFile);
+                service.getHashItemsFile().put(itemsFile.getId(),itemsFile);
             }
             this.current = new LinkedList<>();
             service.getDrivers().get(driver_id).addDate(transportation);

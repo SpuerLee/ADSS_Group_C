@@ -66,7 +66,7 @@ public class Service {
     private ConcurrentHashMap<Integer, Supplier> HashSuppliers= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Store> HashStore= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Truck> HashTrucks= new ConcurrentHashMap<>();
-    private List<Business_Layer.Transportations.Modules.ItemsFile> ItemsFile= new LinkedList<>();
+    private ConcurrentHashMap<Integer,ItemsFile> HashItemsFile = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,Transportation> HashTransportation= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,MissingItems> MissingItems= new ConcurrentHashMap<>();
     private HashMap<Integer, Shift> shiftHistory = new HashMap<>();
@@ -77,41 +77,198 @@ public class Service {
 
     private Mapper mapper = Mapper.getInstance();
 
+    public void remove_MissingItem(int SN){
+        if(MissingItems.containsKey(SN))
+        {
+            MissingItems.remove(SN);
+            mapper.deleteMissing_items(SN);
+        }
+    }
+
     public void upload_MissingItems(){
-        if(area_list.isEmpty())
+        if(MissingItems.isEmpty())
         {
             List<dummy_Missing_items> list = mapper.selectAllMissing_items();
             for (dummy_Missing_items dummy_missing_item : list)
             {
                 MissingItems missingItem = new MissingItems(dummy_missing_item.getSN(),dummy_missing_item.getStore_id(),
                         dummy_missing_item.getSupplier_id(), dummy_missing_item.getItems());
-                if (!HashSuppliers.containsKey(dummy_missing_item.getSupplier_id()))
-                {
-                    dummy_supplier supplier = mapper.selectSupplier(missingItem.getSupplierId());
-                    if (supplier!=null)
-                    {
-                        Address address = new Address(supplier.getDummy_address().getCity(),supplier.getDummy_address().getStreet(),
-                                supplier.getDummy_address().getNumber());
-                        HashSuppliers.put(supplier.getSN(),
-                                new Supplier(supplier.getSN(),supplier.getName(),supplier.getPhone(),
-                                        supplier.getContactName(),address,area_list.get(supplier.getAreaSn())));
-                    }
-                }
-                if (!HashStore.containsKey(dummy_missing_item.getStore_id()))
-                {
-                    dummy_store dummy_store = mapper.selectStore(dummy_missing_item.getStore_id());
-                    if(dummy_store!=null)
-                    {
-                        HashStore.put(dummy_store.getId(),new Store(dummy_store.getId(),dummy_store.getName(),
-                                dummy_store.getPhone(),dummy_store.getContact_name(),
-                                new Address(dummy_store.getCity(),dummy_store.getStreet(),dummy_store.getNumber()),
-                                area_list.get(dummy_store.getAreaSn())));
-                    }
-                }
+
+                upload_Supplier(missingItem.getSupplierId());
+                upload_Store(dummy_missing_item.getStore_id());
+
                 MissingItems.put(missingItem.getID(),missingItem);
             }
         }
     }
+
+    public void upload_ItemFile(int SN){
+
+        dummy_Items_File dummy_items_file = mapper.selectItemfile(SN);
+        if (dummy_items_file!=null)
+        {
+            upload_Supplier(dummy_items_file.getSupplier_id());
+            upload_Store(dummy_items_file.getStore_id());
+            Store store = HashStore.get(dummy_items_file.getStore_id());
+            Supplier supplier = HashSuppliers.get(dummy_items_file.getSupplier_id());
+            ItemsFile itemsFile = new ItemsFile(dummy_items_file.getSn(),dummy_items_file.getItems(),
+                    store,supplier);
+            HashItemsFile.put(itemsFile.getId(),itemsFile);
+        }
+    }
+
+    public void add_ItemFile(ItemsFile itemsFile){
+        if(!HashItemsFile.containsKey(itemsFile.getId()))
+        {
+            HashItemsFile.put(itemsFile.getId(),itemsFile);
+            mapper.insertItemfile(itemsFile.getId(),itemsFile.getSupplier().getId(),itemsFile.getStore().getId(),
+                    itemsFile.getItems_list());
+        }
+    }
+
+    public void set_ItemFile_idCouter(){
+        ItemsFile.setIdCounter(mapper.getNextSNItemfile());
+    }
+
+    public void upload_Trucks() throws Buisness_Exception{
+        List<dummy_Truck> list = mapper.selectAllTrucks();
+        upload_license();
+        for (dummy_Truck dummy_truck : list)
+        {
+            if(!HashTrucks.containsKey(dummy_truck.getSN()))
+            {
+                List<License> license_list = new LinkedList<>();
+                for (Integer id :dummy_truck.getLicense_type())
+                {
+                    license_list.add(getLicenseByName(id.toString()));
+                }
+                Truck truck = new Truck(dummy_truck.getSN(),license_list,dummy_truck.getModel(),dummy_truck.getWeight(),
+                        dummy_truck.getMax_weight());
+                HashTrucks.put(truck.getId(),truck);
+
+
+                for(Integer id : mapper.selectTransportationTrucks(dummy_truck.getSN()))
+                {
+                    upload_Transportation(id);
+                    HashTrucks.get(truck.getId()).getTransportations().add(HashTransportation.get(id));
+                }
+            }
+        }
+    }
+
+    public void upload_Store(Integer SN){
+        if (!HashStore.containsKey(SN))
+        {
+            dummy_store dummy_store = mapper.selectStore(SN);
+            if(dummy_store!=null)
+            {
+                HashStore.put(dummy_store.getId(),new Store(dummy_store.getId(),dummy_store.getName(),
+                        dummy_store.getPhone(),dummy_store.getContact_name(),
+                        new Address(dummy_store.getCity(),dummy_store.getStreet(),dummy_store.getNumber()),
+                        area_list.get(dummy_store.getAreaSn())));
+            }
+        }
+
+    }
+
+    public void upload_Supplier(Integer SN){
+        if (!HashSuppliers.containsKey(SN))
+        {
+            dummy_supplier supplier = mapper.selectSupplier(SN);
+            if (supplier!=null)
+            {
+                Address address = new Address(supplier.getDummy_address().getCity(),supplier.getDummy_address().getStreet(),
+                        supplier.getDummy_address().getNumber());
+                HashSuppliers.put(supplier.getSN(),
+                        new Supplier(supplier.getSN(),supplier.getName(),supplier.getPhone(),
+                                supplier.getContactName(),address,area_list.get(supplier.getAreaSn())));
+            }
+        }
+
+    }
+
+    public void upload_Driver(Integer SN){
+        // TODO: upload Driver
+
+    }
+
+    public void upload_Transportation(int SN) throws Buisness_Exception {
+        if(!HashTransportation.containsKey(SN))
+        {
+            dummy_Transportation dummy_transportation = mapper.selectTransportation(SN);
+            Driver driver = null;
+            if(Drivers.containsKey(dummy_transportation.getDriverSn()))
+                driver = Drivers.get(dummy_transportation.getDriverSn());
+
+            Truck truck = null;
+            if(HashTrucks.containsKey(dummy_transportation.getTrucksn()))
+                truck = HashTrucks.get(dummy_transportation.getTrucksn());
+
+            Transportation transportation = new Transportation(dummy_transportation.getId(),dummy_transportation.getDate(),
+                    dummy_transportation.getLeaving_time(),driver,truck);
+
+            for(Integer id : dummy_transportation.getStores())
+            {
+                upload_Store(id);
+                transportation.getStores().add(HashStore.get(id));
+            }
+            for(Integer id : dummy_transportation.getSuppliers())
+            {
+                upload_Supplier(id);
+                transportation.getSuppliers().add(HashSuppliers.get(id));
+            }
+
+            for(Integer id : dummy_transportation.getItemsFile())
+            {
+                upload_ItemFile(id);
+                transportation.getItemsFiles().add(HashItemsFile.get(id));
+            }
+
+
+            // TODO: upload Stores
+            // TODO: upload Supplier
+            // TODO: upload ItemFile
+
+
+
+
+
+        }
+
+
+
+    }
+
+    public void add_Transportation(Transportation transportation){
+        if(!HashTransportation.containsKey(transportation.getId()))
+        {
+            HashTransportation.put(transportation.getId(),transportation);
+            List<Integer> Suppliers = new LinkedList<>();
+            for(Supplier s:transportation.getSuppliers())
+            {
+                Suppliers.add(s.getId());
+            }
+            List<Integer> Stores = new LinkedList<>();
+            for(Store s:transportation.getStores())
+            {
+                Stores.add(s.getId());
+            }
+            List<Integer> ItemFiles = new LinkedList<>();
+            for(ItemsFile i:transportation.getItemsFiles())
+            {
+                ItemFiles.add(i.getId());
+            }
+            mapper.insertTransportation(transportation.getId(),transportation.getDate(),transportation.getDepartureTime(),
+                    transportation.getWeight_truck(),transportation.getTruck().getId(),transportation.getDriveId(),
+                    Suppliers,Stores,ItemFiles);
+        }
+
+    }
+
+    public void set_Transportation_idCouter(){
+        Transportation.setIdCounter(mapper.getNextSNTransportation());
+    }
+
 
     public void upload_Area(){
         if(area_list.isEmpty())
@@ -124,12 +281,14 @@ public class Service {
         }
     }
 
-
     public void upload_license(){
-        List<String> list= truck_dao.upload_license();
-        int i=1;
-        for(String license: list){
-            license_list.put(i,new License(i,license));
+        if(license_list.isEmpty())
+        {
+            List<dummy_License> list = mapper.selectAllLicense();
+            for (dummy_License l : list)
+            {
+                license_list.put(l.getSN(),new License(l.getSN(),l.getLicenseType()));
+            }
         }
     }
 
@@ -274,13 +433,13 @@ public class Service {
     }
 */
 
-    public List<ItemsFile> getItemsFile(){
-        return ItemsFile;
+    public ConcurrentHashMap<Integer,ItemsFile> getHashItemsFile(){
+        return HashItemsFile;
     }
 
     //print list of all the suppliers
 
-    public ConcurrentHashMap<Integer, Business_Layer.Transportations.Modules.MissingItems> getMissing(){
+    public ConcurrentHashMap<Integer, MissingItems> getMissing(){
         return MissingItems;
     }
 

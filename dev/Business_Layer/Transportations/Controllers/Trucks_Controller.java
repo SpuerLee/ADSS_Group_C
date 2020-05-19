@@ -110,6 +110,8 @@ public class Trucks_Controller {
 
     public List<String> getFreeTrucks(Date date, int departureTime ) throws Buisness_Exception{
         Service service=Service.getInstance();
+        service.upload_Trucks();
+
         List<String> output = new LinkedList<String>();
         for (Truck truck : service.getHashTrucks().values()) {
             if (truck.checkIfFree(date, departureTime)) {
@@ -118,7 +120,7 @@ public class Trucks_Controller {
                 output.add(line);
             }
             if(output.isEmpty())
-                throw new Buisness_Exception("there are on free tracks\n");
+                throw new Buisness_Exception("there are on free trucks\n");
 
         }
         return output;

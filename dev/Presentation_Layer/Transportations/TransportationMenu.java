@@ -165,7 +165,7 @@ public class TransportationMenu {
                 boolean hasKeeper = true;
                 for (Integer storeId1: stores)
                 {
-
+                    //TODO: Upload StoreKeeper
                     if (!systemInterfaceTransportations.isStoreKeeperAvailable(date,shift,storeId1))
                     {
                         System.out.println("There are no Store Keeper available for store "+storeId1.toString()+
@@ -175,7 +175,6 @@ public class TransportationMenu {
                 }
                 if(!hasKeeper)
                     continue;
-
                 List<String> freeTrucks = systemInterfaceTransportations.getFreeTrucks(date, shiftType);
                 if (!freeTrucks.isEmpty()) {
                     System.out.println("The trucks available for the date are:");

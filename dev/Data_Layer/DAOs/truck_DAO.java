@@ -1,7 +1,10 @@
 package Data_Layer.DAOs;
 
 import Data_Layer.Connection;
+import Data_Layer.Dummy_objects.dummy_Address;
+import Data_Layer.Dummy_objects.dummy_License;
 import Data_Layer.Dummy_objects.dummy_Truck;
+import javafx.util.Pair;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -74,72 +77,81 @@ public class truck_DAO {
         throw new NullPointerException();
     }
 
-    public List<String> upload_license(){
+    public List<dummy_License> selectAllLicense(){
         String selectQuery = "select * from License";
-        List<String> list=new LinkedList<>();
+        List<dummy_License> list=new LinkedList<>();
         try {
-
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(selectQuery);
             while (rs2.next()){
-                String add=rs2.getString("LicenseType");
-                if(!list.contains(add))
-                    list.add(add);
+                dummy_License add= new dummy_License(rs2.getInt("SN"),
+                        rs2.getString("LicenseType"));
+                list.add(add);
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
     }
 
-    public void upload_license_types(){
-        String query_type="INSERT INTO \"main\".\"License\"\n" +
-                "(\"SN\", \"LicenseType\")\n" +
-                String.format("VALUES ('%d', '%s');", 1, "C");
 
+
+    public List<dummy_Truck> selectAll(){
+        List<dummy_Truck> output = new LinkedList<>();
+        String query="SELECT * FROM Trucks";
         try {
-            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query_type);
-            statement.executeUpdate();
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            while (rs2.next()) {
+                dummy_Truck dummy_truck = new dummy_Truck(rs2.getInt("SN"),rs2.getInt("LicenseNumber"),
+                        rs2.getString("Model"),rs2.getInt("Weight"),rs2.getInt("MaxWeight"));
+
+
+                String query2="SELECT * FROM Truck_License\n"+
+                        String.format("WHERE TruckSN = '%d';",dummy_truck.getSN());
+                List<Integer> license = new LinkedList<>();
+                try {
+                    Statement stmt = Connection.getInstance().getConn().createStatement();
+                    ResultSet rs  = stmt.executeQuery(query2);
+                    while (rs.next()) {
+                        license.add(rs.getInt("LicenseSN"));
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    throw new NullPointerException();
+                }
+                dummy_truck.setLicense_type(license);
+
+                output.add(dummy_truck);
+            }
+            return output;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        throw new NullPointerException();
+    }
 
-        String query_1="INSERT INTO \"main\".\"License\"\n" +
-                "(\"SN\", \"LicenseType\")\n" +
-                String.format("VALUES ('%d', '%s');", 2, "C1");
-
+    public List<Integer> selectTransportation(int SN) {
+        List<Integer> items=new LinkedList<>();
+        String query = "SELECT TransportationSN FROM Transportation_Truck\n" +
+                String.format("WHERE TruckSN = '%d';", SN);
         try {
-            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query_1);
-            statement.executeUpdate();
-        } catch (SQLException e) {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2 = stmt2.executeQuery(query);
+            while (rs2.next()){
+                items.add(rs2.getInt("TransportationSN"));
+            }
+        }
+        catch (SQLException e){
             e.printStackTrace();
         }
+        return items;
     }
 
 
 
 
-//    public List<dummy_Truck> select(){
-//        String query="SELECT * FROM Trucks";
-//        List<dummy_Truck> list=new LinkedList<>();
-//        try {
-//
-//            Statement stmt2 = Connection.getInstance().getConn().createStatement();
-//            ResultSet rs2  = stmt2.executeQuery(query);
-//            while (rs2.next()) {
-//                list.add(new dummy_Truck(rs2.getInt("SN"),rs2.getInt("LicenseNumber"),rs2.getString("Model"),rs2.getInt("Weight"),rs2.getInt("MaxWeight"),get_type(rs2.getInt("SN"))));
-//            }
-//            return list;
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        throw new NullPointerException();
-//    }
-//
-//
+
 //    public dummy_Truck select_by_id(int id){
 //
 //        String selectQuery = String.format("select * from Trucks where Trucks.SN = '%d'",id);

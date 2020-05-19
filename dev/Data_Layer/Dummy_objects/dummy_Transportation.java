@@ -1,6 +1,7 @@
 package Data_Layer.Dummy_objects;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class dummy_Transportation {
@@ -26,6 +27,18 @@ public class dummy_Transportation {
         this.itemsFile=itemsFile;
         this.suppliers=suppliers;
         this.stores=stores;
+        this.DriverSn=Driver;
+    }
+
+    public dummy_Transportation(int Id,Date date, int leaving_time, double truck_weight,int trucksn, int Driver){
+        this.Id=Id;
+        this.date=date;
+        this.leaving_time=leaving_time;
+        this.truck_weight=truck_weight;
+        this.trucksn=trucksn;
+        this.itemsFile=new LinkedList<>();
+        this.suppliers=new LinkedList<>();
+        this.stores=new LinkedList<>();
         this.DriverSn=Driver;
     }
 

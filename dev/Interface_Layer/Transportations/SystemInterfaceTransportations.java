@@ -28,6 +28,7 @@ public class SystemInterfaceTransportations {
 
     private SystemInterfaceTransportations() {
         service.upload_Area();
+        service.upload_license();
     }
 
     public static SystemInterfaceTransportations getInstance() {

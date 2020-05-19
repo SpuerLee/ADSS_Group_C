@@ -14,7 +14,7 @@ import java.util.*;
 public class Transportation {
 
 
-    private static int idcounter = 1;
+    private static int idcounter = 0;
 
     private int id;
     private Date date;
@@ -34,6 +34,17 @@ public class Transportation {
         this.truck = truck;
         this.suppliers = suppliers;
         this.stores = stores;
+        this.itemsFiles = new LinkedList<>();
+    }
+
+    public Transportation(int id, Date date, int DepartureTime, Driver drivers, Truck truck) {
+        this.id = idcounter++;
+        this.date = date;
+        this.DepartureTime = DepartureTime;
+        this.driver = drivers;
+        this.truck = truck;
+        this.suppliers =new LinkedList<>();
+        this.stores = new LinkedList<>();
         this.itemsFiles = new LinkedList<>();
     }
 
@@ -66,6 +77,12 @@ public class Transportation {
         }
         return output;
 
+    }
+    public static int getIdCounter(){
+        return idcounter;
+    }
+    public static void setIdCounter(int id){
+        idcounter = id;
     }
     public void setDriver(Driver driver)
     {
