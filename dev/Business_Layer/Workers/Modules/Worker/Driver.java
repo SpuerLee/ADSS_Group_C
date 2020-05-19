@@ -54,6 +54,16 @@ import java.util.List;
         transportations.removeIf(transportation1 -> transportationID == transportation1.getId());
     }
 
+    public boolean addLicense(String license){
+        if(this.getLicenses().contains(license)){
+            return false;
+        }
+        else{
+            this.getLicenses().add(license);
+            return true;
+        }
+    }
+
     public List<Transportation> getTransportations(){
         return transportations;
     }

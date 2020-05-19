@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import Business_Layer.Modules.Address;
+import Business_Layer.Modules.License;
 import Business_Layer.Modules.Store;
 import Business_Layer.Service;
 import Business_Layer.Workers.Modules.Shift;
@@ -13,6 +14,7 @@ import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.enums;
 import Data_Layer.DAOs.*;
 import Data_Layer.Dummy_objects.*;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import javafx.util.Pair;
 
 
@@ -134,7 +136,7 @@ public class Mapper {
        List<dummy_store> dummy_Stores = store_Mapper.select();
        for(dummy_store store: dummy_Stores){
            Address address = selectAddressBySN(store.getAddress_Sn());
-           Store toADD = new Store(store.getName(),store.getPhone(),store.getContact_name(),address, Service.getInstance().getArea_list().get(store.getAreaSn()));
+           Store toADD = new Store(store.getName(),store.getPhone(),store.getContact_name(),address, Service.getInstance().getArea_list().get(store.getAreaSn()),store.getId());
            Service.getInstance().getHashStoresMap().putIfAbsent(toADD.getId(),toADD);
        }
     }
@@ -190,14 +192,43 @@ public class Mapper {
         return enums.valueOf(DBday);
     }
 
-    public Worker getWorker(int StoreSN, int workerSN){
-        if(Service.getInstance().getWorkerList(StoreSN).containsKey(workerSN)){
-            return Service.getInstance().getWorkerList(StoreSN).get(workerSN);
+/*
+    public String findJobTitle(int worker_type){
+        switch (worker_type){
+            case 1:
+                return cash
         }
-        else {
+    }
+*/
 
+    public Worker getWorker(int StoreSN, int workerSN){
+        Worker worker = null;
+        if(Service.getInstance().getWorkerList(StoreSN).containsKey(workerSN)){ //worker already exists
+            return Service.getInstance().getWorkerList(StoreSN).get(workerSN);
+        } //
+        dummy_Worker toADD = worker_Mapper.selectWorkerBySN(workerSN); //get the worker from db
+        worker = new Worker(toADD.getId(),toADD.getName(),toADD.getPhone(),toADD.getBankAccount(),toADD.getSalary(),
+                toADD.getStart_Date(),toADD.getJob_title(),workerSN,StoreSN);
+        if( toADD.getJob_title().toUpperCase().equals("DRIVER")){ //if driver add licenses
+            String newLicense = "";
+            List<Integer> licenses = worker_Mapper.selectDriverLicenseByWorkerSN(workerSN);
+            if(licenses.contains(1)){
+                newLicense = "C";
+                if(licenses.contains(2)){
+                    newLicense = "C,C1";
+                }
+            }else if(licenses.contains(2)){
+                newLicense="C1";
+            }
+            worker = new Driver(toADD.getId(),toADD.getName(),toADD.getPhone(),toADD.getBankAccount(),toADD.getSalary(),
+                    toADD.getStart_Date(),toADD.getJob_title(),workerSN,StoreSN,newLicense);
+        } //add constraints
+        List<Pair<Integer,Integer>> constraints = worker_Mapper.selectConstrainsByWorkerSN(workerSN);
+        for(Pair x: constraints){
+            worker.addConstrainsToWorker(dayToEnum((int)x.getKey()),shiftTypeToEnum((int)x.getValue()));
         }
-        return worker_Mapper.selectWorkerBySN(workerSN);
+        Service.getInstance().getWorkerList().putIfAbsent(workerSN,worker);
+        return worker;
     }
 
     public List<Worker> getShiftsWorker(int StoreSN,List<Integer> workers){
@@ -239,5 +270,20 @@ public class Mapper {
             Worker worker1 = getWorker(StoreSN,worker.getSN());
             Service.getInstance().getWorkerList().putIfAbsent(worker1.getWorkerSn(),worker1);
         }
+    }
+    //in area license shift_type
+
+    public void clearDB() {
+        //DELETE EVERYTHING
+        shift_Mapper.deleteAllShift_Worker();
+        worker_Mapper.deleteAllDriverLicense();
+        worker_Mapper.deleteAllConstraints();
+        worker_Mapper.deleteAllWorkers();
+        shift_Mapper.deleteAllShifts();
+        store_Mapper.deleteAllStores();
+        address_Mapper.deleteAll();
+        area_Mapper.deleteAll();
+        worker_Mapper.deleteLicenseType();
+        worker_Mapper.deleteShiftType();
     }
 }

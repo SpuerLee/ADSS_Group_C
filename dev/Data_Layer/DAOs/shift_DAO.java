@@ -19,14 +19,14 @@ public class shift_DAO {
         int sn = shift.getSn();
         String query = "INSERT INTO \"main\".\"Shift\"\n" +
                 "(\"SN\", \"StoreSN\", \"ShiftType\", \"ManagerSN\", \"date\")\n" +
-                String.format("VALUES ('%d','%d','%d','%d', '%s');",
-                        sn , shift.getBranch(),shift.getShift_type(), shift.getManager(),"date");
+                String.format("VALUES ('%d','%d','%d','%d', %s);",
+                        sn , shift.getBranch(),shift.getShift_type(), shift.getManager(),"?");
         System.out.println(query);
-     //   java.sql.Date sqlDate = new java.sql.Date(shift.getDate().getTime());
+        java.sql.Date sqlDate = new java.sql.Date(shift.getDate().getTime());
 
         try {
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
-            //statement.setDate(5,sqlDate);
+            statement.setDate(1,sqlDate);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -79,7 +79,7 @@ public class shift_DAO {
     }
 
     public List<Integer> selectShiftWorkersByShiftSN(int ShiftSN){
-        String constrainsQuery = String.format("select * from Shift_Worker where SNShift = '%d", ShiftSN);
+        String constrainsQuery = String.format("select * from Shift_Worker where SNShift = %d", ShiftSN);
         List<Integer> workers = new LinkedList<>();
         try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
@@ -121,6 +121,16 @@ public class shift_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteAllShift_Worker() {
+        String delete = "DELETE from Shift_Worker;";
+        executeQuery(delete);
+    }
+
+    public void deleteAllShifts() {
+        String delete = "DELETE from Shift;";
+        executeQuery(delete);
     }
 
    /* public Shift selectShiftsByStoreSN(int storeSN){

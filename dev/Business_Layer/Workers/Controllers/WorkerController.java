@@ -542,4 +542,33 @@ public class WorkerController {
     public void getWorkers() {
         Mapper.getInstance().getAllWorkersByStore(this.currentStoreSN);
     }
+
+    public boolean isDriver(int sn) {
+        return this.getWorkerBySn(sn).getWorkerJobTitle().toUpperCase().equals("DRIVER");
+    }
+
+    public InfoObject addNewLicense(int workerSn, String license) {
+        InfoObject infoObject = new InfoObject("Added driver's license successfully",true);
+        if(!(license.toUpperCase().equals("C") || (license.toUpperCase().equals("C1") ))){
+            infoObject.setMessage("Invalid license");
+            infoObject.setIsSucceeded(false);
+            return infoObject;
+        } else {
+            Driver driver = Service.getInstance().getDrivers().get(workerSn);
+            boolean added = driver.addLicense(license);
+            if (!added) {
+                infoObject.setMessage("This driver already has this license");
+                infoObject.setIsSucceeded(false);
+                return infoObject;
+            }
+            List<String> list = new LinkedList<>();
+            list.add(license);
+            Savelicenses(workerSn,list);
+            return infoObject;
+        }
+    }
+
+    public void clearDB() {
+        Mapper.getInstance().clearDB();
+    }
 }

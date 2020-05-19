@@ -3,6 +3,7 @@ package Data_Layer.DAOs;
 import Data_Layer.Connection;
 import Data_Layer.Dummy_objects.dummy_Address;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,5 +31,19 @@ public class address_DAO {
             e.printStackTrace();
         }
         throw new NullPointerException();
+    }
+    private void executeQuery(String query){
+        try {
+            // java.sql.Date sqlDate = new java.sql.Date(worker.getStart_Date().getTime());
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            //statement.setDate(7,sqlDate);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void deleteAll() {
+        String delete = "DELETE from Address;";
+        executeQuery(delete);
     }
 }

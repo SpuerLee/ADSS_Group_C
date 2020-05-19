@@ -7,19 +7,19 @@ import java.sql.SQLException;
 import java.text.MessageFormat;
 
 public class area_DAO {
-    public void insert(int SN, String area){
+    public void insert(int SN, String area) {
         String query = MessageFormat.format(
                 "INSERT INTO \"main\".\"Area\"\n(\"SN\",\"AreaName\")\n{0}", String.format("VALUES ('%d','%s');",
-                        SN,area));
+                        SN, area));
 
         executeQuery(query);
 
     }
 
-    private void executeQuery(String query){
+    private void executeQuery(String query) {
         try {
             // java.sql.Date sqlDate = new java.sql.Date(worker.getStart_Date().getTime());
-            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            PreparedStatement statement = Connection.getInstance().getConn().prepareStatement(query);
             //statement.setDate(7,sqlDate);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -27,11 +27,18 @@ public class area_DAO {
         }
     }
 
-    public void delete(){
+    public void delete() {
 
     }
 
-    public void update(){
+    public void update() {
 
+    }
+
+
+    public void deleteAll() {
+        String delete = "DELETE from Area;";
+        executeQuery(delete);
     }
 }
+

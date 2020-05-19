@@ -48,12 +48,12 @@ public class worker_DAO {
     }*/
 
     public void insert(dummy_Worker worker) {
-        String query = MessageFormat.format("INSERT INTO \"main\".\"Workers\"\n(\"SN\",\"ID\",\"Name\",\"PhoneNumber\",\"BankAccount\", \"Salary\", \"StoreSN\", \"date\", \"Worker_Type\")\n{0}", String.format("VALUES ('%d','%d','%s','%s','%d','%d','%d', '%s', '%d');", worker.getSN(),worker.getId(), worker.getName(), worker.getPhone(), worker.getBankAccount(), worker.getSalary(), worker.getStoreSN(), "date", 1));
+        String query = MessageFormat.format("INSERT INTO \"main\".\"Workers\"\n(\"SN\",\"ID\",\"Name\",\"PhoneNumber\",\"BankAccount\", \"Salary\", \"StoreSN\", \"date\", \"Worker_Type\")\n{0}", String.format("VALUES ('%d','%d','%s','%s','%d','%d','%d', %s , '%d');", worker.getSN(),worker.getId(), worker.getName(), worker.getPhone(), worker.getBankAccount(), worker.getSalary(), worker.getStoreSN(), "?", worker.getJob_title()));
 
         try {
             java.sql.Date sqlDate = new java.sql.Date(worker.getStart_Date().getTime());
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
-            //statement.setDate(7,sqlDate);
+            statement.setDate(1,sqlDate);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -78,96 +78,33 @@ public class worker_DAO {
                 String.format("VALUES ('%d', '%d');", shiftToInsert.getShiftSn(),worker.getWorkerSn());
     }*/
 
-    public Worker selectWorkerBySN(int workerSN){
+    public dummy_Worker selectWorkerBySN(int workerSN){
         Worker workerToReturn = null;
         String selectQuery = String.format("select * from Workers where Workers.SN = '%d'",workerSN);
-
-
-        // if driver ??
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        return workerToReturn;
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(selectQuery);
+            rs2.next();
+            dummy_Worker toADD = new dummy_Worker(rs2.getInt("SN"),rs2.getInt
+                    ("ID"),rs2.getString("Name"),rs2.getString("PhoneNumber"),
+                    rs2.getInt("BankAccount"),rs2.getInt("Salary"),rs2.getInt("StoreSN"),rs2.getDate("Date"),rs2.getString("Worker_Type"));
+            return toADD;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
     }
 
     public List<dummy_Worker> selectWorkersByStoreSN(int storeSN){
         List<dummy_Worker> workerToReturn = new LinkedList<>();
-        String selectQuery = String.format("select * from Workers where StoreSN = '%d", storeSN);
+        String selectQuery = String.format("select * from Workers where StoreSN = '%d'", storeSN);
         try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(selectQuery);
             while (rs2.next()) {
                dummy_Worker toADD = new dummy_Worker(rs2.getInt("SN"),rs2.getInt
                        ("ID"),rs2.getString("Name"),rs2.getString("PhoneNumber"),
-                       rs2.getInt("BankAccount"),rs2.getInt("Salary"),rs2.getInt("StoreSN"),rs2.getDate("Date"),"1");
+                       rs2.getInt("BankAccount"),rs2.getInt("Salary"),rs2.getInt("StoreSN"),rs2.getDate("Date"),rs2.getString("Job_Title"));
                workerToReturn.add(toADD);
             }
             return workerToReturn;
@@ -178,7 +115,7 @@ public class worker_DAO {
     }
 
     public List<Pair<Integer,Integer>> selectConstrainsByWorkerSN(int workerSN){
-        String constrainsQuery = String.format("select * from Constrains where WorkerSN = '%d", workerSN);
+        String constrainsQuery = String.format("select * from Constrains where WorkerSN = %d", workerSN);
         List<Pair<Integer,Integer>> constraints = new LinkedList<>();
         try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
@@ -231,7 +168,6 @@ public class worker_DAO {
         }
         throw new NullPointerException();
     } */
-
 
     public void updateSalary(int sn,int salary){
         String query_Salary = "UPDATE \"main\".\"Workers\"\n" + "SET Salary = " + salary +" WHERE SN = "+sn;
@@ -293,7 +229,7 @@ public class worker_DAO {
             //statement.setDate(7,sqlDate);
             statement.executeUpdate();
         } catch (SQLException e) {
-           // e.printStackTrace();
+         //  e.printStackTrace();
         }
     }
 
@@ -306,6 +242,31 @@ public class worker_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteAllDriverLicense() {
+        String delete = "DELETE from Driver_License;";
+        executeQuery(delete);
+    }
+
+    public void deleteAllConstraints() {
+        String delete = "DELETE from Constrains;";
+        executeQuery(delete);
+    }
+
+    public void deleteAllWorkers() {
+        String delete = "DELETE from Workers;";
+        executeQuery(delete);
+    }
+
+    public void deleteLicenseType() {
+        String delete = "DELETE from License;";
+        executeQuery(delete);
+    }
+
+    public void deleteShiftType() {
+        String delete = "DELETE from Shift_Type;";
+        executeQuery(delete);
     }
 /*
     public void insert(dummy_Worker worker) {

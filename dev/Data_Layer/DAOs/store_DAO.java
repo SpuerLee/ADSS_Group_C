@@ -132,4 +132,18 @@ public class store_DAO {
 
 
     }
+    private void executeQuery(String query){
+        try {
+            // java.sql.Date sqlDate = new java.sql.Date(worker.getStart_Date().getTime());
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            //statement.setDate(7,sqlDate);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void deleteAllStores() {
+        String delete = "DELETE from Stores;";
+        executeQuery(delete);
+    }
 }

@@ -37,6 +37,10 @@ public class Service {
         return this.shiftController;
     }
 
+    public boolean isDriver(int sn) {
+        return this.workerController.isDriver(sn);
+    }
+
     private static class SingletonService {
 
         private static Service instance = new Service();

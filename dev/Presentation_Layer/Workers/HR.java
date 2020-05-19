@@ -35,12 +35,7 @@ public class HR {
     }
 
     public static void run() throws Buisness_Exception {
-        try {
-            Mapper.getInstance().init();
-        }
-        catch (Exception e){
 
-        }
         System.out.println("1. Run tests");
         System.out.println("2. Start system");
         System.out.println("Enter 0 to go back");
@@ -112,22 +107,48 @@ public class HR {
     }
 
     private static void systemStart(Scanner sc) throws Buisness_Exception{
+        //new new new system -- delete everything and mapper.init.
+        //old system new iteration -- no special action, just takes data from db when it needs to.
+        //new system with data -- new new new system and insert some data.
+
         System.out.println("Welcome to SuperLee");
-        System.out.println("1. Choose start with data");
-        System.out.println("2. Start new system");
+        System.out.println("1. Start new system");
+        System.out.println("2. Start new system with data");
+        System.out.println("3. Resume last session ");
         System.out.println("Enter 0 to go back");
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int selectedOption = sc.nextInt();
-        if (selectedOption == 1) {
-            initSuperLeeWithWorkers();
-        }
         if (selectedOption == 0) {
             throw new Buisness_Exception("Going back");
         }
-        if (selectedOption < 0 || selectedOption > 2) {
+        if (selectedOption == 1) { ///new system
+            cleanSuperLeeDB();
+            try {
+                Mapper.getInstance().init();
+            }
+            catch (Exception e){
+
+            }
+            chooseStore(sc);
+        }
+        if (selectedOption == 2) { ///new system with data
+            cleanSuperLeeDB();
+            try {
+                Mapper.getInstance().init();
+            }
+            catch (Exception e){
+
+            }
+            initSuperLeeWithWorkers();
+            chooseStore(sc);
+        }
+        if (selectedOption == 3) {
+            chooseStore(sc);
+        }
+        if (selectedOption < 0 || selectedOption > 3) {
             System.out.println("Invalid input, please try again");
             systemStart(sc);
         }
@@ -135,8 +156,17 @@ public class HR {
 
     }
 
-    private static void chooseStore(Scanner sc) throws Buisness_Exception{
+    private static void cleanSuperLeeDB() {
+        SystemInterfaceWorkers.getInstance().clearDB();
+    }
 
+    private static void chooseStore(Scanner sc) throws Buisness_Exception{
+        try {
+            Mapper.getInstance().init();
+        }
+        catch (Exception e){
+
+        }
         System.out.println("1. Choose store");
         System.out.println("2. Add store");
         while (!sc.hasNextInt()) {
@@ -370,6 +400,9 @@ public class HR {
         System.out.println("Choose action: ");
         System.out.println("1. Edit worker constrains");
         System.out.println("2. Edit worker salary");
+        if(SystemInterfaceWorkers.getInstance().isDriver(workerSn)){
+            System.out.println("3. Add driver license");
+        }
         //System.out.println("3. Fire worker");
         System.out.println("Enter 0 to go back to main menu");
         while (!sc.hasNextInt()) {
@@ -385,6 +418,13 @@ public class HR {
             case 2: // Edit salary
                 EditWorkerSalary(sc, workerSn);
                 break;
+            case 3:
+                if(SystemInterfaceWorkers.getInstance().isDriver(workerSn)){
+                    AddDriverLicense(sc,workerSn);
+                }else{
+                    System.out.println("Invalid input, going back to display workers");
+                    displayWorkers(sc);
+                }
          /*   case 3: // Fire worker
                 checkResponse(SystemInterfaceWorkers.getInstance().removeWorkerBySn(workerSn), sc);
                 checkResponse(SystemInterfaceWorkers.getInstance().removeLaterShiftForFiredManagerByManagerSn(workerSn), sc);
@@ -396,6 +436,13 @@ public class HR {
                 System.out.println("Invalid input, going back to display workers");
                 displayWorkers(sc);
         }
+    }
+
+    private static void AddDriverLicense(Scanner sc, int workerSn) throws Buisness_Exception {
+        System.out.println("Enter new License");
+        String License = sc.nextLine();
+        License = sc.nextLine();
+        checkResponse(SystemInterfaceWorkers.getInstance().addNewLicense(workerSn,License),sc);
     }
 
     private static void EditWorkerSalary(Scanner sc, int workerSn) throws Buisness_Exception {
