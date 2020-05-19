@@ -498,9 +498,9 @@ public class HR {
         Service.getInstance().getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier", "");
         Service.getInstance().getWorkerController().addWorker(101, "Hadar Kor", "101", 124, 2500, "15-04-2020", "Manager", "");
         Service.getInstance().getWorkerController().addWorker(102, "Tomer Hacham", "102", 125, 10000, "15-04-2020", "Storekeeper", "");
-        Service.getInstance().getShiftController().createShift("MORNING", 2, "1,3", "19-12-2020");
-        Service.getInstance().getShiftController().createShift("NIGHT", 2, "1", "19-12-2020");
-        Service.getInstance().getShiftController().createShift("MORNING", 2, "3", "20-12-2020");
+        Service.getInstance().getShiftController().createShift("MORNING", 9, "8,10", "19-12-2020");
+        Service.getInstance().getShiftController().createShift("NIGHT", 9, "10", "19-12-2020");
+        Service.getInstance().getShiftController().createShift("MORNING", 9, "8", "20-12-2020");
 
     }
 

@@ -243,7 +243,15 @@ public class Mapper {
     public void getAllShifts(int storeSn){
         List<dummy_Shift> dummy_Shifts = shift_Mapper.selectShiftByStoreSN(storeSn);
         for(dummy_Shift shift: dummy_Shifts){
-            Shift shift1 = new Shift(shift.getDate(),shiftTypeToEnum(shift.getShift_type()),getWorker(storeSn,shift.getManager()),getShiftsWorker(storeSn,shift.getShift_workers()),shift.getSn(),storeSn);
+//            Date shiftDate = shift.getDate();
+//            enums shiftType = shiftTypeToEnum(shift.getShift_type());
+//            Worker manager = getWorker(storeSn,shift.getManager());
+//            List<Worker> listOfWorkers = getShiftsWorker(storeSn,shift.getShift_workers());
+//            int shiftSN = shift.getSn();
+//            int storeSN = storeSn;
+
+            Shift shift1 = new Shift(shift.getDate(),shiftTypeToEnum(shift.getShift_type()),getWorker(storeSn,shift.getManager()),
+                    getShiftsWorker(storeSn,shift.getShift_workers()),shift.getSn(),storeSn);
             Service.getInstance().getShiftHistory().putIfAbsent(shift1.getShiftSn(),shift1);
         }
     }

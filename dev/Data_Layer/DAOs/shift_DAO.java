@@ -69,6 +69,7 @@ public class shift_DAO {
                 dummy_Shift toADD = new dummy_Shift(rs2.getDate("Date"),rs2.getInt
                         ("ShiftType"),rs2.getInt("ManagerSN"),rs2.getInt("SN"),
                        StoreSN);
+                toADD.setShift_workers(selectShiftWorkersByShiftSN(toADD.getSn()));
                 shiftsToReturn.add(toADD);
             }
             return shiftsToReturn;
@@ -95,8 +96,8 @@ public class shift_DAO {
         throw new NullPointerException();
     }
 
-    private List<Integer> get_workers(int Sn){
-        String sql_workers = "select * from Shift_Worker where SN =" + Sn;
+    private List<Integer> get_workers(int ShiftSn){
+        String sql_workers = "select * from Shift_Worker where SNSfhit =" + ShiftSn;
         List<Integer> workers=new LinkedList<>();
 
         try {
