@@ -46,4 +46,20 @@ public class address_DAO {
         String delete = "DELETE from Address;";
         executeQuery(delete);
     }
+
+    public int getAddressSn() {
+        String query = "select SN from Address\n" +
+                " ORDER BY SN DESC\n" +
+                " LIMIT 1;";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            rs2.next();
+            return rs2.getInt("SN");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
 }

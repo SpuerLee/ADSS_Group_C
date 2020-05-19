@@ -220,8 +220,10 @@ public class Mapper {
             }else if(licenses.contains(2)){
                 newLicense="C1";
             }
-            worker = new Driver(toADD.getId(),toADD.getName(),toADD.getPhone(),toADD.getBankAccount(),toADD.getSalary(),
+            Driver driver = new Driver(toADD.getId(),toADD.getName(),toADD.getPhone(),toADD.getBankAccount(),toADD.getSalary(),
                     toADD.getStart_Date(),toADD.getJob_title(),workerSN,StoreSN,newLicense);
+            worker = driver;
+            Service.getInstance().getDrivers().putIfAbsent(workerSN,driver);
         } //add constraints
         List<Pair<Integer,Integer>> constraints = worker_Mapper.selectConstrainsByWorkerSN(workerSN);
         for(Pair x: constraints){
@@ -293,5 +295,22 @@ public class Mapper {
         area_Mapper.deleteAll();
         worker_Mapper.deleteLicenseType();
         worker_Mapper.deleteShiftType();
+    }
+
+
+    public int getstoreSN() {
+        return store_Mapper.getstoreSN();
+    }
+
+    public int getAddressSn() {
+        return address_Mapper.getAddressSn();
+    }
+
+    public int getWorkerSn() {
+        return worker_Mapper.getWorkerSn();
+    }
+
+    public int getShiftSn() {
+        return shift_Mapper.getShiftSn();
     }
 }

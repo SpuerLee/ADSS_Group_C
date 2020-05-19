@@ -146,6 +146,7 @@ public class HR {
             chooseStore(sc);
         }
         if (selectedOption == 3) {
+            getAllSN();
             chooseStore(sc);
         }
         if (selectedOption < 0 || selectedOption > 3) {
@@ -154,6 +155,10 @@ public class HR {
         }
         chooseStore(sc);
 
+    }
+
+    private static void getAllSN() {
+        SystemInterfaceWorkers.getInstance().getAllSN();
     }
 
     private static void cleanSuperLeeDB() {

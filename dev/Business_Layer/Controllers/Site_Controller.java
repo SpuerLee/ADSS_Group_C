@@ -12,6 +12,13 @@ import java.util.List;
 public class Site_Controller {
 
 
+    public void getAllSN() {
+        int Sn = Mapper.getInstance().getAddressSn();
+        this.AddresssnFactory = ++Sn;
+        int storeSN = Mapper.getInstance().getstoreSN();
+        Site.setSn(storeSN);
+    }
+
     private static class SingletonService {
         private static Site_Controller instance = new Site_Controller();
     }

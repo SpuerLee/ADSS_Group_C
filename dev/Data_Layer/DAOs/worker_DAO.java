@@ -133,7 +133,7 @@ public class worker_DAO {
     }
 
     public List<Integer> selectDriverLicenseByWorkerSN(int workerSN){
-        String constrainsQuery = String.format("select * from Driver_License where DriverSN = '%d", workerSN);
+        String constrainsQuery = String.format("select * from Driver_License where DriverSN = %d", workerSN);
         List<Integer> license = new LinkedList<>();
         try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
@@ -267,6 +267,22 @@ public class worker_DAO {
     public void deleteShiftType() {
         String delete = "DELETE from Shift_Type;";
         executeQuery(delete);
+    }
+
+    public int getWorkerSn() {
+        String query = "select SN from Workers\n" +
+                " ORDER BY SN DESC\n" +
+                " LIMIT 1;";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            rs2.next();
+            return rs2.getInt("SN");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
     }
 /*
     public void insert(dummy_Worker worker) {

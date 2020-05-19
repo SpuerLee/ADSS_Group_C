@@ -134,6 +134,25 @@ public class shift_DAO {
         executeQuery(delete);
     }
 
+    public int getShiftSn() {
+        String query = "select SN from Shift\n" +
+                " ORDER BY SN DESC\n" +
+                " LIMIT 1;";
+
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            while (rs2.next()) {
+                return rs2.getInt("SN");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+
+    }
+
    /* public Shift selectShiftsByStoreSN(int storeSN){
         Shift shiftToReturn = null;
         String sql = "select * from Shift where StoreSN =" + storeSN;

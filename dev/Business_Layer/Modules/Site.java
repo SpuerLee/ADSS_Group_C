@@ -36,7 +36,7 @@ public abstract class Site {
         this.area=area;
     }
 
-
+    public static void setSn(int SN){idcounter = ++SN; }
     public String getPhone(){ return phone;}
     public String getContact_name(){return  contact_name;}
     public Address getAddress() {
