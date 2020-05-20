@@ -146,12 +146,12 @@ public class Service {
         {
             if(!HashTrucks.containsKey(dummy_truck.getSN()))
             {
-                List<License> license_list = new LinkedList<>();
+                List<License> license_list1 = new LinkedList<>();
                 for (Integer id :dummy_truck.getLicense_type())
                 {
-                    license_list.add(getLicenseByName(id.toString()));
+                    license_list1.add(license_list.get(id));
                 }
-                Truck truck = new Truck(dummy_truck.getSN(),license_list,dummy_truck.getModel(),dummy_truck.getWeight(),
+                Truck truck = new Truck(dummy_truck.getSN(),dummy_truck.getLicense_number(),license_list1,dummy_truck.getModel(),dummy_truck.getWeight(),
                         dummy_truck.getMax_weight());
                 HashTrucks.put(truck.getId(),truck);
 
@@ -435,11 +435,11 @@ public class Service {
                 e.printStackTrace();
             }
         }
-        Truck trucks = new Truck(license_number, licenses, model, weight,max_weight);
         if(Truck.getIdCounter()==0)
         {
             set_truck_idCouter();
         }
+        Truck trucks = new Truck(license_number, licenses, model, weight,max_weight);
         HashTrucks.put(trucks.getId(), trucks);
         mapper.insertTruck(trucks.getId(),license_number,model,weight,max_weight,to_add);
     }

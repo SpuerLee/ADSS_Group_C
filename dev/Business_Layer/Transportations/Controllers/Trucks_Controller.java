@@ -55,6 +55,7 @@ public class Trucks_Controller {
 
     public List<String> showtrucks() throws Buisness_Exception{
         Service service=Service.getInstance();
+        service.upload_Trucks();
         if(service.getHashTrucks().size()==0){
             throw new Buisness_Exception("There are no trucks in the system"+ "\n");
         }
