@@ -259,12 +259,14 @@ public class Transportation_Controller {
             Transportation transportation =
                     new Transportation(date, DepartureTime, service.getDrivers().get(driver_id),
                             service.getHashTrucks().get(truck_id), suppliers1, stores1);
+
             List<Integer> id_to_delete = new LinkedList<Integer>();
             for (MissingItems missingItems : service.getMissing().values()) {
                 if (stores.contains(missingItems.getStoreId()) && suppliers.contains(missingItems.getSupplierId())) {
                     ItemsFile itemFile = new ItemsFile(missingItems.getItems_list(),
                             service.getHashStoresMap().get(missingItems.getStoreId()),
                             service.getSuppliersMap().get(missingItems.getSupplierId()));
+
                     itemFile.setTransportationID(transportation.getId());
                     itemFile.setFrom_missing_items();
 
@@ -275,7 +277,8 @@ public class Transportation_Controller {
             }
             service.getHashTrucks().get(truck_id).addDate(transportation);
             service.getDrivers().get(driver_id).addDate(transportation);
-            service.add_Transportation( transportation);
+            service.add_Transportation(transportation);
+
             for (Integer id : id_to_delete) {
                 service.remove_MissingItem(id);
             }
@@ -293,14 +296,9 @@ public class Transportation_Controller {
             throws Buisness_Exception{
         try {
             Service service = Service.getInstance();
-            if(Transportation.getIdCounter()==0)
-            {
-                service.set_Transportation_idCouter();
-            }
-            if(ItemsFile.getIdCounter()==0)
-            {
-                service.set_ItemFile_idCouter();
-            }
+            service.set_Transportation_idCouter();
+            service.set_ItemFile_idCouter();
+
             List<Supplier> suppliers1 = new LinkedList<Supplier>();
             List<Store> stores1 = new LinkedList<Store>();
             for (Supplier site : service.getSuppliersMap().values()) {
@@ -315,15 +313,18 @@ public class Transportation_Controller {
 
             Transportation transportation =
                     new Transportation(date, DepartureTime, service.getDrivers().get(driver_id), service.getHashTrucks().get(truck_license_number), suppliers1, stores1);
-            service.getHashTransportation().put(transportation.getId(), transportation);
+
             for (ItemsFile itemsFile : current) {
                 itemsFile.setTransportationID(transportation.getId());
                 transportation.addItemFile(itemsFile);
-                service.getHashItemsFile().put(itemsFile.getId(),itemsFile);
+
+                service.add_ItemFile(itemsFile);
             }
             this.current = new LinkedList<>();
             service.getDrivers().get(driver_id).addDate(transportation);
             service.getHashTrucks().get(truck_license_number).addDate(transportation);
+
+            service.add_Transportation(transportation);
 
         }
         catch (Exception e)
@@ -381,6 +382,7 @@ public class Transportation_Controller {
     public void addItemFiletotransport(List<Pair<String, Integer>> items, int store, int supplier)throws Buisness_Exception {
         try {
             Service service = Service.getInstance();
+            service.set_ItemFile_idCouter();
             ItemsFile itemsFile = new ItemsFile(items, service.getHashStoresMap().get(store), service.getSuppliersMap().get(supplier));
             current.add(itemsFile);
         }

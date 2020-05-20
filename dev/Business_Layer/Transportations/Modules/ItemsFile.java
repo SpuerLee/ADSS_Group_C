@@ -51,7 +51,7 @@ public class ItemsFile {
 
 
     public int getId(){
-        return id;
+        return this.id;
     }
     public Supplier getSupplier() {return this.supplier;}
     public Store getStore(){return this.store;}

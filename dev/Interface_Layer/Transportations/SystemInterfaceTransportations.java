@@ -74,13 +74,7 @@ public class SystemInterfaceTransportations {
     }
 
     public List<String>  get_area_for_suppliers() throws Buisness_Exception {
-      //  service.upload_All_Supplier();
-        if(service.transportation_controller.get_area_for_suppliers().size()==0){
-            throw new Buisness_Exception("There are no suppliers to show");
-        }
-        else {
-            return service.transportation_controller.get_area_for_suppliers();
-        }
+        return service.transportation_controller.get_area_for_suppliers();
     }
 
     public List<String> getSuppliersbyarea(String area) {

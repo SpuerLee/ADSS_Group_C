@@ -357,22 +357,23 @@ public class Service {
 
             Transportation transportation = new Transportation(dummy_transportation.getId(),dummy_transportation.getDate(),
                     dummy_transportation.getLeaving_time(),driver,truck);
+            HashTransportation.put(dummy_transportation.getId(),transportation);
 
             for(Integer id : dummy_transportation.getStores())
             {
                 upload_Store(id);
-                transportation.getStores().add(HashStore.get(id));
+                HashTransportation.get(transportation.getId()).getStores().add(HashStore.get(id));
             }
             for(Integer id : dummy_transportation.getSuppliers())
             {
                 upload_Supplier(id);
-                transportation.getSuppliers().add(HashSuppliers.get(id));
+                HashTransportation.get(transportation.getId()).getSuppliers().add(HashSuppliers.get(id));
             }
 
             for(Integer id : dummy_transportation.getItemsFile())
             {
                 upload_ItemFile(id);
-                transportation.getItemsFiles().add(HashItemsFile.get(id));
+                HashTransportation.get(transportation.getId()).getItemsFiles().add(HashItemsFile.get(id));
             }
 
 
@@ -395,34 +396,42 @@ public class Service {
         List<dummy_Transportation> dummy_transportations = Mapper.getInstance().select_all_Transportation();
         for (dummy_Transportation dummy_transportation:dummy_transportations) {
             if (!HashTransportation.containsKey(dummy_transportation.getId())) {
-                Driver driver = null;
 
+                Transportation transportation = new Transportation(dummy_transportation.getId(), dummy_transportation.getDate(),
+                        dummy_transportation.getLeaving_time(), null, null);
+                HashTransportation.put(dummy_transportation.getId(),transportation);
+
+                // TODO: upload driver
+
+                Driver driver = null;
                 if (Drivers.containsKey(dummy_transportation.getDriverSn()))
                     driver = Drivers.get(dummy_transportation.getDriverSn());
+
+                HashTransportation.get(transportation.getId()).setDriver(driver);
 
                 upload_Truck(dummy_transportation.getTrucksn());
                 Truck truck = null;
                 if (HashTrucks.containsKey(dummy_transportation.getTrucksn()))
                     truck = HashTrucks.get(dummy_transportation.getTrucksn());
 
-                Transportation transportation = new Transportation(dummy_transportation.getId(), dummy_transportation.getDate(),
-                        dummy_transportation.getLeaving_time(), driver, truck);
+                HashTransportation.get(transportation.getId()).setTruck(truck);
+
 
                 for (Integer id : dummy_transportation.getStores()) {
                     upload_Store(id);
-                    transportation.getStores().add(HashStore.get(id));
+                    HashTransportation.get(transportation.getId()).getStores().add(HashStore.get(id));
                 }
                 for (Integer id : dummy_transportation.getSuppliers()) {
                     upload_Supplier(id);
-                    transportation.getSuppliers().add(HashSuppliers.get(id));
+                    HashTransportation.get(transportation.getId()).getSuppliers().add(HashSuppliers.get(id));
                 }
 
                 for (Integer id : dummy_transportation.getItemsFile()) {
                     upload_ItemFile(id);
-                    transportation.getItemsFiles().add(HashItemsFile.get(id));
+                    HashTransportation.get(transportation.getId()).getItemsFiles().add(HashItemsFile.get(id));
                 }
 
-                HashTransportation.put(transportation.getId(),transportation);
+//                HashTransportation.put(transportation.getId(),transportation);
 
 
                 // TODO: upload Stores

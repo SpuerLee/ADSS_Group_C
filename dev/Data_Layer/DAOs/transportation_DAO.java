@@ -118,12 +118,12 @@ public class transportation_DAO {
             else
             {
                 dummy_Transportation dummy_transportation = new dummy_Transportation(rs2.getInt("SN"),
-                        rs2.getDate("Date"),rs2.getInt("DepartureTime"),rs2.getDouble("TruckWeight"),
+                        parseToDate(rs2.getString("Date")),rs2.getInt("DepartureTime"),rs2.getDouble("TruckWeight"),
                         rs2.getInt("TruckSN"),rs2.getInt("DriverSN"));
 
 
                 dummy_transportation.setStores(select_stores(SN));
-                dummy_transportation.setSuppliers(select_stores(SN));
+                dummy_transportation.setSuppliers(select_suppliers(SN));
                 dummy_transportation.setItemsFile(select_items_files(SN));
 
                 return dummy_transportation;
@@ -153,7 +153,7 @@ public class transportation_DAO {
 
 
                 dummy_transportation.setStores(select_stores(dummy_transportation.getId()));
-                dummy_transportation.setSuppliers(select_stores(dummy_transportation.getId()));
+                dummy_transportation.setSuppliers(select_suppliers(dummy_transportation.getId()));
                 dummy_transportation.setItemsFile(select_items_files(dummy_transportation.getId()));
                 dummy_transportations.add(dummy_transportation);
             }

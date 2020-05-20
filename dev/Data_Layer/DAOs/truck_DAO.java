@@ -137,7 +137,7 @@ public class truck_DAO {
     public dummy_Truck select(int SN){
         List<dummy_Truck> output = new LinkedList<>();
         String query="SELECT * FROM Trucks\n" +
-        String.format("WHERE TruckSN = '%d';",SN);
+        String.format("WHERE SN = '%d';",SN);
         try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(query);
