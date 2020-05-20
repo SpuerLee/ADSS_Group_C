@@ -1,5 +1,6 @@
 package Data_Layer.DAOs;
 
+import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Data_Layer.Connection;
 import Data_Layer.Dummy_objects.dummy_Address;
 import Data_Layer.Dummy_objects.dummy_License;
@@ -40,7 +41,26 @@ public class truck_DAO {
         }
     }
 
-    public void delete(Integer SN){
+    public void insertTruckLicense(List<Integer> license, int SN) throws Buisness_Exception {
+        for(int SNLicense: license)
+        {
+            String query_type="INSERT INTO \"main\".\"Truck_License\"\n" +
+                    "(\"TruckSN\", \"LicenseSN\")\n" +
+                    String.format("VALUES ('%d', '%d');",SN, SNLicense);
+            try {
+                PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query_type);
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+    public void delete(Integer SN) throws Buisness_Exception {
+
+        List<Integer> license = getTruckLicense(SN);
         String query="DELETE FROM \"main\".\"Truck_License\"\n" +
                 String.format("WHERE TruckSN = '%d';",SN);
         try {
@@ -56,8 +76,28 @@ public class truck_DAO {
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query_type);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            insertTruckLicense(license, SN);
+            throw new Buisness_Exception("-Cannot remove a truck that is in another transport-");
+//            e.printStackTrace();
         }
+    }
+
+    public List<Integer> getTruckLicense(int SN){
+        String query2="SELECT * FROM Truck_License\n"+
+                String.format("WHERE TruckSN = '%d';",SN);
+        List<Integer> license = new LinkedList<>();
+        try {
+            Statement stmt = Connection.getInstance().getConn().createStatement();
+            ResultSet rs  = stmt.executeQuery(query2);
+            while (rs.next()) {
+                license.add(rs.getInt("LicenseSN"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException();
+        }
+        return license;
+
     }
 
 
@@ -93,6 +133,7 @@ public class truck_DAO {
         }
         return list;
     }
+
 
 
 

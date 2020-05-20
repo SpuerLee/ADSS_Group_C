@@ -33,6 +33,8 @@ public class Truck {
         this.model = model;
         this.weight = weight;
         this.max_weight = max_weight;
+        if(id>idcounter)
+            idcounter= id+1;
     }
 
     public double getMax_weight()

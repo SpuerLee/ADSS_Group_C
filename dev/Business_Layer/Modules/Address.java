@@ -2,7 +2,7 @@ package Business_Layer.Modules;
 
 public class Address {
 
-    private static int idcounter=1;
+    private static int idcounter=0;
     private int id;
     private String city;
     private String street;
@@ -13,9 +13,12 @@ public class Address {
         this.city=city;
         this.street=street;
         this.number=number;
+        if(id>idcounter)
+            idcounter= id+1;
     }
 
     public Address(String city, String street,int number){
+        this.id = idcounter++;
         this.city=city;
         this.street=street;
         this.number=number;

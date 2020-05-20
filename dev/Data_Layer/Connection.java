@@ -25,7 +25,7 @@ public class Connection {
             String url = "jdbc:sqlite:"+System.getProperty("user.dir")+"/DB/workers_transportation_db.db";
             // create a connection to the database
             conn = DriverManager.getConnection(url);
-            System.out.println("Connection to SQLite has been established.");
+//            System.out.println("Connection to SQLite has been established.");
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());

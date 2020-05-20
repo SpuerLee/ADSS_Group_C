@@ -36,7 +36,6 @@ public class address_DAO {
 
     public Integer getNextSN(){
         String query="SELECT MAX(SN) FROM Address";
-        System.out.println("in hereeee");
         try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(query);

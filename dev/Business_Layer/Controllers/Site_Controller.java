@@ -32,10 +32,7 @@ public class Site_Controller {
         {
             service.set_supplier_idCouter();
         }
-        if(Address.getIdCounter()==1)
-        {
-           service.set_address_idCounter();
-        }
+        service.set_address_idCounter();
         Supplier supplier = new Supplier(name, phone, name_of_contact,
                     new Address(city, street, number), service.getAreaByName(supplier_area));
 
@@ -86,7 +83,7 @@ public class Site_Controller {
             List<String> result = new LinkedList<>();
             for (Supplier supplier : service.getSuppliersMap().values())
             {
-                String line = supplier.getId()+ " .Name :" + supplier.getName() + ", Type: Supplier" + ".";
+                String line = supplier.getId()+ ". Name :" + supplier.getName() + ", Type: Supplier" + ".";
                 result.add(line);
             }
             return result;

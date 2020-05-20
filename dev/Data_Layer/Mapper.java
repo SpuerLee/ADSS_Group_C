@@ -1,5 +1,6 @@
 package Data_Layer;
 
+import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Data_Layer.DAOs.*;
 import Data_Layer.Dummy_objects.*;
 import javafx.util.Pair;
@@ -149,7 +150,7 @@ public class Mapper {
         truck_Mapper.insert(toAdd);
     }
 
-    public void deleteTruck(int SN){
+    public void deleteTruck(int SN) throws Buisness_Exception {
         truck_Mapper.delete(SN);
     }
 
