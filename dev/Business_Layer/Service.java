@@ -327,7 +327,7 @@ public class Service {
     }
 
     public void set_supplier_idCouter(){
-        Supplier.setIdCounter(Mapper.getInstance().getNextSNTransportation());
+        Supplier.setIdCounter(Mapper.getInstance().getNextSNSupplier());
 
     }
 
@@ -596,7 +596,7 @@ public class Service {
     }
 
     public void set_truck_idCouter(){
-        Truck.setIdCounter(Mapper.getInstance().getNextSNTransportation());
+        Truck.setIdCounter(Mapper.getInstance().getNextSNTruck());
     }
 
     public void set_address_idCounter(){

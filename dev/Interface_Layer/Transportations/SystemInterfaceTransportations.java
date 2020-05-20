@@ -167,10 +167,12 @@ public class SystemInterfaceTransportations {
     }
 
     public List<String> Show_AreaList() throws Buisness_Exception {
+        service.set_supplier_idCouter();
         return service.site_controller.Show_AreaList();
     }
 
     public List<String> Show_LicenseList() throws Buisness_Exception {
+        service.set_truck_idCouter();
         return service.trucks_controller.Show_LicenseList();
     }
 

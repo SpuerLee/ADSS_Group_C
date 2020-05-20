@@ -78,6 +78,7 @@ public class Trucks_Controller {
     public boolean addTruck(int license_number, List<String> licenses_types,
                             String model, double weight, double max_weight) throws Buisness_Exception {
         Service service=Service.getInstance();
+        service.set_truck_idCouter();
         boolean result=true;
         if(service.getHashTrucks().containsKey(license_number)){
             throw new Buisness_Exception("The truck driving license is already exist"+ "\n");

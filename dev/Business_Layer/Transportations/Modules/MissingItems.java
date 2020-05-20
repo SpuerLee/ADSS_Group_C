@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MissingItems {
 
-    private static int idcounter=1;
+    private static int idcounter=0;
 
     private int id;
     private int supplier_id;
