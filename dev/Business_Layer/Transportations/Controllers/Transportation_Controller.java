@@ -67,11 +67,13 @@ public class Transportation_Controller {
                 {
                     Store store= service.getHashStoresMap().get(id);
                     stores.remove(stores.indexOf(store));
+                    service.removeStoreFromTransport(transportationID,id);
                     for (ItemsFile itemsFile:itemsFiles)
                     {
                         if(itemsFile.getStore().getId()==id)
                         {
                             itemsFiles.remove(itemsFiles.indexOf(itemsFile));
+                            service.removeItemFileFromTransport(itemsFile.getId());
                         }
                     }
                 }
@@ -79,11 +81,13 @@ public class Transportation_Controller {
                 {
                     Supplier supplier= service.getSuppliersMap().get(id);
                     suppliers.remove(suppliers.indexOf(supplier));
+                    service.removeSupplierFromTransport(transportationID,id);
                     for (ItemsFile itemsFile:itemsFiles)
                     {
                         if(itemsFile.getSupplier().getId()==id)
                         {
                             itemsFiles.remove(itemsFiles.indexOf(itemsFile));
+                            service.removeItemFileFromTransport(itemsFile.getId());
                         }
                     }
                 }
@@ -158,13 +162,13 @@ public class Transportation_Controller {
     public Pair<Date,Integer> Free_truck_and_driver(int transportationID) {
         Service service = Service.getInstance();
         try {
-            service.upload_Transportation(transportationID);
+//            service.upload_Transportation(transportationID);
             Transportation transportation = service.getHashTransportation().get(transportationID);
             int driverID = transportation.getDriveId();
             int truckID = transportation.getTruck().getId();
-            service.remove_driver_transportatin(transportation.getId(),driverID);
+//            service.remove_driver_transportatin(transportation.getId(),driverID);
             service.getDrivers().get(driverID).Remove_date(transportationID);
-            service.remove_truck_transportatin(transportation.getId(),driverID);
+//            service.remove_truck_transportatin(transportation.getId(),driverID);
             service.getHashTrucks().get(truckID).Remove_date(transportationID);
             return new Pair<>(transportation.getDate(), transportation.getDepartureTime());
         }
@@ -177,7 +181,7 @@ public class Transportation_Controller {
         try {
             Transportation transportation = service.getHashTransportation().get(transportationId);
             if(transportation.getTruck().getMax_weight()>truckWeight)
-                transportation.setWeight_truck(truckWeight);
+                service.setWeight_truck(transportationId,truckWeight);
             else
                 throw new Buisness_Exception("-Truck weight exceeds the maximum allowed-\n");
         }
@@ -196,12 +200,14 @@ public class Transportation_Controller {
         int oldTruck = transportation.getTruck().getId();
         try {
 
-            transportation.setTruck(service.getHashTrucks().get(truck_id));
-            transportation.setDriver(service.getDrivers().get(driver_id));
-            service.getDrivers().get(driver_id).addDate(transportation);
-            service.add_transport_driver(transportation.getId(), transportation.getDriveId());
-            service.getHashTrucks().get(truck_id).addDate(transportation);
-            service.add_transport_Truck(transportation.getId(), transportation.getTruck().getId());
+            service.Change_truck_and_driver( transportationID, driver_id,  truck_id);
+
+//            transportation.setTruck(service.getHashTrucks().get(truck_id));
+//            transportation.setDriver(service.getDrivers().get(driver_id));
+//            service.getDrivers().get(driver_id).addDate(transportation);
+//            service.add_transport_driver(transportation.getId(), transportation.getDriveId());
+//            service.getHashTrucks().get(truck_id).addDate(transportation);
+//            service.add_transport_Truck(transportation.getId(), transportation.getTruck().getId());
             return true;
         }
         catch (Exception e)
@@ -350,9 +356,11 @@ public class Transportation_Controller {
                 if (transport.getValue().getId() == transport_id) {
                     int driver = transport.getValue().getDriveId();
                     int truck = transport.getValue().getId();
-                    service.getDrivers().get(driver).Remove_date(transport_id);
-                    service.getHashTrucks().get(truck).Remove_date(transport_id);
-                    service.getHashTransportation().remove(transport.getKey());
+                    service.remove_driver_from_transport(transport_id,driver);
+//                    service.getDrivers().get(driver).Remove_date(transport_id);
+                    service.remove_truck_from_transport(transport_id,truck);
+//                    service.getHashTrucks().get(truck).Remove_date(transport_id);
+//                    service.getHashTransportation().remove(transport.getKey());
                     service.remove_transport(transport_id);
                 }
             }

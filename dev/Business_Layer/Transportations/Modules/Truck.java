@@ -60,7 +60,8 @@ public class Truck {
     }
 
     public static void setIdCounter(int id){
-        idcounter = id;
+        if(idcounter<id)
+            idcounter = id;
     }
 
     public void addDate(Transportation transportation)
@@ -79,17 +80,7 @@ public class Truck {
     }
 
     public void Remove_date(Integer transportationID){
-        try
-        {
-            for(Transportation transportation1:transportations){
-                if (transportationID==transportation1.getId())
-                    transportations.remove(transportation1);
-            }
-        }
-        catch (Exception e)
-        {
-
-        }
+        transportations.removeIf(transportation1 -> transportationID == transportation1.getId());
 
     }
     public static int getIdCounter(){

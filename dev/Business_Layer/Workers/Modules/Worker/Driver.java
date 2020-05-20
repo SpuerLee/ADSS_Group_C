@@ -47,7 +47,13 @@ import java.util.List;
 
     public void addDate(Transportation transportation)
     {
-        this.transportations.add(transportation);
+        boolean isfound=false;
+        for(Transportation t: this.transportations){
+            if(transportation.getId()==t.getId())
+                isfound=true;
+        }
+        if(!isfound)
+            this.transportations.add(transportation);
     }
 
     public void Remove_date(Integer transportationID){
@@ -79,4 +85,18 @@ import java.util.List;
             }
             return output;
         }
+
+    public boolean checkIfFree(Date date, String shiftType)
+    {
+        int departureTime;
+        if(shiftType.equals("MORNING"))
+            departureTime=1;
+        else departureTime=2;
+
+        for(Transportation transportation: this.transportations){
+            if (date.equals(transportation.getDate())& departureTime == transportation.getDepartureTime())
+                return false;
+        }
+        return true;
+    }
 }

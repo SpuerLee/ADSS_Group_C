@@ -16,7 +16,8 @@ public class Supplier extends Site {
     }
 
     public static void setIdCounter(int id){
-        idcounter1 = id;
+        if(idcounter1<id)
+            idcounter1 = id;
     }
 
     public static int getIdCounter(){

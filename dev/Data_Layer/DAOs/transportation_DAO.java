@@ -103,6 +103,21 @@ public class transportation_DAO {
 
     }
 
+    public void updateTruckWeight(int SN, double wieght)
+    {
+        String query_items="UPDATE \"main\".\"Transportations\"\n" +
+                String.format("SET TruckWeight = '%.2f'" +
+                        "where SN = '%d';", wieght ,SN);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query_items);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public dummy_Transportation select(int SN){
         String query="SELECT Transportations.*, Transportation_Driver.DriverSN ,Transportation_Truck.TruckSN\n"+
                 "FROM Transportations INNER JOIN Transportation_Driver\n" +
@@ -229,30 +244,7 @@ public class transportation_DAO {
         return suppliers1;
     }
 
-//    public List<dummy_Transportation> select(){
-//        String query="SELECT * FROM Transportations";
-//        List <dummy_Transportation> transportation=new LinkedList<>();
-//        try {
-//            Statement stmt2 = Connection.getInstance().getConn().createStatement();
-//            ResultSet rs2  = stmt2.executeQuery(query);
-//            while (rs2.next()) {
-//                int Departure=rs2.getInt("DepartureTime");
-//                enums type;
-//                if(Departure==1){
-//                    type=enums.MORNING;
-//                }
-//                else
-//                    type=enums.NIGHT;
-//
-//                int SN=rs2.getInt("SN");
-//                transportation.add(new dummy_Transportation(rs2.getInt("SN"),rs2.getDate("Date"),Departure,rs2.getInt("TruckWeight"), rs2.getInt("TruckSN"),getItems(SN),select_supplier_by_id(SN), select_store_by_id(SN), get_Driver(SN)));
-//            }
-//            return transportation;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        throw new NullPointerException();
-//    }
+
 
     public List<Integer> select_store_by_id(int id){
         store_DAO store_dao=new store_DAO();
@@ -295,22 +287,55 @@ public class transportation_DAO {
         throw new NullPointerException();
     }
 
-//    public dummy_Transportation select_by_TransportationsId(int id){
-//        String selectQuery = String.format("SELECT * from Transportations where SN = '%d'",id);
-//        try {
-//
-//            Statement stmt2 = Connection.getInstance().getConn().createStatement();
-//            ResultSet rs2  = stmt2.executeQuery(selectQuery);
-//            Date d1 = new Date(rs2.getDate("Date").getTime());
-//            return new dummy_Transportation(rs2.getInt("SN"),d1,rs2.getInt("DepartureTime"),rs2.getInt("TruckWeight"), rs2.getInt("TruckSN"),getItems(id),select_supplier_by_id(id), select_store_by_id(id), get_Driver(id));
-//
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        throw new NullPointerException();
-//
-//    }
+    public void deleteStore(int transportationID,int store) {
+        String delete_driver=String.format("DELETE from Transportation_Store where" +
+                " StoreSN = '%d' and TransportationSN = '%d'",store,transportationID);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(delete_driver);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void deleteSupplier(int transportationID,int supplier) {
+        String delete_driver=String.format("DELETE from Transportation_Supplier where" +
+                " SupplierSN = '%d' and TransportationSN = '%d'",supplier,transportationID);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(delete_driver);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    public void deleteDriver(int sn) {
+        String delete_driver=String.format("DELETE from Transportation_Driver where" +
+                " Transportation_Driver.TransportationSN = '%d'",sn);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(delete_driver);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void deleteTruck(int sn) {
+        String delete_trucks=String.format("DELETE from Transportation_Truck where " +
+                "Transportation_Truck.TransportationSN = '%d'",sn);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(delete_trucks);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public void delete(int sn) {
         String selectQuery = String.format("DELETE from Transportations where Transportations.SN = '%d'",sn);
@@ -320,13 +345,7 @@ public class transportation_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        String delete_driver=String.format("DELETE from Transportation_Driver where Transportation_Driver.TransportationSN = '%d'",sn);
-        try {
-            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(delete_driver);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
         String delete_stores=String.format("DELETE from Transportation_Store where Transportation_Store.TransportationSN = '%d'",sn);
         try {
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(delete_stores);
@@ -341,13 +360,7 @@ public class transportation_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        String delete_trucks=String.format("DELETE from Transportation_Truck where Transportation_Truck.TransportationSN = '%d'",sn);
-        try {
-            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(delete_trucks);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
         String delete_items=String.format("DELETE from Transportation_ItemFile where Transportation_ItemFile.TransportationSN = '%d'",sn);
         try {
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(delete_items);
@@ -395,9 +408,10 @@ public class transportation_DAO {
     }
 
     public void add_driver(int transport, int driver){
-        String insert_driver="INSERT INTO \"main\".\"Transportation_Driver\"\n" +
-                "(\"DriverSN\", \"TransportationSN\")\n" +
-                String.format("VALUES ('%d', '%d');", driver, transport);
+
+        String insert_driver="UPDATE \"main\".\"Transportation_Driver\"\n" +
+                String.format("SET DriverSN = '%d'" +
+                        "where TransportationSN = '%d';", driver ,transport);
 
         try {
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(insert_driver);
@@ -408,9 +422,9 @@ public class transportation_DAO {
     }
 
     public void add_Truck(int transport, int truck){
-        String truck_query="INSERT INTO \"main\".\"Transportation_Truck\"\n" +
-                "(\"TruckSN\", \"TransportationSN\")\n" +
-                String.format("VALUES ('%d', '%d');", truck, transport);
+        String truck_query="UPDATE \"main\".\"Transportation_Truck\"\n" +
+                String.format("SET TruckSN = '%d'" +
+                        "where TransportationSN = '%d';", truck ,transport);
         try {
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(truck_query);
             statement.executeUpdate();

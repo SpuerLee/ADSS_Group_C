@@ -23,7 +23,45 @@ public class WorkerController {
         this.currentStoreSN = -1;
     }
 
+//    public List<String> getAllDrivers(Date date,String shiftType,List<String> licenses){
+//        List<String> listToReturn = null;
+//        enums sType;
+//        try{
+//            sType = enums.valueOf(shiftType);
+//        }
+//        catch (Exception e){
+//            System.out.println("No such shift type");
+//            return listToReturn;
+//        }
+//        listToReturn= new LinkedList<>();
+//
+//        for (Worker worker : Service.getInstance().getWorkerList().values()) {
+//            if(worker.available(date,sType)){
+//                if(worker.getWorkerJobTitle().toUpperCase().equals("DRIVER")) {
+//                    // check if driver license in the licenses list
+//                    List<String> driversLicenses = ((Driver) worker).getLicenses();
+//                    boolean licenseFound = false;
+//                    for(String driverLicense : driversLicenses){
+//                        for(String inputLicenses : licenses){
+//                            if (driverLicense.equals(inputLicenses)) {
+//                                licenseFound = true;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    if(licenseFound) {
+//                        String driverToString = worker.getWorkerSn() + ". " + worker.getWorkerName();
+//                        listToReturn.add(driverToString);
+//                    }
+//                }
+//            }
+//        }
+//
+//        return listToReturn;
+//    }
+
     public List<String> getAllDrivers(Date date,String shiftType,List<String> licenses){
+        Mapper.getInstance().getAllDrivers();
         List<String> listToReturn = null;
         enums sType;
         try{
@@ -34,22 +72,21 @@ public class WorkerController {
             return listToReturn;
         }
         listToReturn= new LinkedList<>();
-
-        for (Worker worker : Service.getInstance().getWorkerList().values()) {
-            if(worker.available(date,sType)){
-                if(worker.getWorkerJobTitle().toUpperCase().equals("DRIVER")) {
+        for (Driver worker : Service.getInstance().getDrivers().values()) {
+            if (worker.available(date, sType)&&worker.checkIfFree(date,shiftType)) {
+                if (worker.getWorkerJobTitle().toUpperCase().equals("DRIVER")) {
                     // check if driver license in the licenses list
-                    List<String> driversLicenses = ((Driver) worker).getLicenses();
+                    List<String> driversLicenses = worker.getLicenses();
                     boolean licenseFound = false;
-                    for(String driverLicense : driversLicenses){
-                        for(String inputLicenses : licenses){
+                    for (String driverLicense : driversLicenses) {
+                        for (String inputLicenses : licenses) {
                             if (driverLicense.equals(inputLicenses)) {
                                 licenseFound = true;
                                 break;
                             }
                         }
                     }
-                    if(licenseFound) {
+                    if (licenseFound) {
                         String driverToString = worker.getWorkerSn() + ". " + worker.getWorkerName();
                         listToReturn.add(driverToString);
                     }

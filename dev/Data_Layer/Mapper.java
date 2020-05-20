@@ -213,8 +213,33 @@ public class Mapper {
         return transportation_Mapper.selectAll();
     }
 
+    public void deleteDriverTransportation(int sn) {
+        transportation_Mapper.deleteDriver(sn);
+    }
+    public void deleteTruckTransportation(int sn) {
+        transportation_Mapper.deleteTruck(sn);
+    }
+
+    public void updateTruckWeightTransportation(int SN, double wieght){
+        transportation_Mapper.updateTruckWeight(SN, wieght);
+    }
+
     public void remove_transport(int sn){
+        List<Integer> fileToRemove = transportation_Mapper.select_items_files(sn);
         transportation_Mapper.delete(sn);
+        for (int id:fileToRemove)
+        {
+            deleteItemfile(id);
+        }
+    }
+
+    public void remove_StoreFromTransport(int transportationID,int store){
+        transportation_Mapper.deleteStore( transportationID, store);
+
+    }
+    public void remove_SupplierFromTransport(int transportationID,int Supplier){
+        transportation_Mapper.deleteSupplier( transportationID, Supplier);
+
     }
 
   /*  //Worker
@@ -226,6 +251,10 @@ public class Mapper {
     public void insertItemfile(int Sn, int supplier_id,int store_id, List<Pair<String,Integer>> items){
         dummy_Items_File toAdd = new dummy_Items_File(Sn,supplier_id,store_id, items);
         itemFile_Mapper.insert(toAdd);
+    }
+
+    public void deleteItemfile(int SN){
+        itemFile_Mapper.delete(SN);
     }
 
     public dummy_Items_File selectItemfile(int SN){

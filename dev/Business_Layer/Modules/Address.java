@@ -45,7 +45,8 @@ public class Address {
     }
 
     public static void setIdcounter(int idcounter) {
-        Address.idcounter = idcounter;
+        if(Address.idcounter<idcounter)
+            Address.idcounter = idcounter;
 
     }
 

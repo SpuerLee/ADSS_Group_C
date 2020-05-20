@@ -39,7 +39,8 @@ public class ItemsFile {
         return idcounter;
     }
     public static void setIdCounter(int id){
-        idcounter = id;
+        if(idcounter<id)
+            idcounter = id;
     }
 
 

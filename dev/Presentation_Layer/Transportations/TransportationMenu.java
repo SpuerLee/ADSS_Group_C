@@ -306,12 +306,13 @@ public class TransportationMenu {
                             }
                         }
                         systemInterfaceTransportations.addItemFiletotransport(toAdd, store, suppller);
-                        System.out.println("The transport was registered successfully\n");
+
                     }
                 }
             }
             systemInterfaceTransportations.createRegularTransportation(date, shiftType, driverId,
                     truckId, supplier_list, store_list);
+            System.out.println("The transport was registered successfully\n");
         } catch (Buisness_Exception e) {
             System.out.println(Print_error(e));
         }
@@ -343,6 +344,33 @@ public class TransportationMenu {
         }
     }
 
+    public static Pair<Boolean,Integer> Truck_weight_in_supplier() {
+        try {
+            List<String> result = systemInterfaceTransportations.Show_transports();
+            result.forEach(System.out::println);
+            System.out.println("Please choose transportation id to enter truck weight");
+            Integer transportationId = parseToNumber(scan.nextLine());
+            checkIdInList(result,transportationId.toString());
+            try {
+
+                System.out.println("Enter weight of truck");
+                double truckWeight = parseToDouble(scan.nextLine());
+                systemInterfaceTransportations.SetTruckWeight(transportationId,truckWeight);
+                System.out.println("The truck weight change successfully\n");
+                return new Pair<Boolean,Integer>(true, transportationId);
+
+            }catch (Buisness_Exception e) {
+                System.out.println(Print_error(e));
+                return new Pair<Boolean,Integer>(false, transportationId);
+            }
+
+        }
+        catch (Buisness_Exception e) {
+            System.out.println(Print_error(e));
+            return null;
+        }
+    }
+
     public static void Change_truck_and_driver(int transportationID) {
         try {
             Pair<Date,Integer> transportationTime= systemInterfaceTransportations.Free_truck_and_driver(transportationID);
@@ -359,8 +387,13 @@ public class TransportationMenu {
                     System.out.println("Please choose truck to transportation by it's id");
                     truckId = parseToNumber(scan.nextLine());
                     checkIdInList(freeTrucks,truckId.toString());
+                    String shift = systemInterfaceTransportations.getShiftNameByID(DepartureTime);
+                    List<String> licenses = systemInterfaceTransportations.getTruckLicenseList(truckId);
 
-                    List<String> freeDrivers = systemInterfaceTransportations.getDriverToTrucks(truckId, date);
+//                    List<String> freeDrivers = systemInterfaceTransportations.getDriverToTrucks(truckId, date);
+                    List<String> freeDrivers = systemInterfaceTransportations.getAllDrivers(date,shift,licenses);
+
+//                    List<String> freeDrivers = systemInterfaceTransportations.getDriverToTrucks(truckId, date);
                     if (!freeDrivers.isEmpty()) {
                         System.out.println("The Drivers available for the date are and truck:");
                         freeDrivers.forEach(System.out::println);
@@ -388,32 +421,6 @@ public class TransportationMenu {
         }
     }
 
-    public static Pair<Boolean,Integer> Truck_weight_in_supplier() {
-        try {
-            List<String> result = systemInterfaceTransportations.Show_transports();
-            result.forEach(System.out::println);
-            System.out.println("Please choose transportation id to enter truck weight");
-            int transportationId = parseToNumber(scan.nextLine());
-            try {
-
-                System.out.println("Enter weight of truck");
-                double truckWeight = parseToDouble(scan.nextLine());
-                systemInterfaceTransportations.SetTruckWeight(transportationId,truckWeight);
-                System.out.println("The truck weight change successfully\n");
-                return new Pair<Boolean,Integer>(true, transportationId);
-
-            }catch (Buisness_Exception e) {
-                System.out.println(Print_error(e));
-                return new Pair<Boolean,Integer>(false, transportationId);
-            }
-
-        }
-        catch (Buisness_Exception e) {
-            System.out.println(Print_error(e));
-            return null;
-        }
-    }
-
     public static void Change_remove_store_or_supplier(int transportationID) {
         try {
             boolean OkToRemove= false, toBreak=false;
@@ -424,16 +431,27 @@ public class TransportationMenu {
                 System.out.println("Please choose store id to remove from the transportation, if you want to choose more than one,\n" +
                         "please separate them by space, if you dont want to remove store press enter\n" +
                         "write Cancel fo exit");
-                Integer [] stores = parseArrayToNumber(scan.nextLine().split(" "));
-                for (Integer id : stores ) checkIdInList(store_list, id.toString());
+                String input = scan.nextLine();
+                Integer [] stores={};
+//                System.out.println(input);
+                if(!input.equals("")&&!input.equals("\n"))
+                {
+                    stores = parseArrayToNumber(input.split(" "));
+                    for (Integer id : stores ) checkIdInList(store_list, id.toString());
+                }
 
                 List<String> supplier_list = systemInterfaceTransportations.supplier_list_by_transportationID(transportationID);
                 supplier_list.forEach(System.out::println);
                 System.out.println("Please choose supplier id to remove from the transportation, if you want to choose more than one,\n" +
                         "please separate them by space, if you dont want to remove supplier press enter\n" +
                         "write Cancel fo exit");
-                Integer [] suppliers = parseArrayToNumber(scan.nextLine().split(" "));
-                for (Integer id : suppliers ) checkIdInList(supplier_list, id.toString());
+                input = scan.nextLine();
+                Integer [] suppliers = {};
+                System.out.println(input);
+                if(!input.equals("")&&!input.equals("\n")){
+                    suppliers = parseArrayToNumber(input.split(" "));
+                    for (Integer id : suppliers) checkIdInList(supplier_list, id.toString());
+                }
 
                 String out= systemInterfaceTransportations.RemoveSites(transportationID,stores,suppliers);
                 if (out=="Ok")

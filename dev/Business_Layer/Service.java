@@ -44,11 +44,7 @@ public class Service {
     }
 
     private static class SingletonService {
-
-
         private static Service instance = new Service();
-
-
     }
 
 
@@ -199,6 +195,31 @@ public class Service {
         }
     }
 
+    public void Change_truck_and_driver(int transportationID,int driver_id, int truck_id){
+
+        HashTransportation.get(transportationID).setTruck(getHashTrucks().get(truck_id));
+        HashTransportation.get(transportationID).setDriver(getDrivers().get(driver_id));
+        getDrivers().get(driver_id).addDate(HashTransportation.get(transportationID));
+        add_transport_driver(HashTransportation.get(transportationID).getId(),
+                HashTransportation.get(transportationID).getDriveId());
+        getHashTrucks().get(truck_id).addDate(HashTransportation.get(transportationID));
+        add_transport_Truck(HashTransportation.get(transportationID).getId(),
+                HashTransportation.get(transportationID).getTruck().getId());
+
+    }
+
+    public void removeStoreFromTransport(int transportationID,int store){
+        Mapper.getInstance().remove_StoreFromTransport(transportationID,store);
+    }
+
+    public void removeSupplierFromTransport(int transportationID,int supplier){
+        Mapper.getInstance().remove_SupplierFromTransport(transportationID,supplier);
+    }
+
+    public void removeItemFileFromTransport(int SN){
+        Mapper.getInstance().deleteItemfile(SN);
+    }
+
     public void add_ItemFile(ItemsFile itemsFile){
         if(!HashItemsFile.containsKey(itemsFile.getId()))
         {
@@ -236,6 +257,11 @@ public class Service {
                 }
             }
         }
+    }
+
+    public void setWeight_truck(int transportationId,double weight_truck){
+        HashTransportation.get(transportationId).setWeight_truck(weight_truck);
+        Mapper.getInstance().updateTruckWeightTransportation(transportationId,weight_truck);
     }
 
 
@@ -347,9 +373,14 @@ public class Service {
         if(!HashTransportation.containsKey(SN))
         {
             dummy_Transportation dummy_transportation = Mapper.getInstance().selectTransportation(SN);
+
+            Mapper.getInstance().getAllDrivers();
             Driver driver = null;
-            if(Drivers.containsKey(dummy_transportation.getDriverSn()))
+            if (Drivers.containsKey(dummy_transportation.getDriverSn()))
+            {
                 driver = Drivers.get(dummy_transportation.getDriverSn());
+
+            }
 
             Truck truck = null;
             if(HashTrucks.containsKey(dummy_transportation.getTrucksn()))
@@ -358,6 +389,8 @@ public class Service {
             Transportation transportation = new Transportation(dummy_transportation.getId(),dummy_transportation.getDate(),
                     dummy_transportation.getLeaving_time(),driver,truck);
             HashTransportation.put(dummy_transportation.getId(),transportation);
+            if (driver!=null)
+                driver.addDate(transportation);
 
             for(Integer id : dummy_transportation.getStores())
             {
@@ -401,11 +434,14 @@ public class Service {
                         dummy_transportation.getLeaving_time(), null, null);
                 HashTransportation.put(dummy_transportation.getId(),transportation);
 
-                // TODO: upload driver
-
+                Mapper.getInstance().getAllDrivers();
                 Driver driver = null;
                 if (Drivers.containsKey(dummy_transportation.getDriverSn()))
+                {
                     driver = Drivers.get(dummy_transportation.getDriverSn());
+                    driver.addDate(transportation);
+                }
+
 
                 HashTransportation.get(transportation.getId()).setDriver(driver);
 
@@ -467,7 +503,18 @@ public class Service {
 
     }
 
+    public void remove_driver_from_transport(int transpotrSn, int driverSN){
+        Drivers.get(driverSN).Remove_date(transpotrSn);
+        Mapper.getInstance().deleteDriverTransportation(transpotrSn);
+    }
+
+    public void remove_truck_from_transport(int transpotrSn, int truckSN){
+        HashTrucks.get(truckSN).Remove_date(transpotrSn);
+        Mapper.getInstance().deleteTruckTransportation(transpotrSn);
+    }
+
     public void remove_transport(int sn){
+        getHashTransportation().remove(sn);
         Mapper.getInstance().remove_transport(sn);
     }
 

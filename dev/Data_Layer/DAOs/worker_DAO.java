@@ -100,7 +100,7 @@ public class worker_DAO {
     public List<dummy_Worker> selectAllDrivers(){
         Worker workerToReturn = null;
         List<dummy_Worker> listToReturn = new LinkedList<>();
-        String selectQuery = "select * from Workers where Workers.Job_Title = 'Driver'";
+        String selectQuery = "select * from Workers where Workers.Job_Title = 'Driver' Or Workers.Job_Title = 'driver' ";
         try {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(selectQuery);

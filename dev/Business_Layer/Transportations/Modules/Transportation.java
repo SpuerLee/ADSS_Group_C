@@ -60,7 +60,7 @@ public class Transportation {
             truck= "\n\ttruck- license_number:" + this.truck.getlicense_number()
                     + ", Model:" + this.truck.getModel();
         String output = "";
-        output += "id: " + this.id + "\n\tdate: " + dateFormat.format(this.date) + "\n\tleaving_time: " + this.DepartureTime
+        output += this.id + ".\n\tdate: " + dateFormat.format(this.date) + "\n\tleaving_time: " + this.DepartureTime
                 + dariverName + truck + "\n";
         output += "\tstores: ";
         for (Store sites : stores) {
@@ -90,7 +90,8 @@ public class Transportation {
         return idcounter;
     }
     public static void setIdCounter(int id){
-        idcounter = id;
+        if(idcounter<id)
+            idcounter = id;
     }
     public void setDriver(Driver driver)
     {

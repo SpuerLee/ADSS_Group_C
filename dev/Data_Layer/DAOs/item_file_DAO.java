@@ -125,7 +125,27 @@ public class item_file_DAO {
         throw new NullPointerException();
     }
 
-    public void delete(){
+
+
+    public void delete(int SN){
+        String query="DELETE FROM \"main\".\"Items\"\n" +
+                String.format("WHERE ItemFileSN = '%d';",SN);
+        System.out.println(query);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String query2="DELETE FROM \"main\".\"ItemFiles\"\n" +
+                String.format("WHERE SN = '%d';",SN);
+        try {
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query2);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
