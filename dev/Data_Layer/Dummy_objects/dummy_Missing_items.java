@@ -1,28 +1,36 @@
 package Data_Layer.Dummy_objects;
 import javafx.util.Pair;
-import java.util.HashMap;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public class dummy_Missing_items {
 
-    private  int id;
+    private  int SN;
     private int store_id;
     private int supplier_id;
-    private List<Pair<String,Integer>> missing;
-    public dummy_Missing_items(int id, int store_id, int supplier_id,List<Pair<String,Integer>> missing){
-        this.id=id;
+    private List<Pair<String,Integer>> Items;
+    public dummy_Missing_items(int SN, int store_id, int supplier_id, List<Pair<String,Integer>> Items){
+        this.SN = SN;
         this.store_id=store_id;
         this.supplier_id=supplier_id;
-        this.missing=missing;
+        this.Items = Items;
+    }
+
+    public dummy_Missing_items(int SN, int store_id, int supplier_id){
+        this.SN = SN;
+        this.store_id=store_id;
+        this.supplier_id=supplier_id;
+        this.Items = new LinkedList<>();
     }
 
 
-    public int getId() {
-        return id;
+    public int getSN() {
+        return SN;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setSN(int SN) {
+        this.SN = SN;
     }
 
 
@@ -42,11 +50,11 @@ public class dummy_Missing_items {
         this.supplier_id = supplier_id;
     }
 
-    public List<Pair<String, Integer>> getMissing() {
-        return missing;
+    public List<Pair<String, Integer>> getItems() {
+        return Items;
     }
 
-    public void setMissing(List<Pair<String, Integer>> missing) {
-        this.missing = missing;
+    public void setItems(List<Pair<String, Integer>> items) {
+        this.Items = items;
     }
 }

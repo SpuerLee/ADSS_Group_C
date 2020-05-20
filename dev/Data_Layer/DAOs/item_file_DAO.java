@@ -1,9 +1,8 @@
 package Data_Layer.DAOs;
 
 import Data_Layer.Connection;
-import Data_Layer.Dummy_objects.dummy_Address;
 import Data_Layer.Dummy_objects.dummy_Items_File;
-import Data_Layer.Dummy_objects.dummy_store;
+import Data_Layer.Dummy_objects.dummy_Missing_items;
 import javafx.util.Pair;
 
 import java.sql.PreparedStatement;
@@ -15,13 +14,6 @@ import java.util.List;
 
 public class item_file_DAO {
 
-
-  /*  public void insert(){
-        String query = "INSERT INTO \"main\".\"ItemFiles\"\n" +
-                "(\"SN\", \"StoreSN\", \"SupplierSN\")\n" +
-                "VALUES ('', '', '');";
-
-    } */
     public void insert(dummy_Items_File items_file){
         String query="INSERT INTO \"main\".\"ItemFiles\"\n" +
                 "(\"SN\", \"StoreSN\", \"SupplierSN\")\n" +
@@ -37,65 +29,105 @@ public class item_file_DAO {
         for(int i=0;i<items_file.getItems().size();i++) {
             String query_items = "INSERT INTO \"main\".\"Items\"\n" +
                     "(\"SN\", \"ItemFileSN\", \"Amount\", \"ItemName\")\n" +
-                    String.format("VALUES ('%d', '%d', '%d', '%s');",i,items_file.getSn(), items_file.getItems().get(i).getValue(), items_file.getItems().get(i).getKey());
+                    String.format("VALUES ('%d', '%d', '%d', '%s');", i, items_file.getSn(), items_file.getItems().get(i).getValue(), items_file.getItems().get(i).getKey());
+            try {
+                PreparedStatement statement = Connection.getInstance().getConn().prepareStatement(query_items);
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+    }
 
+    public dummy_Items_File select(int SN){
+        String query="SELECT * FROM ItemFiles\n"+
+                String.format("WHERE SN = '%d';", SN);;
         try {
-            PreparedStatement statement=Connection.getInstance().getConn().prepareStatement(query);
-            statement.executeUpdate();
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            if(!rs2.next())
+                return null;
+            else
+            {
+                dummy_Items_File items_file = new dummy_Items_File(rs2.getInt("SN"),
+                        rs2.getInt("StoreSN"),rs2.getInt("SupplierSN"));
+                String query2="SELECT * FROM Items\n"+
+                        String.format("WHERE ItemFileSN = '%d' ORDER BY SN ASC;", items_file.getSn());
+                List<Pair<String,Integer>> Items = new LinkedList<>();
+                try {
+                    Statement stmt = Connection.getInstance().getConn().createStatement();
+                    ResultSet rs  = stmt.executeQuery(query2);
+                    while (rs.next()) {
+                        Pair<String,Integer> pair = new Pair<>(rs.getString("ItemName"),rs.getInt("Amount"));
+                        Items.add(rs.getInt("SN"),pair);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    throw new NullPointerException();
+                }
+                items_file.setItems(Items);
+                return items_file;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException();
+        }
+    }
+
+    public List<dummy_Items_File> selectAll(){
+        List<dummy_Items_File> output = new LinkedList<>();
+        String query="SELECT * FROM ItemFiles";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            while (rs2.next()) {
+                dummy_Items_File items_file = new dummy_Items_File(rs2.getInt("SN"),
+                        rs2.getInt("StoreSN"),rs2.getInt("SupplierSN"));
+
+
+                String query2="SELECT * FROM Items\n"+
+                        String.format("WHERE ItemFileSN = '%d' ORDER BY SN ASC;", items_file.getSn());
+                List<Pair<String,Integer>> Items = new LinkedList<>();
+                try {
+                    Statement stmt = Connection.getInstance().getConn().createStatement();
+                    ResultSet rs  = stmt.executeQuery(query2);
+                    while (rs.next()) {
+                        Pair<String,Integer> pair = new Pair<>(rs.getString("ItemName"),rs.getInt("Amount"));
+                        Items.add(rs.getInt("SN"),pair);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    throw new NullPointerException();
+                }
+                items_file.setItems(Items);
+                output.add(items_file);
+            }
+            return output;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new NullPointerException();
+        }
+    }
+
+    public Integer getNextSN(){
+        String query="SELECT MAX(SN) FROM ItemFiles";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            if(!rs2.next())
+                return 1;
+            else
+                return rs2.getInt("MAX(SN)") + 1;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        throw new NullPointerException();
     }
 
     public void delete(){
 
     }
 
-    public void select(){
-        String query="SELECT * FROM ItemFiles";
-        try {
-            PreparedStatement statement=Connection.getInstance().getConn().prepareStatement(query);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public dummy_Items_File select_by_id(int id){
-        String selectQuery = String.format("select * from ItemFiles where ItemFiles.SN = '%d'",id);
-        try {
-
-            Statement stmt2 = Connection.getInstance().getConn().createStatement();
-            ResultSet rs2  = stmt2.executeQuery(selectQuery);
-            List<Pair<String,Integer>> pairs=select_items(rs2.getInt("SN"));
-            return new dummy_Items_File(rs2.getInt("SN"),rs2.getInt("StoreSN"),rs2.getInt("SupplierSN"),pairs);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        throw new NullPointerException();
-    }
-
-    private List<Pair<String,Integer>> select_items(int id) {
-        String selectQuery = String.format("select * from Items where Items.ItemFilesSN = '%d'", id);
-        List<Pair<String, Integer>> list = new LinkedList<>();
-        try {
-            Statement stmt2 = Connection.getInstance().getConn().createStatement();
-            ResultSet rs2 = stmt2.executeQuery(selectQuery);
-            while (rs2.next()) {
-                list.add(new Pair<>(rs2.getString("ItemName"), rs2.getInt("Amount")));
-            }
-            return list;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        throw new NullPointerException();
-    }
-
-    public void update(){
-
-    }
 }

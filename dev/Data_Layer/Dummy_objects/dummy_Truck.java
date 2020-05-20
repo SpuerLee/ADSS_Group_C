@@ -1,21 +1,33 @@
 package Data_Layer.Dummy_objects;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class dummy_Truck {
 
-    private int Id;
+    private int SN;
     private int license_number;
     private String model;
     private double weight;
     private double max_weight;
-    private String license_type;
+    private List<Integer> license_type;
 
-    public dummy_Truck(int Id,int license_number, String model, double weight, double max_weight, String license_type){
-        this.Id=Id;
+    public dummy_Truck(int SN, int license_number, String model, double weight, double max_weight, List<Integer> license_type){
+        this.SN = SN;
         this.license_number=license_number;
         this.model=model;
         this.weight=weight;
         this.max_weight=max_weight;
         this.license_type=license_type;
+    }
+
+    public dummy_Truck(int SN, int license_number, String model, double weight, double max_weight){
+        this.SN = SN;
+        this.license_number=license_number;
+        this.model=model;
+        this.weight=weight;
+        this.max_weight=max_weight;
+        this.license_type = new LinkedList<>();
     }
 
     public int getLicense_number() {
@@ -50,19 +62,19 @@ public class dummy_Truck {
         this.max_weight = max_weight;
     }
 
-    public int getId() {
-        return Id;
+    public int getSN() {
+        return SN;
     }
 
-    public void setId(int id) {
-        Id = id;
+    public void setSN(int SN) {
+        this.SN = SN;
     }
 
-    public String getLicense_type() {
+    public List<Integer> getLicense_type() {
         return license_type;
     }
 
-    public void setLicense_type(String license_type) {
+    public void setLicense_type(List<Integer> license_type) {
         this.license_type = license_type;
     }
 }

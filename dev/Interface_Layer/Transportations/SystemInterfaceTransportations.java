@@ -1,16 +1,13 @@
 package Interface_Layer.Transportations;
 
 import Business_Layer.Service;
-import Business_Layer.Controllers.Site_Controller;
 import Business_Layer.Transportations.Utils.Buisness_Exception;
-import Business_Layer.Transportations.Controllers.*;
 import javafx.util.Pair;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
 
 public class SystemInterfaceTransportations {
 
@@ -30,16 +27,17 @@ public class SystemInterfaceTransportations {
     }
 
     private SystemInterfaceTransportations() {
-        // initialization code..
+       service.upload_Area();
+        service.upload_license();
     }
 
     public static SystemInterfaceTransportations getInstance() {
         return SystemInterfaceTransportations.SingletonControler.instance;
     }
 
-    public void uploadData() {
+ /*   public void uploadData() {
         service.uploadData();
-    }
+    } */
 
     static String Print_error(Exception e) {
         Throwable current = e;
@@ -75,8 +73,14 @@ public class SystemInterfaceTransportations {
                 truck_id, suppliers, stores);
     }
 
-    public List<String> get_area_for_suppliers() throws Buisness_Exception {
-        return service.transportation_controller.get_area_for_suppliers();
+    public List<String>  get_area_for_suppliers() throws Buisness_Exception {
+      //  service.upload_All_Supplier();
+        if(service.transportation_controller.get_area_for_suppliers().size()==0){
+            throw new Buisness_Exception("There are no suppliers to show");
+        }
+        else {
+            return service.transportation_controller.get_area_for_suppliers();
+        }
     }
 
     public List<String> getSuppliersbyarea(String area) {
@@ -164,8 +168,8 @@ public class SystemInterfaceTransportations {
         return service.trucks_controller.showtrucks();
     }
 
-    public boolean removeTruck(int id) throws Buisness_Exception{
-        return service.trucks_controller.removeTruck(id);
+    public void removeTruck(int id) throws Buisness_Exception{
+         service.trucks_controller.removeTruck(id);
     }
 
     public List<String> Show_AreaList() throws Buisness_Exception {
@@ -195,14 +199,5 @@ public class SystemInterfaceTransportations {
     public List<String> getTruckLicenseList(int truckID) throws Buisness_Exception {
         return service.trucks_controller.getTruckLicenseList(truckID);
     }
-
-
-
-
-
-
-
-
-
 
 }

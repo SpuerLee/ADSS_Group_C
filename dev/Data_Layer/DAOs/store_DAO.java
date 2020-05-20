@@ -28,7 +28,7 @@ public class store_DAO {
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(address_query);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
 

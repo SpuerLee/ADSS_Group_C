@@ -1,15 +1,11 @@
 package Presentation_Layer.Transportations;
 
-import Business_Layer.Modules.License;
 import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Interface_Layer.Transportations.SystemInterfaceTransportations;
 import javafx.util.Pair;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TransportationMenu {
 
@@ -19,7 +15,7 @@ public class TransportationMenu {
     public static void Menu() {
 
 //        if (args.length > 0 && args[0].equals("upload"))
-        systemInterfaceTransportations.uploadData();
+    //    systemInterfaceTransportations.uploadData();
         String choice = "0";
         do {
             System.out.println("Please choose your option:");
@@ -160,6 +156,7 @@ public class TransportationMenu {
                 date = parseToDate(scan.nextLine());
 
                 System.out.println("Please choose shiftType by id:");
+                //TODO: Upload shiftTypeList
                 List<String> ShiftTypes = systemInterfaceTransportations.Show_shiftTypeList();
                 ShiftTypes.forEach(System.out::println);
                 shiftType = parseToNumber(scan.nextLine());
@@ -168,7 +165,7 @@ public class TransportationMenu {
                 boolean hasKeeper = true;
                 for (Integer storeId1: stores)
                 {
-
+                    //TODO: Upload StoreKeeper
                     if (!systemInterfaceTransportations.isStoreKeeperAvailable(date,shift,storeId1))
                     {
                         System.out.println("There are no Store Keeper available for store "+storeId1.toString()+
@@ -178,7 +175,6 @@ public class TransportationMenu {
                 }
                 if(!hasKeeper)
                     continue;
-
                 List<String> freeTrucks = systemInterfaceTransportations.getFreeTrucks(date, shiftType);
                 if (!freeTrucks.isEmpty()) {
                     System.out.println("The trucks available for the date are:");

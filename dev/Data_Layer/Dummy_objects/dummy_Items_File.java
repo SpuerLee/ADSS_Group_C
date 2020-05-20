@@ -2,6 +2,7 @@ package Data_Layer.Dummy_objects;
 
 import javafx.util.Pair;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class dummy_Items_File {
@@ -16,6 +17,13 @@ public class dummy_Items_File {
         this.supplier_id=supplier_id;
         this.store_id=store_id;
         this.Items=items;
+    }
+
+    public dummy_Items_File(int SN, int store_id, int supplier_id){
+        this.Sn = SN;
+        this.store_id=store_id;
+        this.supplier_id=supplier_id;
+        this.Items = new LinkedList<>();
     }
 
     public int getSupplier_id() {

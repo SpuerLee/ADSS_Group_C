@@ -1,16 +1,14 @@
 package Data_Layer.Dummy_objects;
 
-import java.time.LocalTime;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
-
-import Business_Layer.Workers.Utils.enums;
 
 public class dummy_Transportation {
 
     private int Id;
     private Date date;
-    private enums leaving_time;
+    private int leaving_time;
     private double truck_weight;
     private int trucksn;
     private List<Integer> itemsFile;
@@ -18,7 +16,10 @@ public class dummy_Transportation {
     private List<Integer> stores;
     private int DriverSn;
 
-    public dummy_Transportation(Date date, enums leaving_time, double truck_weight,int trucksn, List<Integer> itemsFile, List<Integer> suppliers, List<Integer> stores, int Driver){
+
+    public dummy_Transportation(int Id,Date date, int leaving_time, double truck_weight,int trucksn, int Driver,
+                                List<Integer> suppliers, List<Integer> stores, List<Integer> itemsFile){
+        this.Id=Id;
         this.date=date;
         this.leaving_time=leaving_time;
         this.truck_weight=truck_weight;
@@ -26,6 +27,18 @@ public class dummy_Transportation {
         this.itemsFile=itemsFile;
         this.suppliers=suppliers;
         this.stores=stores;
+        this.DriverSn=Driver;
+    }
+
+    public dummy_Transportation(int Id,Date date, int leaving_time, double truck_weight,int trucksn, int Driver){
+        this.Id=Id;
+        this.date=date;
+        this.leaving_time=leaving_time;
+        this.truck_weight=truck_weight;
+        this.trucksn=trucksn;
+        this.itemsFile=new LinkedList<>();
+        this.suppliers=new LinkedList<>();
+        this.stores=new LinkedList<>();
         this.DriverSn=Driver;
     }
 
@@ -38,11 +51,11 @@ public class dummy_Transportation {
         this.date = date;
     }
 
-    public enums getLeaving_time() {
+    public int getLeaving_time() {
         return leaving_time;
     }
 
-    public void setLeaving_time(enums leaving_time) {
+    public void setLeaving_time(int leaving_time) {
         this.leaving_time = leaving_time;
     }
 
@@ -62,10 +75,9 @@ public class dummy_Transportation {
         this.itemsFile = itemsFile;
     }
 
-    public int getId() {
-        return Id;
+    public int getId(){
+        return this.Id;
     }
-
     public void setId(int id) {
         Id = id;
     }

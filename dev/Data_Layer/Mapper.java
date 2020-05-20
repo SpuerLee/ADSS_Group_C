@@ -63,11 +63,29 @@ public class Mapper {
             worker_Mapper.insertLicense(toAdd.getSN(),x);
         }*/
     }
+
     public void deleteConstraints(int workerSN){
         worker_Mapper.deleteConstraints(workerSN);
     }
+
     public void updateSalary(int sn,int salary){
         worker_Mapper.updateSalary(sn,salary);
+    }
+
+    public void add_transport_driver(int Transport,int driver){
+        transportation_Mapper.add_driver(Transport,driver);
+    }
+
+    public void add_transport_truck(int Transport, int truck){
+        transportation_Mapper.add_Truck(Transport,truck);
+    }
+
+    public void remove_driver_transportatin(int Transport, int truck){
+        transportation_Mapper.remove_Driver(Transport,truck);
+    }
+
+    public void remove_truck_transportatin(int Transport, int truck){
+        transportation_Mapper.remove_Truck(Transport,truck);
     }
 
     public void addConstraints(int workerSn,int selectedDay,int sType){
@@ -77,12 +95,11 @@ public class Mapper {
     public void insertLicense(int driverSN,int license){
         worker_Mapper.insertLicense(driverSN,license);
     }
+
     public void insert_Shift_Workers(int workerSn,int shiftSN){
         shift_Mapper.insert_Shift_Workers(workerSn,shiftSN);
 
     }
-
-
 
     public void insertShift(Date date, int shiftType, int manager,int SN, int Branch){
         dummy_Shift toAdd = new dummy_Shift(date,shiftType,manager,SN,Branch);
@@ -99,22 +116,127 @@ public class Mapper {
         itemFile_Mapper.insert(toAdd);
     }
 
-    public void insertAddress(String city, String street, int number,int SN){
-        dummy_Address toAdd = new dummy_Address(city, street, number,SN);
-       // address_Mapper.insert(toAdd);
+    public void insertAddress(int Sn,String city, String street, int number){
+        dummy_Address toAdd = new dummy_Address(Sn,city, street, number);
+        address_Mapper.insert(toAdd);
     }
 
-    public void insertTransportation(Date date, String leaving_time, double truck_weight, int trucksn, List<Integer> itemsFile, List<Integer> suppliers, List<Integer> stores, int Driver){
-        enums leaving=enums.NIGHT;
-        if(leaving_time.toUpperCase().equals("MORNING"))
-            leaving=enums.MORNING;
-        dummy_Transportation toAdd = new dummy_Transportation( date, leaving, truck_weight,trucksn,itemsFile,suppliers, stores,Driver);
+    public Integer getNextSNAddress(){
+        return address_Mapper.getNextSN();
+    }
+
+    public List<dummy_Address> selectAllAddress(){
+        return address_Mapper.selectAll();
+    }
+
+    public dummy_Address selectAddress(int SN){
+        return address_Mapper.select(SN);
+    }
+    //Area
+    public List<dummy_Area> selectAllArea(){
+        return area_Mapper.selectAll();
+    }
+    //Supplier
+
+    public List<dummy_supplier> selectAllSuppliers(){
+        List<dummy_supplier> output = supplier_Mapper.selectAll();
+        for (dummy_supplier s : output)
+        {
+            s.setDummy_address(selectAddress(s.getAddress_Sn()));
+
+        }
+        return output;
+    }
+
+    public dummy_supplier selectSupplier(int SN){
+        dummy_supplier supplier = supplier_Mapper.select(SN);
+        if(supplier!=null)
+            supplier.setDummy_address(selectAddress(supplier.getAddress_Sn()));
+        return supplier;
+    }
+
+    public Integer getNextSNSupplier(){
+        return supplier_Mapper.getNextSN();
+    }
+    //Truck
+    public void insertTruck(int SN,int license_number, String model, double weight, double max_weight, List<Integer> license_type){
+        dummy_Truck toAdd = new dummy_Truck(SN,license_number, model, weight, max_weight, license_type);
+        truck_Mapper.insert(toAdd);
+    }
+
+    public void deleteTruck(int SN){
+        truck_Mapper.delete(SN);
+    }
+
+    public List<dummy_Truck> selectAllTrucks(){
+        return truck_Mapper.selectAll();
+    }
+
+    public List<Integer> selectTransportationTrucks(int SN) {
+        return truck_Mapper.selectTransportation(SN);
+    }
+
+    public Integer getNextSNTruck(){
+        return truck_Mapper.getNextSN();
+    }
+    //License
+    public List<dummy_License> selectAllLicense(){
+        return truck_Mapper.selectAllLicense();
+    }
+
+    public void insertTransportation(int Sn, Date date, int leaving_time, double truck_weight,
+                                     int trucksn, int Driver, List<Integer> suppliers,
+                                     List<Integer> stores, List<Integer> itemsFile){
+        dummy_Transportation toAdd = new dummy_Transportation( Sn,date, leaving_time, truck_weight,
+                trucksn,Driver,suppliers, stores,itemsFile);
         transportation_Mapper.insert(toAdd);
     }
 
-    public void insertTruck(int Id,int license_number, String model, double weight, double max_weight, String license_type){
-        dummy_Truck toAdd = new dummy_Truck(Id,license_number, model, weight, max_weight, license_type);
-        truck_Mapper.insert(toAdd);
+    public dummy_Transportation selectTransportation(int SN){
+        return transportation_Mapper.select(SN);
+    }
+
+    public Integer getNextSNTransportation(){
+        return transportation_Mapper.getNextSN();
+    }
+
+    public List<dummy_Transportation> select_all_Transportation(){
+        return transportation_Mapper.selectAll();
+    }
+
+    public void remove_transport(int sn){
+        transportation_Mapper.delete(sn);
+    }
+
+    public dummy_Items_File selectItemfile(int SN){
+        return itemFile_Mapper.select(SN);
+    }
+
+    public Integer getNextSNItemfile(){
+        return itemFile_Mapper.getNextSN();
+    }
+
+    public List<dummy_Missing_items> selectAllMissing_items(){
+        return missingItems_Mapper.selectAll();
+    }
+
+    public void deleteMissing_items(int SN){
+        missingItems_Mapper.delete(SN);
+    }
+
+    public void insertSupplier(int SN,String name, String Phone, String ContactName, int AddressSN, int AreaSN ,String city, String street, int number){
+        insertAddress(AddressSN,city, street, number);
+        dummy_supplier toAdd = new dummy_supplier(SN, name, Phone, ContactName, AddressSN, AreaSN, city, street, number);
+        supplier_Mapper.insert(toAdd);
+    }
+
+    public void deleteAddress(int SN){
+        address_Mapper.delete(SN);
+    }
+
+    public void insertAddress(String city, String street, int number,int SN){
+        dummy_Address toAdd = new dummy_Address(city, street, number,SN);
+        address_Mapper.insert(toAdd);
     }
 
     public void insertStore(String phone, String contact_name, String name, int id, String city, String street, int number, int Adrress_Sn, int AreaSn){
@@ -122,14 +244,20 @@ public class Mapper {
         store_Mapper.insert(toAdd);
     }
 
-    public void insertSupplier(String phone, String contact_name, String name, int id, String city, String street, int number, int Adrress_Sn, int AreaSn){
-        dummy_supplier toAdd = new dummy_supplier(phone,contact_name,name, id,city, street, number, Adrress_Sn, AreaSn);
-       // supplier_Mapper.insert(toAdd);
-    }
-
     public Address selectAddressBySN(int Address){
         dummy_Address address = address_Mapper.select(Address);
         return new Address(address.getCity(),address.getStreet(),address.getNumber(),address.getSN());
+    }
+
+    public dummy_store selectStore(int SN){
+        dummy_store store = store_Mapper.select_by_storeId(SN);
+        return store;
+    }
+
+    public List<dummy_store> select_all_stores(){
+        dummy_store store=new dummy_store("054","Reut","store11",5,"alon","alona",5,1,1);
+        store_Mapper.insert(store);
+        return store_Mapper.select();
     }
 
     public void getAllStores(){
@@ -192,15 +320,6 @@ public class Mapper {
         return enums.valueOf(DBday);
     }
 
-/*
-    public String findJobTitle(int worker_type){
-        switch (worker_type){
-            case 1:
-                return cash
-        }
-    }
-*/
-
     public Worker getWorker(int StoreSN, int workerSN){
         Worker worker = null;
         if(Service.getInstance().getWorkerList(StoreSN).containsKey(workerSN)){ //worker already exists
@@ -241,7 +360,6 @@ public class Mapper {
         return workers1;
     }
 
-
     public void getAllShifts(int storeSn){
         List<dummy_Shift> dummy_Shifts = shift_Mapper.selectShiftByStoreSN(storeSn);
         for(dummy_Shift shift: dummy_Shifts){
@@ -261,6 +379,7 @@ public class Mapper {
     public void deleteWorker( int workerSn){
         worker_Mapper.deleteEmployee(workerSn);
     }
+
     public void deleteManager( int workerSn){
         worker_Mapper.deleteManager(workerSn);
     }
@@ -282,7 +401,6 @@ public class Mapper {
         }
     }
     //in area license shift_type
-
     public void clearDB() {
         //DELETE EVERYTHING
         shift_Mapper.deleteAllShift_Worker();
@@ -296,7 +414,6 @@ public class Mapper {
         worker_Mapper.deleteLicenseType();
         worker_Mapper.deleteShiftType();
     }
-
 
     public int getstoreSN() {
         return store_Mapper.getstoreSN();

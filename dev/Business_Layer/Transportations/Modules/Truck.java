@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Truck {
 
-    private static int idcounter=1;
+    private static int idcounter=0;
     private int id;
     private int license_number;
     private List<License> licenses_types;
@@ -19,6 +19,15 @@ public class Truck {
 
     public Truck(int license_number, List<License> licenses_types, String model, double weight, double max_weight) {
         this.id=idcounter++;
+        this.license_number = license_number;
+        this.licenses_types = licenses_types;
+        this.model = model;
+        this.weight = weight;
+        this.max_weight = max_weight;
+    }
+
+    public Truck(int id,int license_number, List<License> licenses_types, String model, double weight, double max_weight) {
+        this.id=id;
         this.license_number = license_number;
         this.licenses_types = licenses_types;
         this.model = model;
@@ -46,6 +55,10 @@ public class Truck {
 
     public String getModel() {
         return this.model;
+    }
+
+    public static void setIdCounter(int id){
+        idcounter = id;
     }
 
     public void addDate(Transportation transportation)
@@ -76,6 +89,9 @@ public class Truck {
 
         }
 
+    }
+    public static int getIdCounter(){
+        return idcounter;
     }
 
     public List<Transportation> getTransportations(){

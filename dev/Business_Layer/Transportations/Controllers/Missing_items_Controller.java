@@ -27,6 +27,8 @@ public class Missing_items_Controller {
     public List<String> getMissingItemsStores() throws Buisness_Exception
     {
         Service service=Service.getInstance();
+        service.upload_MissingItems();
+
         if(service.getMissing().size()==0){
             throw new Buisness_Exception("The are no missing items in any store");
         }

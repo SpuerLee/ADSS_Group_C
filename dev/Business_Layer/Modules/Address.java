@@ -3,16 +3,49 @@ package Business_Layer.Modules;
 public class Address {
 
 
+    private static int idcounter = 1;
+    private int id;
     private String city;
     private String street;
     private int number;
     private int sn;
 
-    public Address(String city, String street,int number,int sn){
-        this.city=city;
-        this.street=street;
-        this.number=number;
+
+    public Address(String city, String street, int number, int sn) {
+        this.city = city;
+        this.street = street;
+        this.number = number;
         this.sn = sn;
+
+    }
+    public Address(int id, String city, String street, int number) {
+        this.id = id;
+        this.city = city;
+        this.street = street;
+        this.number = number;
+    }
+
+    public Address(String city, String street, int number) {
+        this.city = city;
+        this.street = street;
+        this.number = number;
+        this.sn = sn;
+    }
+
+    public static int getIdcounter() {
+        return idcounter;
+    }
+
+    public static void setIdcounter(int idcounter) {
+        Address.idcounter = idcounter;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCity() {
@@ -47,4 +80,6 @@ public class Address {
         this.sn = sn;
     }
 
+
 }
+

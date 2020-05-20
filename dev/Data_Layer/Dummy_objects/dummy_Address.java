@@ -13,12 +13,8 @@ public class dummy_Address {
     private String city;
     private String street;
     private int number;
-
-    public int getSN() {
-        return SN;
-    }
-
     private int SN;
+
 
     public dummy_Address(String city, String street, int number, int SN) {
         this.city = city;
@@ -27,9 +23,22 @@ public class dummy_Address {
         this.SN = SN;
     }
 
+    public dummy_Address(int sn,String city, String street, int number) {
+        this.SN=sn;
+        this.city = city;
+        this.street = street;
+        this.number = number;
+    }
+
     public String getCity() {
         return city;
     }
+
+    public int getSN() {
+        return SN;
+    }
+
+    public void setSN(int newSN) {this.SN = newSN; }
 
     public void setCity(String city) {
         this.city = city;
