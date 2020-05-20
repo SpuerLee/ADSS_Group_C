@@ -13,7 +13,7 @@ public class TransportationMenu {
     private static SystemInterfaceTransportations systemInterfaceTransportations = SystemInterfaceTransportations.getInstance();
 
     public static void Menu() {
-
+        System.out.println("Welcome to SuperLee - Transportation");
 //        if (args.length > 0 && args[0].equals("upload"))
     //    systemInterfaceTransportations.uploadData();
         String choice = "0";

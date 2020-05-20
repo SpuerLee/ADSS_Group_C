@@ -47,6 +47,10 @@ public class ShiftController {
         Mapper.getInstance().getAllShifts(this.currentStoreSN);
     }
 
+    public void getShifts(int storeSn){
+        Mapper.getInstance().getAllShifts(storeSn);
+    }
+
     public void resetSnFactory(){
         this.snFactory = 0;
     }

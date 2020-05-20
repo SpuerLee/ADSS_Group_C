@@ -61,6 +61,7 @@ public class WorkerController {
     }
 
     public boolean isStoreKeeperAvailable(Date date,String shiftType, int storeSN){
+
         enums sType=null;
         try{
             sType = enums.valueOf(shiftType);
@@ -68,6 +69,10 @@ public class WorkerController {
         catch (Exception e){
             System.out.println("No such shift type");
         }
+        Service.getInstance().getShiftController().setCurrentStoreSN(storeSN);
+        Service.getInstance().getWorkerController().setCurrentStoreSN(storeSN);
+        Service.getInstance().getShiftController().getShifts(storeSN);
+        //getWorkers(storeSN);
         List<Worker> availableWorkers = getAllAvailableWorkers(date,sType);
         for(Worker worker : availableWorkers){
             if(worker.getStoreSN() == storeSN && worker.getWorkerJobTitle().toLowerCase().equals("storekeeper")){
@@ -75,6 +80,10 @@ public class WorkerController {
             }
         }
         return false;
+    }
+
+    private void getWorkers(int storeSN) {
+        Mapper.getInstance().getAllWorkersByStore(storeSN);
     }
 
     private List<Worker> getAllAvailableWorkers(Date date, enums shiftType) {
@@ -272,9 +281,9 @@ public class WorkerController {
         if(!infoObject.isSucceeded()){
             return infoObject;
         }
-        Driver driverToAdd = new Driver(id,name,phoneNumber,bankAccount,salary,date,jobTitle,getSnFactory(),getCurrentStoreSN(),licenses);
+        Driver driverToAdd = new Driver(id,name,phoneNumber,bankAccount,salary,date,"Driver",getSnFactory(),getCurrentStoreSN(),licenses);
         Service.getInstance().getWorkerList().put(driverToAdd.getWorkerSn(),driverToAdd);
-        Mapper.getInstance().insertDriver(id,name,phoneNumber,bankAccount,salary,date,jobTitle,driverToAdd.getWorkerSn(),driverToAdd.getStoreSN());
+        Mapper.getInstance().insertDriver(id,name,phoneNumber,bankAccount,salary,date,"Driver",driverToAdd.getWorkerSn(),driverToAdd.getStoreSN());
 
         if(!constrains.toUpperCase().equals("NONE")) {
             if (!workerConstrains[0].equals("")) {
