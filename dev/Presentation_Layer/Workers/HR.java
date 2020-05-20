@@ -4,6 +4,7 @@ package Presentation_Layer.Workers;
 import Business_Layer.Service;
 import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Workers.Utils.InfoObject;
+import Data_Layer.Mapper;
 import Interface_Layer.Workers.SystemInterfaceWorkers;
 import Test.Workers.projectTests;
 
@@ -34,6 +35,7 @@ public class HR {
     }
 
     public static void run() throws Buisness_Exception {
+
         System.out.println("1. Run tests");
         System.out.println("2. Start system");
         System.out.println("Enter 0 to go back");
@@ -105,22 +107,50 @@ public class HR {
     }
 
     private static void systemStart(Scanner sc) throws Buisness_Exception{
+        //new new new system -- delete everything and mapper.init.
+        //old system new iteration -- no special action, just takes data from db when it needs to.
+        //new system with data -- new new new system and insert some data.
+
         System.out.println("Welcome to SuperLee");
-        System.out.println("1. Choose start with data");
-        System.out.println("2. Start new system");
+        System.out.println("1. Start new system");
+        System.out.println("2. Start new system with data");
+        System.out.println("3. Resume last session ");
         System.out.println("Enter 0 to go back");
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int selectedOption = sc.nextInt();
-        if (selectedOption == 1) {
-            initSuperLeeWithWorkers();
-        }
         if (selectedOption == 0) {
             throw new Buisness_Exception("Going back");
         }
-        if (selectedOption < 0 || selectedOption > 2) {
+        if (selectedOption == 1) { ///new system
+            cleanSuperLeeDB();
+            try {
+                SystemInterfaceWorkers.getInstance().initConstants();
+            }
+            catch (Exception e){
+
+            }
+            chooseStore(sc);
+        }
+        if (selectedOption == 2) { ///new system with data
+            cleanSuperLeeDB();
+
+            try {
+                SystemInterfaceWorkers.getInstance().initConstants();
+            }
+            catch (Exception e){
+
+            }
+            initSuperLeeWithWorkers();
+            chooseStore(sc);
+        }
+        if (selectedOption == 3) {
+            getAllSN();
+            chooseStore(sc);
+        }
+        if (selectedOption < 0 || selectedOption > 3) {
             System.out.println("Invalid input, please try again");
             systemStart(sc);
         }
@@ -128,13 +158,28 @@ public class HR {
 
     }
 
+    private static void getAllSN() {
+        SystemInterfaceWorkers.getInstance().getAllSN();
+    }
+
+    private static void cleanSuperLeeDB() {
+        SystemInterfaceWorkers.getInstance().clearDB();
+    }
+
     private static void chooseStore(Scanner sc) throws Buisness_Exception{
+        try {
+            Mapper.getInstance().init();
+        }
+        catch (Exception e){
+
+        }
         System.out.println("1. Choose store");
         System.out.println("2. Add store");
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
+        SystemInterfaceWorkers.getInstance().getStores();
         int userChoose = sc.nextInt();
         if (userChoose == 1) {
             if (!(SystemInterfaceWorkers.getInstance().printAllStores())) {
@@ -236,6 +281,7 @@ public class HR {
     }
 
     public static void addShift(Scanner sc) throws Buisness_Exception {
+        SystemInterfaceWorkers.getInstance().getShifts();
         System.out.println("Please select a date - dd-mm-yyyy");
         while (!sc.hasNext()) {
             System.out.println("Invalid input, please try again");
@@ -269,6 +315,7 @@ public class HR {
     }
 
     public static void displayShifts(Scanner sc) throws Buisness_Exception {
+        SystemInterfaceWorkers.getInstance().getShifts();
         checkResponse(SystemInterfaceWorkers.getInstance().printAllShifts(), sc);
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
@@ -282,6 +329,7 @@ public class HR {
     }
 
     public static void addWorker(Scanner sc) throws Buisness_Exception {
+        SystemInterfaceWorkers.getInstance().getWorkers();
         System.out.println("Enter worker Id:");
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
@@ -346,6 +394,7 @@ public class HR {
     }
 
     public static void displayWorkers(Scanner sc) throws Buisness_Exception {
+        SystemInterfaceWorkers.getInstance().getWorkers();
         checkResponse(SystemInterfaceWorkers.getInstance().printAllWorkers(), sc);
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
@@ -359,7 +408,10 @@ public class HR {
         System.out.println("Choose action: ");
         System.out.println("1. Edit worker constrains");
         System.out.println("2. Edit worker salary");
-        System.out.println("3. Fire worker");
+        if(SystemInterfaceWorkers.getInstance().isDriver(workerSn)){
+            System.out.println("3. Add driver license");
+        }
+        //System.out.println("3. Fire worker");
         System.out.println("Enter 0 to go back to main menu");
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
@@ -374,10 +426,17 @@ public class HR {
             case 2: // Edit salary
                 EditWorkerSalary(sc, workerSn);
                 break;
-            case 3: // Fire worker
+            case 3:
+                if(SystemInterfaceWorkers.getInstance().isDriver(workerSn)){
+                    AddDriverLicense(sc,workerSn);
+                }else{
+                    System.out.println("Invalid input, going back to display workers");
+                    displayWorkers(sc);
+                }
+         /*   case 3: // Fire worker
                 checkResponse(SystemInterfaceWorkers.getInstance().removeWorkerBySn(workerSn), sc);
                 checkResponse(SystemInterfaceWorkers.getInstance().removeLaterShiftForFiredManagerByManagerSn(workerSn), sc);
-                break;
+                break;*/
             case 0: // quit
                 workingLoop(sc);
                 break;
@@ -385,6 +444,13 @@ public class HR {
                 System.out.println("Invalid input, going back to display workers");
                 displayWorkers(sc);
         }
+    }
+
+    private static void AddDriverLicense(Scanner sc, int workerSn) throws Buisness_Exception {
+        System.out.println("Enter new License");
+        String License = sc.nextLine();
+        License = sc.nextLine();
+        checkResponse(SystemInterfaceWorkers.getInstance().addNewLicense(workerSn,License),sc);
     }
 
     private static void EditWorkerSalary(Scanner sc, int workerSn) throws Buisness_Exception {
@@ -409,12 +475,12 @@ public class HR {
 
     public static void initSuperLeeWithWorkers() throws Buisness_Exception {
 
-//        try {
-//            Service.getInstance().site_controller.addsite("store","Nesspresso","Holon","Krauze","12","Hadar","04","A");
-//            Service.getInstance().site_controller.addsite("store","Nesspresso_2","Holon","Krauze","12","Hadar","04","A");
-//        } catch (Buisness_Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Service.getInstance().site_controller.addsite("store","Nesspresso","Holon","Krauze","12","Hadar","04","A");
+            Service.getInstance().site_controller.addsite("store","Nesspresso_2","Holon","Krauze","12","Hadar","04","A");
+        } catch (Buisness_Exception e) {
+            e.printStackTrace();
+        }
 
         Service.getInstance().getWorkerController().setCurrentStoreSN(1);
         Service.getInstance().getShiftController().setCurrentStoreSN(1);
@@ -440,9 +506,9 @@ public class HR {
         Service.getInstance().getWorkerController().addWorker(100, "Andrey Palman", "100", 123, 100, "15-04-2020", "Cashier", "");
         Service.getInstance().getWorkerController().addWorker(101, "Hadar Kor", "101", 124, 2500, "15-04-2020", "Manager", "");
         Service.getInstance().getWorkerController().addWorker(102, "Tomer Hacham", "102", 125, 10000, "15-04-2020", "Storekeeper", "");
-        Service.getInstance().getShiftController().createShift("MORNING", 2, "1,3", "19-12-2020");
-        Service.getInstance().getShiftController().createShift("NIGHT", 2, "1", "19-12-2020");
-        Service.getInstance().getShiftController().createShift("MORNING", 2, "3", "20-12-2020");
+        Service.getInstance().getShiftController().createShift("MORNING", 9, "8,10", "19-12-2020");
+        Service.getInstance().getShiftController().createShift("NIGHT", 9, "10", "19-12-2020");
+        Service.getInstance().getShiftController().createShift("MORNING", 9, "8", "20-12-2020");
 
     }
 

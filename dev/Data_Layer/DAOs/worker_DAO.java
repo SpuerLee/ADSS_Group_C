@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class worker_DAO {
@@ -46,58 +48,108 @@ public class worker_DAO {
     }*/
 
     public void insert(dummy_Worker worker) {
-        String query = MessageFormat.format("INSERT INTO \"main\".\"Workers\"\n(\"SN\",\"ID\",\"Name\",\"PhoneNumber\",\"BankAccount\", \"Salary\", \"StoreSN\", \"date\", \"Worker_Type\")\n{0}", String.format("VALUES ('%d','%d','%s','%s','%d','%d','%d', '%s', '%d');", worker.getSN()+10,worker.getId(), worker.getName(), worker.getPhone(), worker.getBankAccount(), worker.getSalary(), worker.getStoreSN(), "date", 1));
+        String query = MessageFormat.format("INSERT INTO \"main\".\"Workers\"\n(\"SN\",\"ID\",\"Name\",\"PhoneNumber\",\"BankAccount\", \"Salary\", \"StoreSN\", \"date\", \"Job_Title\")\n{0}", String.format("VALUES ('%d','%d','%s','%s','%d','%d','%d', %s , '%s');", worker.getSN(),worker.getId(), worker.getName(), worker.getPhone(), worker.getBankAccount(), worker.getSalary(), worker.getStoreSN(), "?", worker.getJob_title()));
 
         try {
             java.sql.Date sqlDate = new java.sql.Date(worker.getStart_Date().getTime());
             PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
-            //statement.setDate(7,sqlDate);
+            statement.setDate(1,sqlDate);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        for(Pair x : worker.getConstrains().keySet()){
-            boolean canWork =  worker.getConstrains().get(x);
-            String query_constraints = "INSERT INTO \"main\".\"Workers_Constraints\"\n" +
-                    "(\"WorkerSN\",\"Shift_type\",\"DayOfWeek\",\"CanWork\")\n" +
-                    String.format("VALUES ('%d','%d','%d','%b');",worker.getSN(), x.getValue(), x.getKey(),canWork);
-
-        }
-
     }
 
-    public void delete(int workerSN){
+    public void deleteManager(int Manager){
+        deleteConstraints(Manager);
+        String removeShiftManager = "DELETE FROM Shift_Worker WHERE SNWorker = " + Manager + "; DELETE FROM Shift where ManagerSN = " +Manager+ "; DELETE FROM Shift where ManagerSN =" +Manager +";";
+        executeQuery(removeShiftManager);
+    }
+
+    public void deleteEmployee(int workerSN){
         String sql = "DELETE FROM Workers WHERE SN = " + workerSN;
+        executeQuery(sql);
     }
 
-    public void update(Shift shiftToInsert,Worker worker){
+/*    public void update(Shift shiftToInsert,Worker worker){
         String shiftWorkersQuery = "INSERT INTO \"main\".\"Shift_Worker\"\n" +
                 "(\"SNShift\", \"SNWorker\")\n" +
                 String.format("VALUES ('%d', '%d');", shiftToInsert.getShiftSn(),worker.getWorkerSn());
-    }
+    }*/
 
-    public Worker selectWorkerBySN(int workerSN){
+    public dummy_Worker selectWorkerBySN(int workerSN){
         Worker workerToReturn = null;
         String selectQuery = String.format("select * from Workers where Workers.SN = '%d'",workerSN);
-
-
-        // if driver ??
-        return workerToReturn;
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(selectQuery);
+            rs2.next();
+            dummy_Worker toADD = new dummy_Worker(rs2.getInt("SN"),rs2.getInt
+                    ("ID"),rs2.getString("Name"),rs2.getString("PhoneNumber"),
+                    rs2.getInt("BankAccount"),rs2.getInt("Salary"),rs2.getInt("StoreSN"),rs2.getDate("Date"),rs2.getString("Job_Title"));
+            return toADD;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
     }
 
-    public String selectConstrainsByWorkerSN(int workerSN){
-        String constrainsQuery = String.format("select * from Workers_Constrains where WorkerSN = '%d", workerSN);
-        return String.format("select * from Workers_Constrains where WorkerSN = '%d", workerSN);
+    public List<dummy_Worker> selectWorkersByStoreSN(int storeSN){
+        List<dummy_Worker> workerToReturn = new LinkedList<>();
+        String selectQuery = String.format("select * from Workers where StoreSN = '%d'", storeSN);
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(selectQuery);
+            while (rs2.next()) {
+               dummy_Worker toADD = new dummy_Worker(rs2.getInt("SN"),rs2.getInt
+                       ("ID"),rs2.getString("Name"),rs2.getString("PhoneNumber"),
+                       rs2.getInt("BankAccount"),rs2.getInt("Salary"),rs2.getInt("StoreSN"),rs2.getDate("Date"),rs2.getString("Job_Title"));
+               workerToReturn.add(toADD);
+            }
+            return workerToReturn;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
+    public List<Pair<Integer,Integer>> selectConstrainsByWorkerSN(int workerSN){
+        String constrainsQuery = String.format("select * from Constrains where WorkerSN = %d", workerSN);
+        List<Pair<Integer,Integer>> constraints = new LinkedList<>();
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(constrainsQuery);
+            while (rs2.next()) {
+                Pair<Integer,Integer> toADD =new Pair<>(rs2.getInt("DayOfWeek"),rs2.getInt
+                        ("ShiftType"));
+                constraints.add(toADD);
+            }
+            return constraints;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
+    public List<Integer> selectDriverLicenseByWorkerSN(int workerSN){
+        String constrainsQuery = String.format("select * from Driver_License where DriverSN = %d", workerSN);
+        List<Integer> license = new LinkedList<>();
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(constrainsQuery);
+            while (rs2.next()) {
+                int toADD =rs2.getInt("LicenseSN");
+                license.add(toADD);
+            }
+            return license;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
     }
 /*
-    public dummy_Worker selectWorkersByStoreSN(int storeSN){
-        dummy_Worker workerToReturn = null;
 
-        String selectQuery = String.format("select * from Workers where StoreSN = '%d", storeSN);
-
-        return workerToReturn;
-    }
     public void insertLicense(int sn, int license){
         String query = "INSERT INTO \"main\".\"Driver_License\"\n" +
                 "(\"DriverSN\",\"LicenseSN\")\n" +
@@ -117,18 +169,23 @@ public class worker_DAO {
         throw new NullPointerException();
     } */
 
-
     public void updateSalary(int sn,int salary){
         String query_Salary = "UPDATE \"main\".\"Workers\"\n" + "SET Salary = " + salary +" WHERE SN = "+sn;
+
+        executeQuery(query_Salary);
     }
 
     public void deleteConstraints(int workerSN){
-        String sql = "DELETE FROM \"main\".\"Workers_Constraints\"\n WHERE SN = " + workerSN;
+        String sql = "DELETE FROM \"main\".\"Constrains\"\n WHERE WorkerSN = " + workerSN;
+
+        executeQuery(sql);
     }
     public void addConstraints(int workerSn,int selectedDay,int sType){
-        String query_constraints = "INSERT INTO \"main\".\"Workers_Constraints\"\n" +
-                "(\"WorkerSN\",\"Shift_type\",\"DayOfWeek\",\"CanWork\")\n" +
+        String query_constraints = "INSERT INTO \"main\".\"Constrains\"\n" +
+                "(\"WorkerSN\",\"DayOfWeek\",\"ShiftType\",\"CanWork\")\n" +
                 String.format("VALUES ('%d','%d','%d','%b');",workerSn,selectedDay, sType,false);
+
+        executeQuery(query_constraints);
     }
 
 
@@ -136,9 +193,97 @@ public class worker_DAO {
         String query = "INSERT INTO \"main\".\"Driver_License\"\n" +
                 "(\"DriverSN\",\"LicenseSN\")\n" +
                 String.format("VALUES ('%d','%d');",sn, license);
+        executeQuery(query);
+    }
+    public void initShiftType(){
 
+        String query = "INSERT INTO \"main\".\"Shift_Type\"\n" +
+                "(\"SN\",\"DayType\")\n" +
+                String.format("VALUES ('%d','%s');",1, "MORNING");
+        String que = "INSERT INTO \"main\".\"Shift_Type\"\n" +
+                "(\"SN\",\"DayType\")\n" +
+                String.format("VALUES ('%d','%s');",2, "NIGHT");
+
+        executeNOexception(query);
+        executeNOexception(que);
     }
 
+
+
+    public void initLicense(){
+
+        String query = "INSERT INTO \"main\".\"License\"\n" +
+                "(\"SN\",\"LicenseType\")\n" +
+                String.format("VALUES ('%d','%s');",1, "C");
+        String que = "INSERT INTO \"main\".\"License\"\n" +
+                "(\"SN\",\"LicenseType\")\n" +
+                String.format("VALUES ('%d','%s');",2, "C1");
+
+        executeNOexception(query);
+        executeNOexception(que);
+    }
+    private void executeNOexception(String query){
+        try {
+            // java.sql.Date sqlDate = new java.sql.Date(worker.getStart_Date().getTime());
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            //statement.setDate(7,sqlDate);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+         //  e.printStackTrace();
+        }
+    }
+
+    private void executeQuery(String query){
+        try {
+           // java.sql.Date sqlDate = new java.sql.Date(worker.getStart_Date().getTime());
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            //statement.setDate(7,sqlDate);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAllDriverLicense() {
+        String delete = "DELETE from Driver_License;";
+        executeQuery(delete);
+    }
+
+    public void deleteAllConstraints() {
+        String delete = "DELETE from Constrains;";
+        executeQuery(delete);
+    }
+
+    public void deleteAllWorkers() {
+        String delete = "DELETE from Workers;";
+        executeQuery(delete);
+    }
+
+    public void deleteLicenseType() {
+        String delete = "DELETE from License;";
+        executeQuery(delete);
+    }
+
+    public void deleteShiftType() {
+        String delete = "DELETE from Shift_Type;";
+        executeQuery(delete);
+    }
+
+    public int getWorkerSn() {
+        String query = "select SN from Workers\n" +
+                " ORDER BY SN DESC\n" +
+                " LIMIT 1;";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            rs2.next();
+            return rs2.getInt("SN");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
 /*
     public void insert(dummy_Worker worker) {
         String query = "INSERT INTO \"main\".\"Workers\"\n" +
@@ -159,7 +304,7 @@ public class worker_DAO {
 
 
 
-    public void delete(int sn) {
+    public void deleteEmployee(int sn) {
         String sql = "DELETE FROM \"main\".\"Workers\"\n WHERE SN = " + sn;
     } */
 

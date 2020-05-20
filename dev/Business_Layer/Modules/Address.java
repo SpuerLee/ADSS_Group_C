@@ -2,11 +2,25 @@ package Business_Layer.Modules;
 
 public class Address {
 
+
     private static int idcounter=0;
+
     private int id;
     private String city;
     private String street;
     private int number;
+    private int sn;
+
+
+    public Address(String city, String street, int number, int sn) {
+        this.city = city;
+        this.street = street;
+        this.number = number;
+        this.sn = sn;
+        if(sn>idcounter)
+            idcounter= sn+1;
+
+    }
 
     public Address(int id, String city, String street,int number){
         this.id=id;
@@ -17,11 +31,22 @@ public class Address {
             idcounter= id+1;
     }
 
-    public Address(String city, String street,int number){
+    public Address(String city, String street,int number) {
         this.id = idcounter++;
-        this.city=city;
-        this.street=street;
-        this.number=number;
+        this.city = city;
+        this.street = street;
+        this.number = number;
+    }
+
+
+
+    public static int getIdcounter() {
+        return idcounter;
+    }
+
+    public static void setIdcounter(int idcounter) {
+        Address.idcounter = idcounter;
+
     }
 
     public int getId() {
@@ -56,12 +81,14 @@ public class Address {
         this.number = number;
     }
 
-    public static int getIdCounter(){
-        return idcounter;
+    public int getSn() {
+        return sn;
     }
-    public static void setIdCounter(int id){
-        idcounter = id;
+
+    public void setSn(int sn) {
+        this.sn = sn;
     }
 
 
 }
+

@@ -38,7 +38,7 @@ public class Transportation {
     }
 
     public Transportation(int id, Date date, int DepartureTime, Driver drivers, Truck truck) {
-        this.id = idcounter++;
+        this.id = id;
         this.date = date;
         this.DepartureTime = DepartureTime;
         this.driver = drivers;
@@ -46,14 +46,22 @@ public class Transportation {
         this.suppliers =new LinkedList<>();
         this.stores = new LinkedList<>();
         this.itemsFiles = new LinkedList<>();
+        if(id>idcounter)
+            idcounter=id+1;
     }
 
     public String toString() {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String dariverName = "";
+        String truck = "";
+        if (this.driver!=null)
+            dariverName= "\n\tdriver: " + this.driver.getWorkerName();
+        if (this.truck!=null)
+            truck= "\n\ttruck- license_number:" + this.truck.getlicense_number()
+                    + ", Model:" + this.truck.getModel();
         String output = "";
         output += "id: " + this.id + "\n\tdate: " + dateFormat.format(this.date) + "\n\tleaving_time: " + this.DepartureTime
-                + "\n\tdriver: " + this.driver.getWorkerName() + "\n\ttruck- license_number:" + this.truck.getlicense_number()
-                + ", Model:" + this.truck.getModel() + "\n";
+                + dariverName + truck + "\n";
         output += "\tstores: ";
         for (Store sites : stores) {
 

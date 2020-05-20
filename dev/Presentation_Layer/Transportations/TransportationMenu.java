@@ -19,7 +19,7 @@ public class TransportationMenu {
         String choice = "0";
         do {
             System.out.println("Please choose your option:");
-            String[] A = new String[]{"Transportations", "Suppliers", "Trucks","Missing_items","Quit"};
+            String[] A = new String[]{"Transportations", "Suppliers", "Trucks","Quit"};
             //  String choice = null;
             for (int i = 0; i < A.length; i++) {
                 System.out.println(i + 1 + ". " + A[i]);
@@ -95,24 +95,9 @@ public class TransportationMenu {
                 else if (option.equals("3"))
                     Remove_truck();
             }
-
-            else if (choice.equals("4")) {
-                String[] suppliers = new String[]{"Add new Truck", "Show trucks List", "Remove truck","Cancel"};
-                String option = null;
-                for (int i = 0; i < suppliers.length; i++) {
-                    System.out.println(i + 1 + ". " + suppliers[i]);
-                }
-                option = scan.nextLine();
-//                if (option.equals("1"))
-//                    systemInterfaceTransportations.Add_truck();
-//                else if (option.equals("2"))
-//                    systemInterfaceTransportations.Show_trucks();
-//                else if (option.equals("3"))
-//                    systemInterfaceTransportations.Remove_truck();
-            }
         }
 
-        while (!choice.equals("5"));
+        while (!choice.equals("4"));
     }
 
     static String Print_error(Exception e) {
@@ -241,39 +226,6 @@ public class TransportationMenu {
             List<Integer> store_list = Arrays.asList(stores);
             List<Integer> supplier_list = Arrays.asList(supplier);
 
-//            boolean find_truck_driver = false;
-//            Date date = new Date();
-//            Integer driverId = 0;
-//            Integer truckId = 0;
-//            while (!find_truck_driver) {
-//                System.out.println("Please choose date to transportation by the pattern dd-MM-yyyy");
-//                date = parseToDate(scan.nextLine());
-//
-//                List<String> freeTrucks = systemInterfaceTransportations.getFreeTrucks(date);
-//                if (!freeTrucks.isEmpty()) {
-//                    System.out.println("The trucks available for the date are:");
-//                    freeTrucks.forEach(System.out::println);
-//                    System.out.println("Please choose truck to transportation by it's id");
-//                    truckId = parseToNumber(scan.nextLine());
-//                    checkIdInList(freeTrucks,truckId.toString());
-//
-//                    List<String> freeDrivers = systemInterfaceTransportations.getDriverToTrucks(truckId, date);
-//                    if (!freeDrivers.isEmpty()) {
-//                        System.out.println("The Drivers available for the date are and truck:");
-//                        freeDrivers.forEach(System.out::println);
-//                        System.out.println("Please choose Driver to transportation by it's id");
-//                        driverId = parseToNumber(scan.nextLine());
-//                        checkIdInList(freeDrivers,driverId.toString());
-//                        find_truck_driver = true;
-//
-//
-//                    } else {
-//                        System.out.println("There are no Drivers available for the truck at this date");
-//                    }
-//                } else {
-//                    System.out.println("No trucks available on date");
-//                }
-//            }
 
             boolean find_truck_driver = false;
             Date date = new Date();

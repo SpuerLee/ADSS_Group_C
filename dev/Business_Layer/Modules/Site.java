@@ -27,6 +27,15 @@ public abstract class Site {
         this.area=area;
     }
 
+
+    Site (String name, String phone, String contact_name, Address address,Area area, int id){
+        this.id=id;
+        this.name=name;
+        this.contact_name=contact_name;
+        this.phone=phone;
+        this.address=address;
+        this.area=area;
+    }
     Site (int id, String name, String phone, String contact_name, Address address,Area area){
         this.id=id;
         this.name=name;
@@ -37,6 +46,7 @@ public abstract class Site {
     }
 
 
+    public static void setSn(int SN){idcounter = ++SN; }
     public String getPhone(){ return phone;}
     public String getContact_name(){return  contact_name;}
     public Address getAddress() {

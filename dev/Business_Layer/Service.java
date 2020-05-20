@@ -6,10 +6,7 @@ import Business_Layer.Transportations.Controllers.Drivers_Controller;
 import Business_Layer.Transportations.Controllers.Missing_items_Controller;
 import Business_Layer.Transportations.Controllers.Transportation_Controller;
 import Business_Layer.Transportations.Controllers.Trucks_Controller;
-import Business_Layer.Transportations.Modules.ItemsFile;
-import Business_Layer.Transportations.Modules.MissingItems;
-import Business_Layer.Transportations.Modules.Transportation;
-import Business_Layer.Transportations.Modules.Truck;
+import Business_Layer.Transportations.Modules.*;
 import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Workers.Controllers.ShiftController;
 import Business_Layer.Workers.Controllers.WorkerController;
@@ -17,44 +14,43 @@ import Business_Layer.Workers.Modules.Shift;
 import Business_Layer.Workers.Modules.Worker.Driver;
 import Business_Layer.Workers.Modules.Worker.Worker;
 import Business_Layer.Workers.Utils.ShiftType;
-import Business_Layer.Workers.Utils.enums;
 import Data_Layer.DAOs.shift_DAO;
-import Data_Layer.DAOs.truck_DAO;
 import Data_Layer.Dummy_objects.*;
 import Data_Layer.Mapper;
+import Interface_Layer.Workers.SystemInterfaceWorkers;
+import javafx.util.Pair;
+import com.google.gson.*;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Service {
 
-    private static class SingletonService {
-        private static Service instance = new Service();
-    }
-
-    truck_DAO truck_dao=new truck_DAO();
-
     private Service() {
         // initialization code..
-      /*  license_list.put(1, new License(1,"C"));
+        license_list.put(1, new License(1,"C"));
         license_list.put(2,new License(2,"C1"));
         area_list.put(1,new Area(1,"A"));
         area_list.put(2,new Area(2,"B"));
         area_list.put(3,new Area(3,"C"));
         area_list.put(4,new Area(4,"D"));
         shiftTypeList.put(1, new ShiftType(1,"MORNING"));
-        shiftTypeList.put(2, new ShiftType(2,"NIGHT")); */
-
-
+        shiftTypeList.put(2, new ShiftType(2,"NIGHT"));
     }
-
 
     public static Service getInstance() {
         return SingletonService.instance;
     }
+
+    private static class SingletonService {
+
+
+        private static Service instance = new Service();
+
+
+    }
+
 
     public Trucks_Controller trucks_controller = Trucks_Controller.getInstance();
     public Site_Controller site_controller = Site_Controller.getInstance();
@@ -68,7 +64,9 @@ public class Service {
     private ConcurrentHashMap<Integer, Supplier> HashSuppliers= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Store> HashStore= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer, Truck> HashTrucks= new ConcurrentHashMap<>();
+
     private ConcurrentHashMap<Integer,ItemsFile> HashItemsFile = new ConcurrentHashMap<>();
+
     private ConcurrentHashMap<Integer,Transportation> HashTransportation= new ConcurrentHashMap<>();
     private ConcurrentHashMap<Integer,MissingItems> MissingItems= new ConcurrentHashMap<>();
     private HashMap<Integer, Shift> shiftHistory = new HashMap<>();
@@ -77,20 +75,102 @@ public class Service {
     private HashMap<Integer, Area> area_list = new HashMap<>();
     private HashMap<Integer, ShiftType> shiftTypeList = new HashMap<>();
 
-    private Mapper mapper = Mapper.getInstance();
+    public ConcurrentHashMap<Integer, ItemsFile> getHashItemsFile() {
+        return HashItemsFile;
+    }
+    public HashMap<Integer, ShiftType> getshiftTypeList() {
+        return shiftTypeList;
+    }
+    public HashMap<Integer, Area> getArea_list() {
+        return area_list;
+    }
+    public HashMap<Integer, License> getLicense_list() {
+        return license_list;
+    }
+    public HashMap<Integer, Worker> getWorkerList() {
+        return workerList;
+    }
+    public HashMap<Integer, Shift> getShiftHistory() {
+        return shiftHistory;
+    }
+    public HashMap<Integer, Shift> getShiftHistory(int currentStoreSN) {
+        HashMap<Integer,Shift> CurrentStoreShifts = new HashMap<>();
+        for(Shift shift : this.shiftHistory.values()){
+            if(shift.getStoreSN() == currentStoreSN){
+                CurrentStoreShifts.put(shift.getShiftSn(),shift);
+            }
+        }
+        return CurrentStoreShifts;
+    }
+    public HashMap<Integer, Worker> getWorkerList(int currentStoreSN) {
+        HashMap<Integer,Worker> CurrentStoreWorkers = new HashMap<>();
+        for(Worker worker : this.workerList.values()){
+            if(worker.getStoreSN() == currentStoreSN){
+                CurrentStoreWorkers.put(worker.getWorkerSn(),worker);
+            }
+        }
+        return CurrentStoreWorkers;
+    }
+
+
+
+
+
+    public ConcurrentHashMap<Integer, Business_Layer.Transportations.Modules.MissingItems> getMissing(){
+        return MissingItems;
+    }
+
+    public ConcurrentHashMap<Integer,Supplier> getSuppliersMap()
+    {
+        return HashSuppliers;
+    }
+
+    public ConcurrentHashMap<Integer, Store> getHashStoresMap()
+    {
+        return HashStore;
+    }
+
+    public ConcurrentHashMap<Integer,Transportation> getHashTransportation(){
+        return HashTransportation;
+    }
+
+    public ConcurrentHashMap<Integer, Driver> getDrivers(){
+        return Drivers;
+    }
+
+    public ConcurrentHashMap<Integer, Truck> getHashTrucks() {
+        return HashTrucks;
+    }
+
+    public WorkerController getWorkerController() {
+        return this.workerController;
+    }
+
+    public ShiftController getShiftController() {
+        return this.shiftController;
+    }
+
+    public boolean isDriver(int sn) {
+        return this.workerController.isDriver(sn);
+    }
+
+    public void initConstants() {
+        Mapper.getInstance().init();
+    }
+
 
     public void remove_MissingItem(int SN){
         if(MissingItems.containsKey(SN))
         {
             MissingItems.remove(SN);
-            mapper.deleteMissing_items(SN);
+            Mapper.getInstance().deleteMissing_items(SN);
         }
     }
 
     public void upload_MissingItems(){
         if(MissingItems.isEmpty())
         {
-            List<dummy_Missing_items> list = mapper.selectAllMissing_items();
+            List<dummy_Missing_items> list = Mapper.getInstance().selectAllMissing_items();
             for (dummy_Missing_items dummy_missing_item : list)
             {
                 MissingItems missingItem = new MissingItems(dummy_missing_item.getSN(),dummy_missing_item.getStore_id(),
@@ -106,7 +186,7 @@ public class Service {
 
     public void upload_ItemFile(int SN){
 
-        dummy_Items_File dummy_items_file = mapper.selectItemfile(SN);
+        dummy_Items_File dummy_items_file = Mapper.getInstance().selectItemfile(SN);
         if (dummy_items_file!=null)
         {
             upload_Supplier(dummy_items_file.getSupplier_id());
@@ -119,28 +199,21 @@ public class Service {
         }
     }
 
-    public void upload_shift_type(){
-        shift_DAO shiftDAO=new shift_DAO();
-        shiftDAO.insert_types();
-        shiftTypeList.put(1, new ShiftType(1,"Morning"));
-
-    }
-
     public void add_ItemFile(ItemsFile itemsFile){
         if(!HashItemsFile.containsKey(itemsFile.getId()))
         {
             HashItemsFile.put(itemsFile.getId(),itemsFile);
-            mapper.insertItemfile(itemsFile.getId(),itemsFile.getSupplier().getId(),itemsFile.getStore().getId(),
+            Mapper.getInstance().insertItemfile(itemsFile.getId(),itemsFile.getSupplier().getId(),itemsFile.getStore().getId(),
                     itemsFile.getItems_list());
         }
     }
 
     public void set_ItemFile_idCouter(){
-        ItemsFile.setIdCounter(mapper.getNextSNItemfile());
+        ItemsFile.setIdCounter(Mapper.getInstance().getNextSNItemfile());
     }
 
     public void upload_Trucks() throws Buisness_Exception{
-        List<dummy_Truck> list = mapper.selectAllTrucks();
+        List<dummy_Truck> list = Mapper.getInstance().selectAllTrucks();
         upload_license();
         for (dummy_Truck dummy_truck : list)
         {
@@ -156,7 +229,32 @@ public class Service {
                 HashTrucks.put(truck.getId(),truck);
 
 
-                for(Integer id : mapper.selectTransportationTrucks(dummy_truck.getSN()))
+                for(Integer id : Mapper.getInstance().selectTransportationTrucks(dummy_truck.getSN()))
+                {
+                    upload_Transportation(id);
+                    HashTrucks.get(truck.getId()).getTransportations().add(HashTransportation.get(id));
+                }
+            }
+        }
+    }
+
+
+    public void upload_Truck(int SN) throws Buisness_Exception{
+        upload_license();
+        dummy_Truck dummy_truck = Mapper.getInstance().selectTruck(SN);
+        if(dummy_truck!=null)
+        {
+            if(!HashTrucks.containsKey(dummy_truck.getSN()))
+            {
+                List<License> license_list1 = new LinkedList<>();
+                for (Integer id :dummy_truck.getLicense_type())
+                {
+                    license_list1.add(license_list.get(id));
+                }
+                Truck truck = new Truck(dummy_truck.getSN(),dummy_truck.getLicense_number(),license_list1,dummy_truck.getModel(),dummy_truck.getWeight(),
+                        dummy_truck.getMax_weight());
+                HashTrucks.put(truck.getId(),truck);
+                for(Integer id : Mapper.getInstance().selectTransportationTrucks(dummy_truck.getSN()))
                 {
                     upload_Transportation(id);
                     HashTrucks.get(truck.getId()).getTransportations().add(HashTransportation.get(id));
@@ -168,7 +266,7 @@ public class Service {
     public void upload_Store(Integer SN){
         if (!HashStore.containsKey(SN))
         {
-            dummy_store dummy_store = mapper.selectStore(SN);
+            dummy_store dummy_store = Mapper.getInstance().selectStore(SN);
             if(dummy_store!=null)
             {
                 HashStore.put(dummy_store.getId(),new Store(dummy_store.getId(),dummy_store.getName(),
@@ -183,7 +281,7 @@ public class Service {
     public void upload_Supplier(Integer SN){
         if (!HashSuppliers.containsKey(SN))
         {
-            dummy_supplier supplier = mapper.selectSupplier(SN);
+            dummy_supplier supplier = Mapper.getInstance().selectSupplier(SN);
             if (supplier!=null)
             {
                 Address address = new Address(supplier.getDummy_address().getCity(),supplier.getDummy_address().getStreet(),
@@ -198,23 +296,24 @@ public class Service {
     public void add_new_supplier(Supplier supplier){
         if(!HashSuppliers.containsKey(supplier.getId())) {
             HashSuppliers.put(supplier.getId(), supplier);
-            mapper.insertSupplier(supplier.getId(),supplier.getName(),supplier.getPhone(),supplier.getContact_name(),supplier.getAddress().getId(),supplier.getArea().getAreaSN(),supplier.getAddress().getCity(),supplier.getAddress().getStreet(),supplier.getAddress().getNumber());
+            Mapper.getInstance().insertSupplier(supplier.getId(),supplier.getName(),supplier.getPhone(),supplier.getContact_name(),supplier.getAddress().getId(),supplier.getArea().getAreaSN(),supplier.getAddress().getCity(),supplier.getAddress().getStreet(),supplier.getAddress().getNumber());
         }
     }
 
     public void set_supplier_idCouter(){
-        Supplier.setIdCounter(mapper.getNextSNSupplier());
+        Supplier.setIdCounter(Mapper.getInstance().getNextSNTransportation());
+
     }
 
     public void upload_All_Supplier(){
-        List<dummy_supplier> dummy_suppliers=mapper.selectAllSuppliers();
+        List<dummy_supplier> dummy_suppliers=Mapper.getInstance().selectAllSuppliers();
         for(dummy_supplier supplier:dummy_suppliers) {
             if (!HashSuppliers.containsKey(supplier.getSN())) {
-                    Address address = new Address(supplier.getDummy_address().getCity(), supplier.getDummy_address().getStreet(),
-                            supplier.getDummy_address().getNumber());
-                    HashSuppliers.put(supplier.getSN(),
-                            new Supplier(supplier.getSN(), supplier.getName(), supplier.getPhone(),
-                                    supplier.getContactName(), address, area_list.get(supplier.getAreaSn())));
+                Address address = new Address(supplier.getDummy_address().getSN(),supplier.getDummy_address().getCity(), supplier.getDummy_address().getStreet(),
+                        supplier.getDummy_address().getNumber());
+                HashSuppliers.put(supplier.getSN(),
+                        new Supplier(supplier.getSN(), supplier.getName(), supplier.getPhone(),
+                                supplier.getContactName(), address, area_list.get(supplier.getAreaSn())));
             }
         }
     }
@@ -223,36 +322,31 @@ public class Service {
         // TODO: upload Driver
 
     }
-/*
-    public void upload_all_Drivers(){ //TODO implement this
-        List<dummy_Worker> dummy_workers=mapper.get_drivers();
-    } */
 
     public void add_transport_driver(int Transport,int Driver){
         if((HashTransportation.containsKey(Transport)) && (Drivers.containsKey(Driver))){
-            mapper.add_transport_driver(Transport,Driver);
+            Mapper.getInstance().add_transport_driver(Transport,Driver);
         }
     }
 
-
     public void add_transport_Truck(int Transport,int truck){
         if((HashTransportation.containsKey(Transport)) && (HashTrucks.containsKey(truck))){
-            mapper.add_transport_truck(Transport,truck);
+            Mapper.getInstance().add_transport_truck(Transport,truck);
         }
     }
 
     public void remove_driver_transportatin(int Transport,int driver){
-        mapper.remove_driver_transportatin(Transport, driver);
+        Mapper.getInstance().remove_driver_transportatin(Transport, driver);
     }
 
     public void remove_truck_transportatin(int Transport, int driver){
-        mapper.remove_truck_transportatin(Transport, driver);
+        Mapper.getInstance().remove_truck_transportatin(Transport, driver);
     }
 
     public void upload_Transportation(int SN) throws Buisness_Exception {
         if(!HashTransportation.containsKey(SN))
         {
-            dummy_Transportation dummy_transportation = mapper.selectTransportation(SN);
+            dummy_Transportation dummy_transportation = Mapper.getInstance().selectTransportation(SN);
             Driver driver = null;
             if(Drivers.containsKey(dummy_transportation.getDriverSn()))
                 driver = Drivers.get(dummy_transportation.getDriverSn());
@@ -298,13 +392,15 @@ public class Service {
 
     public void upload__all_Transportation() throws Buisness_Exception {
 
-        List<dummy_Transportation> dummy_transportations = mapper.select_all_Transportation();
+        List<dummy_Transportation> dummy_transportations = Mapper.getInstance().select_all_Transportation();
         for (dummy_Transportation dummy_transportation:dummy_transportations) {
             if (!HashTransportation.containsKey(dummy_transportation.getId())) {
                 Driver driver = null;
+
                 if (Drivers.containsKey(dummy_transportation.getDriverSn()))
                     driver = Drivers.get(dummy_transportation.getDriverSn());
 
+                upload_Truck(dummy_transportation.getTrucksn());
                 Truck truck = null;
                 if (HashTrucks.containsKey(dummy_transportation.getTrucksn()))
                     truck = HashTrucks.get(dummy_transportation.getTrucksn());
@@ -325,6 +421,8 @@ public class Service {
                     upload_ItemFile(id);
                     transportation.getItemsFiles().add(HashItemsFile.get(id));
                 }
+
+                HashTransportation.put(transportation.getId(),transportation);
 
 
                 // TODO: upload Stores
@@ -353,7 +451,7 @@ public class Service {
             {
                 ItemFiles.add(i.getId());
             }
-            mapper.insertTransportation(transportation.getId(),transportation.getDate(),transportation.getDepartureTime(),
+            Mapper.getInstance().insertTransportation(transportation.getId(),transportation.getDate(),transportation.getDepartureTime(),
                     transportation.getWeight_truck(),transportation.getTruck().getId(),transportation.getDriveId(),
                     Suppliers,Stores,ItemFiles);
         }
@@ -361,18 +459,17 @@ public class Service {
     }
 
     public void remove_transport(int sn){
-        mapper.remove_transport(sn);
+        Mapper.getInstance().remove_transport(sn);
     }
 
     public void set_Transportation_idCouter(){
-        Transportation.setIdCounter(mapper.getNextSNTransportation());
+        Transportation.setIdCounter(Mapper.getInstance().getNextSNTransportation());
     }
-
 
     public void upload_Area(){
         if(area_list.isEmpty())
         {
-            List<dummy_Area> list = mapper.selectAllArea();
+            List<dummy_Area> list = Mapper.getInstance().selectAllArea();
             for (dummy_Area area : list)
             {
                 area_list.put(area.getSN(),new Area(area.getSN(),area.getAreaName()));
@@ -381,22 +478,23 @@ public class Service {
     }
 
     public void getAllStores(){
-        List<dummy_store> dummy_Stores = mapper.select_all_stores();
-        for(dummy_store store: dummy_Stores){
-            Address address = new Address(store.getCity(),store.getStreet(),
-                    store.getNumber());
-            Store toADD = new Store(store.getName(),store.getPhone(),store.getContact_name(),address, Service.getInstance().getArea_list().get(store.getAreaSn()));
-            Service.getInstance().getHashStoresMap().putIfAbsent(toADD.getId(),toADD);
-        }
+        Mapper.getInstance().getAllStores();
+//        List<dummy_store> dummy_Stores = Mapper.getInstance().select_all_stores();
+//        for(dummy_store store: dummy_Stores){
+//            if (!HashStore.containsKey(store.getId())) {
+//                Address address = new Address(store.getCity(),store.getStreet(),
+//                        store.getNumber());
+//                Store toADD = new Store(store.getName(),store.getPhone(),store.getContact_name(),address, Service.getInstance().getArea_list().get(store.getAreaSn()));
+//                Service.getInstance().getHashStoresMap().putIfAbsent(toADD.getId(),toADD);
+//            }
+//
+//        }
     }
-
-
-    //trucks
 
     public void upload_license(){
         if(license_list.isEmpty())
         {
-            List<dummy_License> list = mapper.selectAllLicense();
+            List<dummy_License> list = Mapper.getInstance().selectAllLicense();
             for (dummy_License l : list)
             {
                 license_list.put(l.getSN(),new License(l.getSN(),l.getLicenseType()));
@@ -409,7 +507,7 @@ public class Service {
             throw new Buisness_Exception("Truck doesn't exist");
         }
         else {
-            mapper.deleteTruck(sn);
+            Mapper.getInstance().deleteTruck(sn);
             for(Truck truck:HashTrucks.values()){
                 if (truck.getId()==sn)
                     HashTrucks.remove(sn);
@@ -441,19 +539,19 @@ public class Service {
         }
         Truck trucks = new Truck(license_number, licenses, model, weight,max_weight);
         HashTrucks.put(trucks.getId(), trucks);
-        mapper.insertTruck(trucks.getId(),license_number,model,weight,max_weight,to_add);
+        Mapper.getInstance().insertTruck(trucks.getId(),license_number,model,weight,max_weight,to_add);
     }
 
     public void set_truck_idCouter(){
-        Truck.setIdCounter(mapper.getNextSNTruck());
+        Truck.setIdCounter(Mapper.getInstance().getNextSNTransportation());
     }
 
     public void set_address_idCounter(){
-        Address.setIdCounter(mapper.getNextSNAddress());
+        Address.setIdcounter(Mapper.getInstance().getNextSNAddress());
     }
 
-
-    public Area getAreaByName(String str) throws Buisness_Exception{
+    public Area getAreaByName(String str) throws Buisness_Exception
+    {
         for (Map.Entry<Integer, Area> area : area_list.entrySet()) {
             if(str.equals(area.getValue().getAreaName()))
                 return area.getValue();
@@ -477,157 +575,8 @@ public class Service {
         throw new Buisness_Exception("-License dont exist-");
     }
 
-    public ConcurrentHashMap<Integer, Truck> getHashTrucks() {
-        return HashTrucks;
-    }
 
-    public WorkerController getWorkerController() {
-        return this.workerController;
-    }
 
-    public ShiftController getShiftController() {
-        return this.shiftController;
-    }
-
-    public HashMap<Integer, ShiftType> getshiftTypeList() {
-        return shiftTypeList;
-    }
-
-    public HashMap<Integer, Area> getArea_list() {
-        return area_list;
-    }
-
-    public HashMap<Integer, License> getLicense_list() {
-        return license_list;
-    }
-
-    public HashMap<Integer, Worker> getWorkerList() {
-        return workerList;
-    }
-
-    public HashMap<Integer, Shift> getShiftHistory() {
-        return shiftHistory;
-    }
-
-    public HashMap<Integer, Shift> getShiftHistory(int currentStoreSN) {
-        HashMap<Integer,Shift> CurrentStoreShifts = new HashMap<>();
-        for(Shift shift : this.shiftHistory.values()){
-            if(shift.getStoreSN() == currentStoreSN){
-                CurrentStoreShifts.put(shift.getShiftSn(),shift);
-            }
-        }
-        return CurrentStoreShifts;
-    }
-
-    public HashMap<Integer, Worker> getWorkerList(int currentStoreSN) {
-        HashMap<Integer, Worker> CurrentStoreWorkers = new HashMap<>();
-        for (Worker worker : this.workerList.values()) {
-            if (worker.getStoreSN() == currentStoreSN) {
-                CurrentStoreWorkers.put(worker.getWorkerSn(), worker);
-            }
-        }
-        return CurrentStoreWorkers;
-    }
-    /*
-    public void uploadData()
-    {
-
-        JsonParser parser = new JsonParser();
-        try (InputStream is = this.getClass().getResourceAsStream("Data.json");
-            Reader rd = new InputStreamReader(is, "UTF-8"); ) {
-            Object obj = parser.parse(rd);
-            Gson gson = new Gson();
-
-            JsonObject jsonObject = (JsonObject) obj;
-          //  JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-            final JsonArray drivers = jsonObject.get("Drivers").getAsJsonArray();
-            for (int i = 0; i < drivers.size(); i++) {
-                final JsonObject driver = drivers.get(i).getAsJsonObject();
-                Date date = new Date();                //
-                Driver add = new Driver(123,driver.get("name").getAsString(),"321312",132,465,date,"Driver",100,1,driver.get("licenses").getAsString());
-                Drivers.put(add.getWorkerSn(),add);
-
-            }
-            final JsonArray sites = jsonObject.get("Sites").getAsJsonArray();
-            for (int i = 0; i < sites.size(); i++) {
-                final JsonObject site = sites.get(i).getAsJsonObject();
-                String type=site.get("site_type").getAsString();
-                Area area= getAreaByName(site.get("area").getAsString());
-                if(type.equals("store")){
-                    Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
-                    Store store=new Store(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,area);
-                    HashStore.put(store.getId(),store);
-                }
-                else if(type.equals("supplier")){
-                    Address address=new Address(site.get("city").getAsString(),site.get("street").getAsString(),site.get("number").getAsInt());
-                    Supplier supplier=new Supplier(site.get("name").getAsString(),site.get("phone").getAsString(),site.get("name_of_contact").getAsString(),address,area);
-                    HashSuppliers.put(supplier.getId(),supplier);
-                   }
-                }
-
-            final JsonArray trucks = jsonObject.get("Trucks").getAsJsonArray();
-            for (int i = 0; i < trucks.size(); i++) {
-                final JsonObject truck = trucks.get(i).getAsJsonObject();
-                final JsonArray license = truck.getAsJsonArray("licenses");
-                List<License> licenses=new LinkedList<License>();
-                for(int j=0;j<license.size();j++){
-                    License type = getLicenseByName(license.get(j).getAsString());
-                    licenses.add(type);
-                }
-                Truck truck1 = new Truck(truck.get("license_number").getAsInt(),licenses,truck.get("model").getAsString(),truck.get("weight").getAsDouble(),truck.get("max weight").getAsDouble());
-                HashTrucks.put(truck1.getId(),truck1);
-            }
-            final JsonArray missing_items = jsonObject.get("Missing_Items").getAsJsonArray();
-            for (int i = 0; i < missing_items.size(); i++) {
-                final JsonObject missing = missing_items.get(i).getAsJsonObject();
-                final JsonArray items = missing.getAsJsonArray("items_list");
-                List<Pair<String,Integer>> items_list = new LinkedList<Pair<String,Integer>>();
-//                HashMap<String,Integer> map=new HashMap<String,Integer>();
-                for(int j=0;j<items.size();j++){
-                    String [] items_to_add=items.get(j).getAsString().split(":");
-                    Pair<String,Integer> pair = new Pair<>(items_to_add[1],Integer.parseInt(items_to_add[0]));
-//                    map.put(items_to_add[1],Integer.parseInt(items_to_add[0]));
-                }
-                MissingItems items1=new MissingItems(missing.get("store_id").getAsInt(),missing.get("supplier_id").getAsInt(),items_list);
-                MissingItems.put(items1.getID(),items1);
-            }
-
-        }
-        catch (Exception e)
-        {
-            System.out.println(e);
-
-        }
-    }
-*/
-
-    public ConcurrentHashMap<Integer,ItemsFile> getHashItemsFile(){
-        return HashItemsFile;
-    }
-
-    //print list of all the suppliers
-
-    public ConcurrentHashMap<Integer, MissingItems> getMissing(){
-        return MissingItems;
-    }
-
-    public ConcurrentHashMap<Integer,Supplier> getSuppliersMap()
-    {
-        return HashSuppliers;
-    }
-
-    public ConcurrentHashMap<Integer, Store> getHashStoresMap()
-    {
-        return HashStore;
-    }
-
-    public ConcurrentHashMap<Integer,Transportation> getHashTransportation(){
-        return HashTransportation;
-    }
-
-    public ConcurrentHashMap<Integer, Driver> getDrivers(){
-        return Drivers;
-    }
 
 }
 

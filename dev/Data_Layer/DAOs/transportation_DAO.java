@@ -1,5 +1,6 @@
 package Data_Layer.DAOs;
 
+import Business_Layer.Transportations.Utils.Buisness_Exception;
 import Business_Layer.Workers.Utils.enums;
 import Data_Layer.Connection;
 import Data_Layer.Dummy_objects.dummy_Address;
@@ -9,6 +10,7 @@ import Data_Layer.Dummy_objects.dummy_Transportation;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,6 +19,16 @@ public class transportation_DAO {
     private String pattern = "yyyy-MM-dd";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public static Date parseToDate(String str) {
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        try{
+            return simpleDateFormat.parse(str);
+        }catch (Exception e){
+            return new Date();
+        }
+    }
 
     public void insert(dummy_Transportation transportation){
         String query_items="INSERT INTO \"main\".\"Transportations\"\n" +
@@ -134,8 +146,9 @@ public class transportation_DAO {
             Statement stmt2 = Connection.getInstance().getConn().createStatement();
             ResultSet rs2  = stmt2.executeQuery(query);
             while (rs2.next()){
+                String d = rs2.getString("Date");
                 dummy_Transportation dummy_transportation = new dummy_Transportation(rs2.getInt("SN"),
-                        rs2.getDate("Date"),rs2.getInt("DepartureTime"),rs2.getDouble("TruckWeight"),
+                        parseToDate(rs2.getString("Date")),rs2.getInt("DepartureTime"),rs2.getDouble("TruckWeight"),
                         rs2.getInt("TruckSN"),rs2.getInt("DriverSN"));
 
 

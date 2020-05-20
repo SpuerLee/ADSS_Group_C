@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class address_DAO {
+
     public void insert(dummy_Address dummy_address){
         String address_query="INSERT INTO \"main\".\"Address\"\n" +
                 "(\"SN\", \"City\", \"Street\", \"Number\")\n" +
@@ -34,6 +35,62 @@ public class address_DAO {
         }
     }
 
+    public void insert(){
+
+    }
+
+    public void delete(){
+
+    }
+
+    public void update(){
+
+    }
+
+    public dummy_Address select(int Sn){
+        String query="SELECT * FROM Address";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            return new dummy_Address(rs2.getString("City"),rs2.getString("Street"),rs2.getInt("Number"),rs2.getInt("SN"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
+    private void executeQuery(String query){
+        try {
+            // java.sql.Date sqlDate = new java.sql.Date(worker.getStart_Date().getTime());
+            PreparedStatement statement= Connection.getInstance().getConn().prepareStatement(query);
+            //statement.setDate(7,sqlDate);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteAll() {
+        String delete = "DELETE from Address;";
+        executeQuery(delete);
+    }
+
+    public int getAddressSn() {
+        String query = "select SN from Address\n" +
+                " ORDER BY SN DESC\n" +
+                " LIMIT 1;";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            rs2.next();
+            return rs2.getInt("SN");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
     public Integer getNextSN(){
         String query="SELECT MAX(SN) FROM Address";
         try {
@@ -49,10 +106,6 @@ public class address_DAO {
         throw new NullPointerException();
     }
 
-    public void update(){
-
-    }
-
     public List<dummy_Address> selectAll(){
         List<dummy_Address> output = new LinkedList<>();
         String query="SELECT * FROM Address";
@@ -64,22 +117,6 @@ public class address_DAO {
                 output.add(dummy_address);
             }
             return output;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        throw new NullPointerException();
-    }
-
-    public dummy_Address select(int SN){
-        String query="SELECT * FROM Address\n"+
-        String.format("WHERE SN = '%d';",SN);;
-        try {
-            Statement stmt2 = Connection.getInstance().getConn().createStatement();
-            ResultSet rs2  = stmt2.executeQuery(query);
-            if(!rs2.next())
-                return null;
-            else
-                return new dummy_Address(rs2.getInt("SN"),rs2.getString("City"),rs2.getString("Street"),rs2.getInt("Number"));
         } catch (SQLException e) {
             e.printStackTrace();
         }

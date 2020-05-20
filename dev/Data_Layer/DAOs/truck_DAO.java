@@ -134,6 +134,45 @@ public class truck_DAO {
         return list;
     }
 
+    public dummy_Truck select(int SN){
+        List<dummy_Truck> output = new LinkedList<>();
+        String query="SELECT * FROM Trucks\n" +
+        String.format("WHERE TruckSN = '%d';",SN);
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(query);
+            if(!rs2.next())
+                return null;
+            else {
+                dummy_Truck dummy_truck = new dummy_Truck(rs2.getInt("SN"),rs2.getInt("LicenseNumber"),
+                        rs2.getString("Model"),rs2.getInt("Weight"),rs2.getInt("MaxWeight"));
+
+
+                String query2="SELECT * FROM Truck_License\n"+
+                        String.format("WHERE TruckSN = '%d';",dummy_truck.getSN());
+                List<Integer> license = new LinkedList<>();
+                try {
+                    Statement stmt = Connection.getInstance().getConn().createStatement();
+                    ResultSet rs  = stmt.executeQuery(query2);
+                    while (rs.next()) {
+                        license.add(rs.getInt("LicenseSN"));
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    throw new NullPointerException();
+                }
+                dummy_truck.setLicense_type(license);
+
+                return dummy_truck;
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
 
 
 

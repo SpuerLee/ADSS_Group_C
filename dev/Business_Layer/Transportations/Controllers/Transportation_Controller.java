@@ -29,7 +29,6 @@ public class Transportation_Controller {
 
     public List<String> Show_shiftTypeList() throws Buisness_Exception {
         Service service = Service.getInstance();
-        service.upload_shift_type();
         List<String> output = new LinkedList<>();
         for(ShiftType shiftType : service.getshiftTypeList().values())
         {

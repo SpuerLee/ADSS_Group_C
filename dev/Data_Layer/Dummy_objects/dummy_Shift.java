@@ -13,11 +13,10 @@ public class dummy_Shift {
     private int Sn;
     private int Branch;
 
-    public dummy_Shift(Date date, int shift_type, int manager, List<Integer> shift_workers, int Sn, int Branch){
+    public dummy_Shift(Date date, int shift_type, int manager, int Sn, int Branch){
         this.date=date;
         this.shift_type=shift_type;
         this.manager=manager;
-        this.shift_workers=shift_workers;
         this.Sn=Sn;
         this.Branch=Branch;
     }

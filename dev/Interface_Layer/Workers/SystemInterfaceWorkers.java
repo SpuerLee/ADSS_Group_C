@@ -25,6 +25,22 @@ public class SystemInterfaceWorkers {
     public InfoObject printAllManagersAvailableInDates(String date, String shiftType) {
         return Service.getInstance().getWorkerController().printAllManagersAvailableInThisDate(date,shiftType);
     }
+    public boolean isDriver(int SN){
+        return Service.getInstance().isDriver(SN);
+
+    }
+
+    public void getStores(){
+        Service.getInstance().site_controller.getStores();
+    }
+
+    public void getShifts(){
+        Service.getInstance().getShiftController().getShifts();
+    }
+    public void getWorkers(){
+        Service.getInstance().getWorkerController().getWorkers();
+    }
+
 
     public InfoObject printAllWorkers(){
         return Service.getInstance().getWorkerController().printAllWorker();
@@ -105,5 +121,25 @@ public class SystemInterfaceWorkers {
             return false;
         }
         return true;
+    }
+
+    public InfoObject addNewLicense(int workerSn, String license) {
+
+        return Service.getInstance().getWorkerController().addNewLicense(workerSn,license);
+    }
+
+    public void clearDB() {
+        Service.getInstance().getWorkerController().clearDB();
+    }
+
+    public void getAllSN() {
+        Service.getInstance().getWorkerController().getAllSN();
+        Service.getInstance().getShiftController().getAllSN();
+        Service.getInstance().site_controller.getAllSN();
+
+    }
+
+    public void initConstants() {
+        Service.getInstance().initConstants();
     }
 }
