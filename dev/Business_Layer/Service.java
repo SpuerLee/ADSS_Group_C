@@ -542,10 +542,7 @@ public class Service {
                 e.printStackTrace();
             }
         }
-        if(Truck.getIdCounter()==0)
-        {
-            set_truck_idCouter();
-        }
+        set_truck_idCouter();
         Truck trucks = new Truck(license_number, licenses, model, weight,max_weight);
         HashTrucks.put(trucks.getId(), trucks);
         Mapper.getInstance().insertTruck(trucks.getId(),license_number,model,weight,max_weight,to_add);

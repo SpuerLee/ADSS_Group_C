@@ -109,8 +109,6 @@ public class Trucks_Controller {
                         ", Model: "+truck.getModel()+".";
                 output.add(line);
             }
-            if(output.isEmpty())
-                throw new Buisness_Exception("there are on free trucks\n");
 
         }
         return output;
