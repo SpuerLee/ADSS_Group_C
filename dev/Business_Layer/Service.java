@@ -19,7 +19,6 @@ import Data_Layer.Dummy_objects.*;
 import Data_Layer.Mapper;
 import Interface_Layer.Workers.SystemInterfaceWorkers;
 import javafx.util.Pair;
-import com.google.gson.*;
 
 import java.io.*;
 import java.util.*;
