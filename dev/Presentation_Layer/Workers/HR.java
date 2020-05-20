@@ -25,9 +25,10 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
 public class HR {
 
     public static void Menu() throws Buisness_Exception{
-        System.out.println("Welcome! Enter you choice");
+        //System.out.println("Welcome! Enter you choice");
+        Scanner sc = new Scanner(System.in);
         try {
-            run();
+            systemStart(sc);
         }
         catch (Exception e){
 
@@ -111,46 +112,51 @@ public class HR {
         //old system new iteration -- no special action, just takes data from db when it needs to.
         //new system with data -- new new new system and insert some data.
 
-        System.out.println("Welcome to SuperLee");
-        System.out.println("1. Start new system");
-        System.out.println("2. Start new system with data");
-        System.out.println("3. Resume last session ");
+        System.out.println("Welcome to SuperLee - HR");
+        //System.out.println("1. Start system");
+        //System.out.println("1. Start new system");
+        //System.out.println("2. Start new system with data");
+        //System.out.println("3. Resume last session ");
         System.out.println("Enter 0 to go back");
+        getAllSN();
+        chooseStore(sc);
         while (!sc.hasNextInt()) {
             System.out.println("Invalid input, please try again");
             sc.next();
         }
         int selectedOption = sc.nextInt();
-        if (selectedOption == 0) {
-            throw new Buisness_Exception("Going back");
-        }
-        if (selectedOption == 1) { ///new system
-            cleanSuperLeeDB();
-            try {
-                SystemInterfaceWorkers.getInstance().initConstants();
-            }
-            catch (Exception e){
-
-            }
-            chooseStore(sc);
-        }
-        if (selectedOption == 2) { ///new system with data
-            cleanSuperLeeDB();
-
-            try {
-                SystemInterfaceWorkers.getInstance().initConstants();
-            }
-            catch (Exception e){
-
-            }
-            initSuperLeeWithWorkers();
-            chooseStore(sc);
-        }
-        if (selectedOption == 3) {
-            getAllSN();
-            chooseStore(sc);
-        }
-        if (selectedOption < 0 || selectedOption > 3) {
+//        if (selectedOption == 1) {
+//            getAllSN();
+//            chooseStore(sc);
+//        }
+//        if (selectedOption == 0) {
+//            throw new Buisness_Exception("Going back");
+//        }
+//        if (selectedOption == 1) { ///new system
+//            cleanSuperLeeDB();
+//            try {
+//                SystemInterfaceWorkers.getInstance().initConstants();
+//            }
+//            catch (Exception e){
+//
+//            }
+//            chooseStore(sc);
+//        }
+//        if (selectedOption == 2) { ///new system with data
+//            cleanSuperLeeDB();
+//            try {
+//                SystemInterfaceWorkers.getInstance().initConstants();
+//            }
+//            catch (Exception e){
+//            }
+//            initSuperLeeWithWorkers();
+//            chooseStore(sc);
+//        }
+//        if (selectedOption == 3) {
+//            getAllSN();
+//            chooseStore(sc);
+//        }
+        if (selectedOption < 0) {
             System.out.println("Invalid input, please try again");
             systemStart(sc);
         }

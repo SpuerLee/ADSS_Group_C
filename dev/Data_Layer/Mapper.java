@@ -341,6 +341,20 @@ public class Mapper {
         return enums.valueOf(DBday);
     }
 
+    public void getAllDrivers(){
+        List<dummy_Worker> drivers = worker_Mapper.selectAllDrivers();
+        List<Worker> workersToAdd = new LinkedList<>();
+
+        for(dummy_Worker driverToAdd : drivers){
+            workersToAdd.add(getWorker(driverToAdd.getStoreSN(),driverToAdd.getSN()));
+        }
+
+        for(Worker driverToAdds : workersToAdd){
+            Service.getInstance().getDrivers().putIfAbsent(driverToAdds.getWorkerSn(), (Driver) driverToAdds);
+        }
+
+    }
+
     public Worker getWorker(int StoreSN, int workerSN){
         Worker worker = null;
         if(Service.getInstance().getWorkerList(StoreSN).containsKey(workerSN)){ //worker already exists

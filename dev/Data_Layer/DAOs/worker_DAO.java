@@ -48,7 +48,9 @@ public class worker_DAO {
     }*/
 
     public void insert(dummy_Worker worker) {
-        String query = MessageFormat.format("INSERT INTO \"main\".\"Workers\"\n(\"SN\",\"ID\",\"Name\",\"PhoneNumber\",\"BankAccount\", \"Salary\", \"StoreSN\", \"date\", \"Job_Title\")\n{0}", String.format("VALUES ('%d','%d','%s','%s','%d','%d','%d', %s , '%s');", worker.getSN(),worker.getId(), worker.getName(), worker.getPhone(), worker.getBankAccount(), worker.getSalary(), worker.getStoreSN(), "?", worker.getJob_title()));
+        String query = MessageFormat.format("INSERT INTO \"main\".\"Workers\"\n(\"SN\",\"ID\",\"Name\",\"PhoneNumber\",\"BankAccount\", \"Salary\", \"StoreSN\", \"date\", \"Job_Title\")\n{0}",
+                                                                                                               String.format("VALUES ('%d','%d','%s','%s','%d','%d','%d', %s , '%s');",
+                                    worker.getSN(),worker.getId(), worker.getName(), worker.getPhone(), worker.getBankAccount(), worker.getSalary(), worker.getStoreSN(), "?", worker.getJob_title()));
 
         try {
             java.sql.Date sqlDate = new java.sql.Date(worker.getStart_Date().getTime());
@@ -89,6 +91,28 @@ public class worker_DAO {
                     ("ID"),rs2.getString("Name"),rs2.getString("PhoneNumber"),
                     rs2.getInt("BankAccount"),rs2.getInt("Salary"),rs2.getInt("StoreSN"),rs2.getDate("Date"),rs2.getString("Job_Title"));
             return toADD;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new NullPointerException();
+    }
+
+    public List<dummy_Worker> selectAllDrivers(){
+        Worker workerToReturn = null;
+        List<dummy_Worker> listToReturn = new LinkedList<>();
+        String selectQuery = "select * from Workers where Workers.Job_Title = 'Driver'";
+        try {
+            Statement stmt2 = Connection.getInstance().getConn().createStatement();
+            ResultSet rs2  = stmt2.executeQuery(selectQuery);
+            while(rs2.next()) {
+                dummy_Worker toADD = new dummy_Worker(rs2.getInt("SN"), rs2.getInt
+                        ("ID"), rs2.getString("Name"), rs2.getString("PhoneNumber"),
+                        rs2.getInt("BankAccount"), rs2.getInt("Salary"), rs2.getInt("StoreSN"), rs2.getDate("Date"), rs2.getString("Job_Title"));
+//            List<Integer> Licenses = selectDriverLicenseByWorkerSN(toADD.getSN());
+//            List<Pair<Integer,Integer>> Constrains = selectConstrainsByWorkerSN(toADD.getSN());
+                listToReturn.add(toADD);
+            }
+            return listToReturn;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -207,6 +231,8 @@ public class worker_DAO {
         executeNOexception(query);
         executeNOexception(que);
     }
+
+
 
 
 

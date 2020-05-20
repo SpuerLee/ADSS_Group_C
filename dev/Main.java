@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args)  throws Buisness_Exception {
+        System.out.println("Welcome to SuperLee");
         while (true)
         {
             Scanner scan = new Scanner(System.in);
